@@ -18,7 +18,7 @@ body {
 	box-sizing: inherit;
 }
 
-input[type=text] {
+.text-field {
 	margin-bottom: 1rem;
 	width: 100%;
 	padding: .75rem 1.25rem;
@@ -31,7 +31,7 @@ input[type=text] {
 	transition: all 0.15s ease;
 }
 
-input[type=text]:focus {
+.text-field:focus {
 	border-color: #666ee8;
 }
 
