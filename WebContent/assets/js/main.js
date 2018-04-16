@@ -1,3 +1,1 @@
-/**
- * 
- */
+$(".content-container").load("opretBruger.html");
