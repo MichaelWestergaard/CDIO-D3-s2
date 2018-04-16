@@ -12,6 +12,8 @@ body {
 	background-color: #eceeef;
 	font-family: 'Roboto';
 	height: inherit;
+	overflow: scroll;
+	margin: 0;
 }
 
 *, :after, :before {
