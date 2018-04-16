@@ -18,7 +18,7 @@ body {
 	box-sizing: inherit;
 }
 
-input {
+input[type=text] {
 	margin-bottom: 1rem;
 	width: 100%;
 	padding: .75rem 1.25rem;
@@ -31,6 +31,67 @@ input {
 	transition: all 0.15s ease;
 }
 
-input:focus {
+input[type=text]:focus {
 	border-color: #666ee8;
+}
+
+.container {
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 100%;
+	width: 1140px;
+	height: inherit;
+}
+
+.container .row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -15px;
+	margin-left: -15px;
+	height: inherit;
+}
+
+.content-container {
+	margin: auto;
+	background: #fff;
+	border-radius: 2px;
+	position: relative;
+	display: inline-block;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.content-container .content {
+	padding: 15px 20px;
+	margin: 0 auto;
+	display: table;
+}
+
+.content-container .content input[type=submit] {
+	margin-top: 20px;
+	display: block;
+	background: #666ee8;
+	color: #fff;
+	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	border: 0;
+	font-weight: 700;
+	width: 100%;
+	outline: none;
+	cursor: pointer;
+	padding: 10px;
+	transition: all 0.15s ease;
+}
+
+.content h1 {
+	width: 100%;
+	padding: 5px 0;
+	text-align: center;
+	text-transform: uppercase;
+	font-family: Roboto;
+	font-weight: 500;
+}
+
+td {
+	display: block;
 }
