@@ -7,6 +7,7 @@
 <body>
 <div class="content">
 <h1>Opret bruger</h1>
+<form method="get" action="index.html">
 
 	<table>
 		<tr>
@@ -35,16 +36,15 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Aktiv?</td>
+			<td>Aktiv</td>
 			<td>
-				<input type="radio" name="Yes">Ja
-				<input type="radio" name="No">Nej
+				<input type="radio" name="Aktiv" value="yes">Yes
+				<input type="radio" name="Aktiv" value="no">Nej
 			</td>
 		</tr>
 	</table>
 	
-	<form method="get" action="index.html">
-	<input type="submit" name="SaveChanges" value="Gem ændringerne">
+		<input type="submit" name="SaveChanges" value="Gem ændringerne">
 	</form>
 	
 <br>
