@@ -4,24 +4,26 @@
 <table>
 		<tr>
 			<th>BrugerID</th>
-			<th>BrugerNavn</th>
-			<th>Rolle</th>
+			<th>Brugernavn</th>
 			<th>Fornavn</th>
-			<th>Vej</th>
-			<th>Adresse Nummer</th>
-			<th>Postnummer</th>
-			<th>By</th>
+			<th>Efternavn</th>
+			<th>Password</th>
+			<th>Rolle</th>
+			<th>Aktiv</th>
 		</tr>
 		<tr>
 			<td>1</td>
-			<td>Alp</td>
-			<td>admin</td>
-			<td>Parslan</td>
-			<td>Brønby</td>
-			<td>22</td>
-			<td>2200</td>
-			<td>KHB</td>
-			<td><select id="options"><option>hej</option><option>Med</option><option>Dig</option></select></td>
+			<td>Alp56</td>
+			<td>Alparslan</td>
+			<td>Baroboris</td>
+			<td>Jfwefq2</td>
+			<td>Admin</td>
+			<td>Ja</td>
+			<td><select id="options">
+				<option value="deleteUser">Slet bruger</option>
+				<option value="updateUser">Opdater bruger</option>
+				<option value="resetPass">Nulstil kode</option>
+			</select></td>
 		</tr>
 </table>
 
@@ -29,6 +31,18 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script>
 	$('#options').on('change', function() {
-		alert("gg");
+		alert(this.value);
+		
+		if (this.value == "deleteUser") {
+		//gør det i rest
+		}
+		
+		if (this.value == "updateUser") {
+		$(".content-container").load("changeUser.html");
+		}
+		
+		if (this.value == "resetPass") {
+		$(".content-container").load("resetPassword.html");
+		}
 	});	
 </script>
