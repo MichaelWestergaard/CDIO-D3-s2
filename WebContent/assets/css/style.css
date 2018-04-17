@@ -67,6 +67,7 @@ body {
 	padding: 15px 20px;
 	margin: 0 auto;
 	display: table;
+	min-width: 50vw;
 }
 
 .content-container .content input[type=submit] {
@@ -94,6 +95,10 @@ body {
 	font-weight: 500;
 }
 
-td {
+table {
+	width: 100%;
+}
+
+.create-user td, .update-user td, .reset-password td {
 	display: block;
 }
