@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$(".content-container").load("Brugereliste.html");
+	$(".content-container").load("Brugerliste.html");
 });
 
 $('#options').on('change', function() {
