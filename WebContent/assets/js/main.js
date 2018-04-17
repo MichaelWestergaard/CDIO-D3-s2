@@ -1,3 +1,6 @@
 $(document).ready(function(){
-	$(".content-container").load("opretBruger.html");
+	$(".content-container").load("Brugereliste.html");
+	$( "#options" ).change(function() {
+		  alert( "Handler for .select() called." );
+		});
 });
