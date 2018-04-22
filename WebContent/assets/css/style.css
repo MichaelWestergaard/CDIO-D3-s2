@@ -121,3 +121,29 @@ table {
 	text-decoration: none;
 	font-size: 12px;
 }
+
+#userList {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+	border-radius: 6px;
+	margin: 25px 0;
+}
+
+#userList th,
+#userList td {
+	padding: 15px;
+	background-color: rgba(255,255,255,0.2);
+	color: #fff;
+	text-align: center;
+}
+
+#userList thead th {
+	background-color: #5b73c0;
+}
+
+#userList tbody td {
+	position: relative;
+	color: #575962;
+}
