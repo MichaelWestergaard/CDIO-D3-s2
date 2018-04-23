@@ -67,7 +67,7 @@ body {
 	padding: 15px 20px;
 	margin: 0 auto;
 	display: table;
-	min-width: 25vw;
+	min-width: 35vw;
 }
 
 .content-container .content input[type=submit] {
@@ -141,8 +141,7 @@ table {
 	font-size: 12px; 
 }
 
-#userList {
-	width: 800px;
+.user-table {
 	border-collapse: collapse;
 	overflow: hidden;
 	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
@@ -150,19 +149,23 @@ table {
 	margin: 25px 0;
 }
 
-#userList th,
-#userList td {
+.user-table th,
+.user-table td {
 	padding: 15px;
 	background-color: rgba(255,255,255,0.2);
 	color: #fff;
 	text-align: center;
 }
 
-#userList thead th {
+.user-table td.align-left {
+	text-align: left;
+}
+
+.user-table thead th {
 	background-color: #5b73c0;
 }
 
-#userList tbody td {
+.user-table tbody td {
 	position: relative;
 	color: #575962;
 }

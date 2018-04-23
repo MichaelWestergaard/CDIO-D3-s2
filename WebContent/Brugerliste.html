@@ -3,7 +3,7 @@
 
 										<!-- SKAL HAVE EN OPRET USER KNAP -->
 
-	<table id="userList">
+	<table class="user-table">
 		<thead>
 			<tr>
 				<th>BrugerID</th>
@@ -36,28 +36,7 @@
 			</tr>
 		</tbody>
 	</table> 
-	<a href="#" id="createBtn">Opret bruger</a>
+	<a href="javascript:;" id="createBtn">Opret bruger</a>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script>
-	$('#options').on('change', function() {
-		
-		if (this.value == "deleteUser") {
-		//gør det i rest/DB
-		}
-		
-		if (this.value == "updateUser") {
-		$(".content-container").load('updateUser.html',function(){}).hide().fadeIn();
-		}
-		
-		if (this.value == "resetPass") {
-		$(".content-container").load('resetPassword.html',function(){}).hide().fadeIn();
-		}
-		
-		$('#createBtn').on('click', function(){
-			$(".content-container").load("opretBruger.html",function(){}).hide().fadeIn();
-		}); 
-		
-		
-	});	
-</script>
+
+		<script src="assets/js/main.js"></script>
