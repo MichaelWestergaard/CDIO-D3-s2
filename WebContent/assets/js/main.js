@@ -12,7 +12,9 @@ $(document).ready(function(){
 	$('#options').on('change', function() {
 		
 		if (this.value == "deleteUser") {
-			console.log("test");
+			if (confirm("Er du sikker på at du vil fjerne denne bruger?")) {
+		        alert("bg. Brugeren blev ikke fjernet, da vi ikke har lavet det endnu..");
+		    }
 		}
 		
 		if (this.value == "updateUser") {
