@@ -1,5 +1,5 @@
 <div class="content">
-
+<form method="get" action="index.html">
 
 <table id="updateUser">
 		<thead>
@@ -21,17 +21,24 @@
 				<td><input type="text" name="company" form="my_form" /></td>
 				<td><input type="text" name="company" form="my_form" /></td>
 				<td><input type="text" name="company" form="my_form" /></td>
-				<td><input type="text" name="company" form="my_form" /></td>
 				<td>
 					<select id="roles">
+					<option value="noValue">-Vælg-</option>
 					<option value="Admin">Admin</option>
 					<option value="Pharmacist">Pharmacist</option>
 					<option value="Produktionsleder">Produktionsleder</option>
 					<option value="Laborant">Laborant</option>
 					</select>
 				</td>
+				<td>
+					<input type="radio" name="Aktiv" value="yes">Ja
+					<input type="radio" name="Aktiv" value="no">Nej
+				</td>
 			</tr>
 		</tbody>
 	</table>
+	
+	<input type="submit" name="SaveChanges" value="Gem ændringerne">
+</form>
 </div>
 </html>
