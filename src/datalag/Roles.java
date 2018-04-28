@@ -1,5 +1,5 @@
 package datalag;
 
-public enum Roller {
+public enum Roles {
 Admin, Pharmacist, Laborant, Produktionsleder
 }
