@@ -20,6 +20,11 @@ public class UserService {
 public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roles Role, @FormParam("Active") boolean Active)  {
 	return "user added";
 }
+
+
+public String createUser1()  {
+	return "user added";
+}
 //Få hele brugerlsiten
 /*@GET 
 public String getUserList() {
