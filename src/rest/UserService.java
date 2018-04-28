@@ -17,7 +17,7 @@ public class UserService {
 //Tilføj en bruger
 @POST
 @Path("form")
-public String createUser(@FormParam("BrugerID") int BrugerID,@FormParam("Brugernavn") String Brugernavn, @FormParam("Fornavn") String Fornavn, @FormParam("Efternavn") String Efternavn, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Rolle") Roller Rolle, @FormParam("Aktiv") boolean Aktiv)  {
+public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roller Role, @FormParam("Active") boolean Active)  {
 	return "user added";
 }
 //Få hele brugerlsiten
