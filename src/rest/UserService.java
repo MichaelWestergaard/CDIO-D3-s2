@@ -14,11 +14,38 @@ import javax.ws.rs.FormParam;
 @Path("user")
 public class UserService {
 
+//Tilføj en bruger
 @POST
 @Path("form")
-public String createIngredient(@FormParam("BrugerID") int Brugerid,@FormParam("Brugernavn") String Brugernavn, @FormParam("Fornavn") String Fornavn, @FormParam("Efternavn") String Efternavn, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Rolle") Roller Rolle, @FormParam("Aktiv") boolean Aktiv)  {
+public String createUser(@FormParam("BrugerID") int BrugerID,@FormParam("Brugernavn") String Brugernavn, @FormParam("Fornavn") String Fornavn, @FormParam("Efternavn") String Efternavn, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Rolle") Roller Rolle, @FormParam("Aktiv") boolean Aktiv)  {
 	return "user added";
 }
-	
-	
+//Få hele brugerlsiten
+/*@GET 
+public String getUserList() {
+List<UserDTO> list = IUserDAO.getInstance().getUserList();
+return new JSONArray(list).toString();
+}*/
+
+/*@GET
+@PATH("users"
+public list<User> getUser() {
+return IUserDAO.getAllUsers();
+
+//Slette
+@Delete
+public string deleteUser(@PathPharam("BrugerID") int BrugerID) {
+
+//Opdatere
+@PUT
+@Path("form")
+public String updateUser(@FormParam("BrugerID") int BrugerID,@FormParam("Brugernavn") String Brugernavn, @FormParam("Fornavn") String Fornavn, @FormParam("Efternavn") String Efternavn, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Rolle") Roller Rolle, @FormParam("Aktiv") boolean Aktiv)  {
+	return "user updated";
+}
+}
+
+
+
+
+*/	
 }
