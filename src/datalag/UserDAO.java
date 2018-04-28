@@ -18,18 +18,13 @@ public class UserDAO implements IUserDAO {
 		return null;
 	}
 
-	public void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password,
-			Roles role, boolean active) {
+	public void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) {
 		if(getUser(userID) == null) {
-			users.add(new UserDTO(userID, userName, firstName, lastName, cpr, password,
-					role, active));
-			
+			users.add(new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active));
 		}
-		
 	}
 
-	public void updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password,
-			Roles role, boolean active) {
+	public void updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) {
 		// TODO Auto-generated method stub
 		if(users.contains(getUser(userID)))  {
 		UserDTO user = getUser(userID);

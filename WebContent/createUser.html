@@ -1,50 +1,52 @@
 <div class="content">
 <h1>Opret bruger</h1>
-<form method="get" action="index.html">
+<form method="POST" action="rest/user/createUser">
 
 	<table class="">
 		<tr>
 			<td>Bruger ID:</td>
-			<td><input type="text" class="text-field" name="UserID"></td>
+			<td><input type="text" class="text-field" name="userID"></td>
+		</tr>
+		<tr>
+			<td>CPR Nummer:</td>
+			<td><input type="text" class="text-field" name="CPR"></td>
 		</tr>
 		<tr>
 			<td>Brugernavn:</td>
-			<td><input type="text" class="text-field" name="UserName"></td>
+			<td><input type="text" class="text-field" name="userName"></td>
 		</tr>
 		<tr>
 			<td>Fornavn:</td>
-			<td><input type="text" class="text-field"name="FirstName"></td>
+			<td><input type="text" class="text-field" name="firstName"></td>
 		</tr>
 		<tr>
 			<td>Efternavn:</td>
-			<td><input type="text" class="text-field" name="LastName"></td>
+			<td><input type="text" class="text-field" name="lastName"></td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type="password" class="text-field" name="Password"></td>
+			<td><input type="password" class="text-field" name="password"></td>
 		</tr>
 		<tr>
 			<td>Rolle:</td>
 			<td>
-				<input type="checkbox" name="Admin">Admin
-				<input type="checkbox" name="Pharmacist">Pharmacist
-				<input type="checkbox" name="Produktionsleder">Produktionsleder
-				<input type="checkbox" name="Laborant">Laborant
+				<input type="checkbox" name="role" value="Admin">Admin
+				<input type="checkbox" name="role" value="Pharmacist">Pharmacist
+				<input type="checkbox" name="role" value="Produktionsleder">Produktionsleder
+				<input type="checkbox" name="role" value="Laborant">Laborant
 			</td>
 		</tr>
 		<tr>
 			<td>Aktiv:</td>
 			<td>
-				<input type="radio" name="Aktiv" value="yes">Ja
-				<input type="radio" name="Aktiv" value="no">Nej
+				<input type="radio" name="active" value="1">Ja
+				<input type="radio" name="active" value="0">Nej
 			</td>
 		</tr>
 	</table>
 	
-		<input type="submit" name="SaveChanges" value="Gem ændringerne">
+		<input type="submit" name="createUser" value="Opret Bruger">
 	</form>
-<a href="#" id="homeBtn">Tilbage</a>
-</div>	
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-		<script src="assets/js/main.js"></script>
+<a href="javascript:;" id="homeBtn">Tilbage</a>
+</div>
+<script src="assets/js/main.js"></script>

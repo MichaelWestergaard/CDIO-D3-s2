@@ -5,6 +5,7 @@ import javax.ws.rs.Path;
 import datalag.UserDTO;
 import datalag.IUserDAO;
 import datalag.Roles;
+import datalag.UserDAO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -13,12 +14,22 @@ import javax.ws.rs.FormParam;
 
 @Path("user")
 public class UserService {
+	
+	UserDAO userDAO = new UserDAO();
 
 	//Tilføj en bruger
 	@POST
-	@Path("form")
-	public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roles Role, @FormParam("Active") boolean Active)  {
-		return "user added";
+	@Path("createUser")
+	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active)  {
+		userDAO.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
+		
+		UserDTO createdUser = userDAO.getUser(userID);
+		
+		if(createdUser != null) {
+			return createdUser.toString();
+		} else {
+			return "error";
+		}
 	}
 
 	@GET

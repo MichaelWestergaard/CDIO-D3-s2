@@ -5,7 +5,7 @@ $(document).ready(function(){
 	});
 	$('#createBtn').on('click', function(){
 		console.log("create");
-		$(".content-container").load("opretBruger.html");
+		$(".content-container").load("createUser.html");
 	});
 	
 	//Brugerliste
