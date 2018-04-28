@@ -4,7 +4,7 @@ import java.util.List;
 import javax.ws.rs.Path;
 import datalag.UserDTO;
 import datalag.IUserDAO;
-import datalag.Roller;
+import datalag.Roles;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,7 +17,7 @@ public class UserService {
 //Tilføj en bruger
 @POST
 @Path("form")
-public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roller Role, @FormParam("Active") boolean Active)  {
+public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roles Role, @FormParam("Active") boolean Active)  {
 	return "user added";
 }
 //Få hele brugerlsiten
