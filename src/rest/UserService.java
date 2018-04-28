@@ -14,17 +14,20 @@ import javax.ws.rs.FormParam;
 @Path("user")
 public class UserService {
 
-//Tilføj en bruger
-@POST
-@Path("form")
-public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roles Role, @FormParam("Active") boolean Active)  {
-	return "user added";
-}
+	//Tilføj en bruger
+	@POST
+	@Path("form")
+	public String createUser(@FormParam("UserID") int UserID,@FormParam("UserName") String UserName, @FormParam("FirstName") String FirstName, @FormParam("LastName") String LastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Role") Roles Role, @FormParam("Active") boolean Active)  {
+		return "user added";
+	}
 
+	@GET
+	@Path("test")
+	public String createUser1()  {
+		return "user added";
+	}
+	
 
-public String createUser1()  {
-	return "user added";
-}
 //Få hele brugerlsiten
 /*@GET 
 public String getUserList() {
@@ -32,7 +35,7 @@ List<UserDTO> list = IUserDAO.getInstance().getUserList();
 return new JSONArray(list).toString();
 }*/
 
-/*@GET
+	/*@GET
 @PATH("users"
 public list<User> getUser() {
 return IUserDAO.getAllUsers();
@@ -52,5 +55,5 @@ public String updateUser(@FormParam("BrugerID") int BrugerID,@FormParam("Brugern
 
 
 
-*/	
+	 */	
 }
