@@ -9,24 +9,8 @@ import datalag.UserDTO;
 public class UserDAO implements IUserDAO {
 	
 	private List<UserDTO> users = new ArrayList<UserDTO>();
-	private MySQLController mySQLController;
-	
-	public UserDAO() {
-		try {
-			mySQLController = new MySQLController();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	public List<UserDTO> getUserList() {
-		try {
-			mySQLController.getUsers(this);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return users;
 	}
 	
@@ -43,13 +27,6 @@ public class UserDAO implements IUserDAO {
 		if(getUser(userID) == null) {
 			UserDTO newUser = new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active);
 			users.add(newUser);
-			
-			try {
-				mySQLController.createUser(newUser);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 

@@ -1,12 +1,16 @@
 package rest;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import com.google.gson.Gson;
+
 import datalag.UserDTO;
 import datalag.IUserDAO;
+import datalag.MySQLController;
 import datalag.Roles;
 import datalag.UserDAO;
 
@@ -20,66 +24,106 @@ import javax.ws.rs.FormParam;
 @Path("user")
 public class UserService {
 
-	UserDAO userDAO = new UserDAO();
+	private MySQLController mySQLController;
+	
+	public UserService() {
+		try {
+			mySQLController = new MySQLController();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	//Tilføj en bruger
 	@POST
 	@Path("createUser")
 	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active)  {
-		userDAO.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
-
-		UserDTO createdUser = userDAO.getUser(userID);
-
-		if(createdUser != null) {
-			return "user created";
-		} else {
-			return "error";
+		try {
+			mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
+			UserDTO createdUser = mySQLController.getUser(userID);
+				
+			if(createdUser != null) {
+				return "user created";
+			} else {
+				return "error";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	}
-
-	@GET
-	@Path("test")
-	public String createUser1()  {
-		return "user added";
+		return "error";
 	}
 
 	//BRuerliste
 	@GET 
 	@Path("getUserList")
-	public List<UserDTO> getUserList() {
-		return userDAO.getUserList();
+	public String getUserList() {
+		String returnMsg = "";
+		try {
+			List<UserDTO> users = mySQLController.getUsers();
+
+			String json = new Gson().toJson(users);
+			returnMsg = json;
+						
+//			for (UserDTO user : users) {
+//				returnMsg += user.toString() + "\n";
+//			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnMsg;
 	}
 
 	//få en bruger ud fra id
 	@GET
 	@Path("getUser")
 	public UserDTO getUser(@PathParam("userID") int userID) {
-		return userDAO.getUser(userID);
+		try {
+			return mySQLController.getUser(userID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 
 	//Slette UserDTO createdUser = userDAO.getUser(userID);
 	@DELETE
-	@Path("deleteUser") 
+	@Path("deleteUser")
 	public String deleteUser(@PathParam("userID") int userID) {
-		boolean state = userDAO.deleteUser(userID);
-		if(state) {
-			return "true";
-		} else {
-			return "false";
+		try {
+			boolean state = mySQLController.deleteUser(userID);
+			if(state) {
+				return "true";
+			} else {
+				return "false";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return "false";
 	}
 	
 	//Opdatere
-//	@PUT
-//	@Path("updateUser")
-//	public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
-//		UserDTO user = new UserDTO(userID, userName, name, lastName, CPR, Password, role, active); //Brugernavn, fornavn, efternavn, password, rolle og active skal kunne opdateres
-//		int updatedUser = userDAO.updateUser(user); 
-//		if(updatedUser == 1) {
-//			return "Result success";
-//		}
-//		return "Result failed";
-//	}
+	@POST
+	@Path("updateUser")
+	public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
+		try {
+			boolean state = mySQLController.updateUser(userID, userName, name, lastName, CPR, Password, role, active); 
+			if(state) {
+				return "true";
+			} else {
+				return "false";
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "false";
+	}
 
 }

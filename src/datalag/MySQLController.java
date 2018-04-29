@@ -32,8 +32,29 @@ public class MySQLController {
 	public Connection getConnection() throws SQLException {
 		return startConnection();
 	}
+		
+	public UserDTO getUser(int userID) throws SQLException {
+		UserDTO user = null;
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM admin WHERE userID = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			List<String> roles = Arrays.asList(results.getString("Roller").split(",")); 
+			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), "mangler view", roles, results.getInt("status"));
+			preparedStatement.close();
+			return user;
+		}
+
+		preparedStatement.close();
+		return null;
+	}
 	
-	public void getUsers(UserDAO userDAO) throws SQLException {
+	public List<UserDTO> getUsers() throws SQLException {
+		List<UserDTO> users = new ArrayList<UserDTO>();
 		ResultSet results = null;
 		
 		String query = "SELECT * FROM admin";
@@ -41,25 +62,78 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			List<String> roles = Arrays.asList(results.getString("Roller").split(",")); 
-			userDAO.createUser(results.getInt("userID"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), "Skal ændres i view", roles, results.getInt("status"));
+			List<String> roles = Arrays.asList(results.getString("Roller").split(","));
+			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), "mangler view", roles, results.getInt("status"));
+			users.add(user);
 		}
 		statement.close();
+		return users;
 	}
 	
-	public void createUser(UserDTO user) throws SQLException {
-		String query = "call opretBruger(?, ?, ?, ?, ?, ?, ?, ?)";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, user.getUserID());
-		preparedStatement.setString(2, user.getUserName());
-		preparedStatement.setString(3, user.getName());
-		preparedStatement.setString(4, user.getLastName());
-		preparedStatement.setString(5, user.getCpr());
-		preparedStatement.setString(6, user.getPassword());
-		preparedStatement.setString(7, String.join(",", user.getRole()));
-		preparedStatement.setInt(8, user.getActive());
-		preparedStatement.execute();
-		preparedStatement.close();
+	public void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
+		if(getUser(userID) == null) {
+			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active);
+			
+			String query = "call opretBruger(?, ?, ?, ?, ?, ?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, user.getUserID());
+			preparedStatement.setString(2, user.getUserName());
+			preparedStatement.setString(3, user.getName());
+			preparedStatement.setString(4, user.getLastName());
+			preparedStatement.setString(5, user.getCpr());
+			preparedStatement.setString(6, user.getPassword());
+			preparedStatement.setString(7, String.join(",", user.getRole()));
+			preparedStatement.setInt(8, user.getActive());
+			preparedStatement.execute();
+			preparedStatement.close();
+		}		
+	}
+	
+	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
+		if(getUser(userID) != null) {
+			UserDTO user = getUser(userID);
+			user.setActive(active);
+			user.setCpr(cpr);
+			user.setRole(role);
+			user.setPassword(password);
+			user.setName(firstName);
+			user.setLastName(lastName);
+			
+			String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, user.getUserID());
+			preparedStatement.setString(2, user.getUserName());
+			preparedStatement.setString(3, user.getName());
+			preparedStatement.setString(4, user.getLastName());
+			preparedStatement.setString(5, user.getCpr());
+			preparedStatement.setString(6, user.getPassword());
+			preparedStatement.setString(7, String.join(",", user.getRole()));
+			preparedStatement.setInt(8, user.getActive());
+			if(preparedStatement.execute()) {
+				preparedStatement.close();
+				return true;
+			} else {
+				preparedStatement.close();
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteUser(int userID) throws SQLException {
+		if(getUser(userID) != null) {
+			String query = "call sletBruger(?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, userID);
+			if(preparedStatement.execute()) {
+				preparedStatement.close();
+				return true;
+			} else {
+				preparedStatement.close();
+				return false;
+			}
+		}
+		return false;
 	}
 	
 }
