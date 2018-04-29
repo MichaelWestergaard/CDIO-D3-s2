@@ -10,7 +10,7 @@ public interface IUserDAO{
 	void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active);
 	void updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active);
 	void deleteUser(int userID);	
-	
+	public List<UserDTO> getUserList();
 	
 	
 	
