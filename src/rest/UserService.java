@@ -2,6 +2,8 @@ package rest;
 
 import java.util.List;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import datalag.UserDTO;
 import datalag.IUserDAO;
 import datalag.Roles;
@@ -38,18 +40,20 @@ public class UserService {
 		return "user added";
 	}
 	
+//BRuerliste
+@GET 
+@Path("getUserList")
+public List<UserDTO> getUserList() {
+	return userDAO.getUserList();
+}
 
-//Få hele brugerlsiten
-/*@GET 
-public String getUserList() {
-List<UserDTO> list = IUserDAO.getInstance().getUserList();
-return new JSONArray(list).toString();
-}*/
+//få en bruger ud fra id
+@GET
+@Path("getUser")
+public UserDTO getUser(@PathParam("userID") int userID) {
+return userDAO.getUser(userID);
+}
 
-	/*@GET
-@PATH("users"
-public list<User> getUser() {
-return IUserDAO.getAllUsers();
 
 //Slette
 @Delete

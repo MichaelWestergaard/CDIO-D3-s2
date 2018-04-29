@@ -9,6 +9,10 @@ public class UserDAO implements IUserDAO {
 	private List<UserDTO> users = new ArrayList<UserDTO>();
 
 	
+	public List<UserDTO> getUserList() {
+	return users;
+	}
+	
 	public UserDTO getUser(int userID) {
 		for(int i = 0; i < users.size(); i++) {
 			if(users.get(i).getUserID()==userID) {
