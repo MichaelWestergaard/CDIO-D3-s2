@@ -19,9 +19,7 @@ public class MySQLController {
 	
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
-	
-	private UserDAO userDAO = new UserDAO();
-	
+		
 	public MySQLController() throws ClassNotFoundException {
 		Class.forName(DRIVER_CLASS);
 	}
@@ -35,7 +33,7 @@ public class MySQLController {
 		return startConnection();
 	}
 	
-	public void getUsers() throws SQLException {
+	public void getUsers(UserDAO userDAO) throws SQLException {
 		ResultSet results = null;
 		
 		String query = "SELECT * FROM admin";

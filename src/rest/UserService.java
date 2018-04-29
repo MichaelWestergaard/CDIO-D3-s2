@@ -19,7 +19,7 @@ import javax.ws.rs.FormParam;
 
 @Path("user")
 public class UserService {
-	
+
 	UserDAO userDAO = new UserDAO();
 
 	//Tilføj en bruger
@@ -27,11 +27,11 @@ public class UserService {
 	@Path("createUser")
 	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active)  {
 		userDAO.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
-		
+
 		UserDTO createdUser = userDAO.getUser(userID);
-		
+
 		if(createdUser != null) {
-			return createdUser.toString();
+			return "user created";
 		} else {
 			return "error";
 		}
@@ -42,42 +42,44 @@ public class UserService {
 	public String createUser1()  {
 		return "user added";
 	}
+
+	//BRuerliste
+	@GET 
+	@Path("getUserList")
+	public List<UserDTO> getUserList() {
+		return userDAO.getUserList();
+	}
+
+	//få en bruger ud fra id
+	@GET
+	@Path("getUser")
+	public UserDTO getUser(@PathParam("userID") int userID) {
+		return userDAO.getUser(userID);
+	}
+
+
+	//Slette UserDTO createdUser = userDAO.getUser(userID);
+	@DELETE
+	@Path("deleteUser") 
+	public String deleteUser(@PathParam("userID") int userID) {
+		boolean state = userDAO.deleteUser(userID);
+		if(state) {
+			return "true";
+		} else {
+			return "false";
+		}
+	}
 	
-//BRuerliste
-@GET 
-@Path("getUserList")
-public List<UserDTO> getUserList() {
-	return userDAO.getUserList();
-}
+	//Opdatere
+//	@PUT
+//	@Path("updateUser")
+//	public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
+//		UserDTO user = new UserDTO(userID, userName, name, lastName, CPR, Password, role, active); //Brugernavn, fornavn, efternavn, password, rolle og active skal kunne opdateres
+//		int updatedUser = userDAO.updateUser(user); 
+//		if(updatedUser == 1) {
+//			return "Result success";
+//		}
+//		return "Result failed";
+//	}
 
-//få en bruger ud fra id
-@GET
-@Path("getUser")
-public UserDTO getUser(@PathParam("userID") int userID) {
-return userDAO.getUser(userID);
-}
-
-
-//Slette UserDTO createdUser = userDAO.getUser(userID);
-@DELETE
-@Path("deleteUser") 
-public String deleteUser(@PathParam("userID") int userID) {
-	int deletedUser = userDAO.deleteUser(userID);
-	if(deletedUser == 1) {
-	return "Result success";
-}
-	return "Result failed";
-}
-//Opdatere
-@PUT
-@Path("updateUser")
-public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
-UserDTO user = new UserDTO(userID, userName, name, lastName, CPR, Password, role, active); //Brugernavn, fornavn, efternavn, password, rolle og active skal kunne opdateres
-int updatedUser = userDAO.updateUser(user); 
-if(updatedUser == 1) {
-	return "Result success";
-}
-	return "Result failed";
-}
-	 	
 }
