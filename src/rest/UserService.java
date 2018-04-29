@@ -6,6 +6,9 @@ import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
 
@@ -18,6 +21,7 @@ import datalag.UserDAO;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
+import javax.servlet.ServletContext;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
@@ -39,23 +43,25 @@ public class UserService {
 	//Tilføj en bruger
 	@POST
 	@Path("createUser")
-	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active)  {
+	public Response createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
 		try {
 			mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
 			UserDTO createdUser = mySQLController.getUser(userID);
 				
 			if(createdUser != null) {
-				return "user created";
-			} else {
-				return "error";
+				UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+		        builder.path("index.html");
+		        return Response.seeOther(builder.build()).build();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "error";
+		UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+        builder.path("index.html");
+        return Response.seeOther(builder.build()).build();
 	}
-
+	
 	//BRuerliste
 	@GET 
 	@Path("getUserList")
