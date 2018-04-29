@@ -1,0 +1,85 @@
+﻿<div class="content">
+
+		<table class="user-table">
+			<thead>
+				<tr>
+					<th>BrugerID</th>
+					<th>Brugernavn</th>
+					<th>Fornavn</th>
+					<th>Efternavn</th>
+					<th>Password</th>
+					<th>CPR</th>
+					<th>Rolle</th>
+					<th>Aktiv</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input name="userID" disabled="true"></td>
+					<!--id skal ikke kunne ændres-->
+					<td><input type="text" name="userName" form="my_form" /></td>
+					<td><input type="text" name="firstName" form="my_form" /></td>
+					<td><input type="text" name="lastName" form="my_form" /></td>
+					<td><input type="password" name="password" form="my_form" /></td>
+					<td><input type="text" name="CPR" form="my_form" /></td>
+					<td class="align-left">
+						<input type="checkbox" name="role" value="Admin">Admin <br>
+						<input type="checkbox" name="role" value="Pharmacist">Pharmacist <br>
+						<input type="checkbox" name="role" value="Laborant">Laborant <br>
+						<input type="checkbox" name="role" value="Produktionsleder">Produktionsleder
+					</td>
+					<td>
+						<input type="radio" name="active" value="1">Ja
+						<input type="radio" name="active" value="0">Nej
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<input type="submit" name="updateUser" value="Gem ændringerne">
+	<a href="javascript:;" id="homeBtn">Tilbage</a>
+</div>
+
+<script type="text/javascript">
+	$("input[name=updateUser]").click(function(){
+		var userID 		= $("input[name=userID]").val();
+		var userName 	= $("input[name=userName]").val();
+		var firstName	= $("input[name=firstName]").val();
+		var lastName	= $("input[name=lastName]").val();
+		var password	= $("input[name=password]").val();
+		var cpr 		= $("input[name=CPR]").val();
+		var role = "";
+		$('input[name=role]:checked').each(function() {
+			role += $(this).val() + ",";
+		});
+		role = role.slice(0, -1);
+		var active 		= $("input[name=active]:checked").val();
+
+		$.ajax({
+        	type: "POST",
+        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/updateUser",
+        	data: {
+        		userID: userID,
+        		userName: userName,
+        		firstName: firstName,
+        		lastName: lastName,
+        		password: password,
+        		CPR: cpr,
+        		role: role,
+        		active: active
+        	},
+        	success: function(data){
+        		if(data == "true"){
+        			$(".content-container").load("Brugerliste.html");
+        		} else {
+        			console.log("fejl");
+        		}
+        	},
+        	error: function(xhr, ajaxOptions, thrownError) {
+              alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+	});
+</script>
+
+<script src="assets/js/main.js"></script>

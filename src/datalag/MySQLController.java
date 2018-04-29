@@ -37,7 +37,7 @@ public class MySQLController {
 		UserDTO user = null;
 		ResultSet results = null;
 		
-		String query = "SELECT * FROM admin WHERE userID = ?";
+		String query = "SELECT * FROM admin WHERE opr_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
 		results = preparedStatement.executeQuery();
@@ -89,51 +89,28 @@ public class MySQLController {
 		}		
 	}
 	
-	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
-		if(getUser(userID) != null) {
-			UserDTO user = getUser(userID);
-			user.setActive(active);
-			user.setCpr(cpr);
-			user.setRole(role);
-			user.setPassword(password);
-			user.setName(firstName);
-			user.setLastName(lastName);
-			
+	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String role, int active) throws SQLException {
 			String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, user.getUserID());
-			preparedStatement.setString(2, user.getUserName());
-			preparedStatement.setString(3, user.getName());
-			preparedStatement.setString(4, user.getLastName());
-			preparedStatement.setString(5, user.getCpr());
-			preparedStatement.setString(6, user.getPassword());
-			preparedStatement.setString(7, String.join(",", user.getRole()));
-			preparedStatement.setInt(8, user.getActive());
-			if(preparedStatement.execute()) {
-				preparedStatement.close();
-				return true;
-			} else {
-				preparedStatement.close();
-				return false;
-			}
-		}
-		return false;
+			preparedStatement.setInt(1, userID);
+			preparedStatement.setString(2, userName);
+			preparedStatement.setString(3, firstName);
+			preparedStatement.setString(4, lastName);
+			preparedStatement.setString(5, cpr);
+			preparedStatement.setString(6, password);
+			preparedStatement.setString(7, role);
+			preparedStatement.setInt(8, active);
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
 	}
 	
-	public boolean deleteUser(int userID) throws SQLException {
-		if(getUser(userID) != null) {
-			String query = "call sletBruger(?)";
-			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, userID);
-			if(preparedStatement.execute()) {
-				preparedStatement.close();
-				return true;
-			} else {
-				preparedStatement.close();
-				return false;
-			}
-		}
-		return false;
+	public void deleteUser(int userID) throws SQLException {
+		String query = "call sletBruger(?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.execute();
+		preparedStatement.close();
 	}
 	
 }

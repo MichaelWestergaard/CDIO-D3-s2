@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 
 import com.google.gson.Gson;
 
@@ -79,9 +80,10 @@ public class UserService {
 	//få en bruger ud fra id
 	@GET
 	@Path("getUser")
-	public UserDTO getUser(@PathParam("userID") int userID) {
+	public String getUser(@QueryParam("userID") int userID) {
 		try {
-			return mySQLController.getUser(userID);
+			String json = new Gson().toJson(mySQLController.getUser(userID));
+			return json;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,16 +93,13 @@ public class UserService {
 
 
 	//Slette UserDTO createdUser = userDAO.getUser(userID);
-	@DELETE
+	@GET
 	@Path("deleteUser")
-	public String deleteUser(@PathParam("userID") int userID) {
+	public String deleteUser(@QueryParam("userID") int userID) {
 		try {
-			boolean state = mySQLController.deleteUser(userID);
-			if(state) {
-				return "true";
-			} else {
-				return "false";
-			}
+			mySQLController.deleteUser(userID);
+			return "true";
+						
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,9 +110,9 @@ public class UserService {
 	//Opdatere
 	@POST
 	@Path("updateUser")
-	public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
+	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
 		try {
-			boolean state = mySQLController.updateUser(userID, userName, name, lastName, CPR, Password, role, active); 
+			boolean state = mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, role, active); 
 			if(state) {
 				return "true";
 			} else {
@@ -123,7 +122,7 @@ public class UserService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "false";
+		return "false gretg";
 	}
 
 }
