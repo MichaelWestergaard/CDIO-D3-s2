@@ -1,5 +1,6 @@
 package rest;
 
+import java.io.IOException;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -11,6 +12,8 @@ import datalag.UserDAO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
 
@@ -55,20 +58,26 @@ return userDAO.getUser(userID);
 }
 
 
-//Slette
-@Delete
-public string deleteUser(@PathPharam("BrugerID") int BrugerID) {
-
+//Slette UserDTO createdUser = userDAO.getUser(userID);
+@DELETE
+@Path("deleteUser") 
+public String deleteUser(@PathParam("userID") int userID) {
+	int deletedUser = userDAO.deleteUser(userID);
+	if(deletedUser == 1) {
+	return "Result success";
+}
+	return "Result failed";
+}
 //Opdatere
 @PUT
-@Path("form")
-public String updateUser(@FormParam("BrugerID") int BrugerID,@FormParam("Brugernavn") String Brugernavn, @FormParam("Fornavn") String Fornavn, @FormParam("Efternavn") String Efternavn, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("Rolle") Roller Rolle, @FormParam("Aktiv") boolean Aktiv)  {
-	return "user updated";
+@Path("updateUser")
+public String updateUser(@FormParam("userID") int userID,@FormParam("userName") String userName, @FormParam("name") String name, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("Password") String Password, @FormParam("role") List<String> role, @FormParam("active") int active) throws IOException  {
+UserDTO user = new UserDTO(userID, userName, name, lastName, CPR, Password, role, active); //Brugernavn, fornavn, efternavn, password, rolle og active skal kunne opdateres
+int updatedUser = userDAO.updateUser(user); 
+if(updatedUser == 1) {
+	return "Result success";
 }
+	return "Result failed";
 }
-
-
-
-
-	 */	
+	 	
 }
