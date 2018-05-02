@@ -131,4 +131,23 @@ public class UserService {
 		return "false gretg";
 	}
 
+	//Ikke testet
+	@POST
+	@Path("resetPassword")
+	public String resetPassword(@FormParam("userID") int userID, @FormParam("password") String password) {
+		try {
+			boolean state = mySQLController.resetPassword(userID, password);
+			if(state) {
+				return "true";
+			} else {
+				return "false";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return "false";
+	}
+	
+	
 }

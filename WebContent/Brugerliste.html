@@ -98,8 +98,19 @@ $.ajax({
 			
 			}
 			
+			//Ikke testet.
 			if (this.value == "resetPass") {
 				$(".content-container").load('resetPassword.html');
+				$.ajax({
+					type: "GET",
+					url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+					dataType: 'json',
+					data: {
+						userID: userID
+					},
+					sucess: function(data)
+					$("input[name=password]").val(data.password);
+				});
 			}
 			
 		});

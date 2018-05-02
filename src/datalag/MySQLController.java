@@ -113,4 +113,22 @@ public class MySQLController {
 		preparedStatement.close();
 	}
 	
+	//Mangler storedProcedure 'nulstilkode', og eventuelt også en ændring i viewet.
+	public boolean resetPassword(int userID, String password) throws SQLException {
+		String query = "call nulstilKode(?, ?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setString(2, password);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 }
