@@ -43,10 +43,12 @@ $.ajax({
 			 
 			$(".user-table tbody").append('<tr id="' + data[i].userID + '"><td>' + data[i].userID + '</td><td>' + data[i].userName + '</td><td>' + data[i].name + '</td><td>' + data[i].lastName + '</td><td>' + data[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteUser">Slet bruger</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
 		}
-		
-		$('#options').on('change', function() {
+
+		$('.user-table').on('change', 'tr select', function() {
 			
 			var userID = $(this).closest("tr").attr("id");
+			console.log(userID);
+
 			
 			if (this.value == "deleteUser") {
 				if (confirm("Er du sikker på at du vil fjerne denne bruger?")) {
@@ -67,7 +69,6 @@ $.ajax({
 			}
 			
 			if (this.value == "updateUser") {
-
 				$(".content-container").load('editUser.html');
 				$.ajax({
 		        	type: "GET",
@@ -98,19 +99,22 @@ $.ajax({
 			
 			}
 			
-			//Ikke testet.
 			if (this.value == "resetPass") {
 				$(".content-container").load('resetPassword.html');
 				$.ajax({
-					type: "GET",
-					url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
-					dataType: 'json',
-					data: {
-						userID: userID
-					},
-					sucess: function(data)
-					$("input[name=password]").val(data.password);
-				});
+		        	type: "GET",
+		        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+		        	dataType: 'json',
+		        	data: {
+		        		userID: userID
+		        	},
+		        	success: function(data){
+		        		console.log(data);
+		        		$("#userID").html(data.userID);
+						$("input[name=userID]").val(data.userID);
+						$("input[name=password]").val(data.password);
+		        	}
+		        });
 			}
 			
 		});

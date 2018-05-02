@@ -128,7 +128,7 @@ public class UserService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "false gretg";
+		return "false";
 	}
 
 	//Ikke testet
