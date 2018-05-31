@@ -13,9 +13,9 @@ import com.mysql.jdbc.Statement;
 
 public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://localhost:3306/testvaegt";
-	private static final String USER = "root";
-	private static final String PASSWORD = "";
+	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
+	private static final String USER = "michaelwest_dk";
+	private static final String PASSWORD = "68wukovuzovi";
 	
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
