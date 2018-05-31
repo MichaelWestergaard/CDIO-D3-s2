@@ -17,7 +17,11 @@
 				
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script>
-			$(".content-container").load("Brugerliste.html");
+			if(sessionStorage.getItem("username")){
+				$(".content-container").load("Brugerliste.html");
+			} else {
+				$(".content-container").load("login.html");
+			}
 		</script>
 	</body>
 </html>

@@ -28,7 +28,7 @@ import javax.ws.rs.FormParam;
 
 @Path("user")
 public class UserService {
-
+	
 	private MySQLController mySQLController;
 	
 	public UserService() {
@@ -40,6 +40,25 @@ public class UserService {
 		}
 	}
 
+	//Login
+	@POST
+	@Path("login")
+	public String login(@FormParam("username") String username) {
+		try {
+			List<UserDTO> users = mySQLController.getUsers();
+			
+			for (UserDTO user : users) {
+				if(user.getUserName().equals(username)) {
+					return user.getUserName();
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	//Tilføj en bruger
 	@POST
 	@Path("createUser")

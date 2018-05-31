@@ -6,4 +6,3 @@
 		console.log("create");
 		$(".content-container").load("createUser.html");
 	});
-	

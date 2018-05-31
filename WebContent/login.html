@@ -1,0 +1,37 @@
+<div class="content">
+<h1>Log Ind</h1>
+	<div>
+		<label>Brugernavn:</label>
+		<input type="text" class="text-field" name="username" value="admin">
+	</div>
+	<input type="submit" name="login" value="Log Ind">
+	
+	<script type="text/javascript">
+	$('input[name=login]').on('click', function(){
+		login();
+	});
+
+	
+	function login(){
+		$.ajax({
+			type: "POST",
+			url: "http://localhost:8080/CDIO-D3-s2/rest/user/login",
+			datatype: "json",
+			data: {
+				username: $('input[name=username]').val()
+			},
+			success: function(data){
+				console.log(data);
+				if(data != null){
+					sessionStorage.setItem("username", data);
+					$(".content-container").load("Brugerliste.html");
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+	        	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+	    	}
+		});
+	}
+	
+	</script>
+</div>
