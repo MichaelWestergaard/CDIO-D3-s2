@@ -34,6 +34,7 @@ public class MySQLController {
 	}
 		
 	public UserDTO getUser(int userID) throws SQLException {
+
 		UserDTO user = null;
 		ResultSet results = null;
 		
@@ -124,6 +125,38 @@ public class MySQLController {
 		return true;
 	}
 	
+	
+	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
+		IngredientDTO ingredient = null;
+		ResultSet results = null;
+		
+		String query = "Selet * from raavare WHERE raavare_id = =";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		
+		if(results.next()) {
+			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"), results.getString("leverandoer"));
+			preparedStatement.close();
+			return ingredient;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public void createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+		if(getIngredient(ingredientID) == null) {
+			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName, supplier);
+			
+			String query = "Call opretRaavare(?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, ingredient.getIngredientID());
+			preparedStatement.setString(2, ingredient.getIngredientName());
+			preparedStatement.setString(3, ingredient.getSupplier());
+			preparedStatement.execute();
+			preparedStatement.close();
+					
+		}
+	}
 	
 	
 	
