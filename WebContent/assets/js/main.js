@@ -70,6 +70,15 @@
         		}
         	}
 		});
-		
-		
+
+	}
+
+	function showStatusMessage(text, status){
+		$('.status-container .status-content .status-message').html(text);
+		$('.status-container .status-content').addClass(status);
+		$('.status-container').toggleClass('shown');
+		setTimeout(function(){
+			$('.status-container').toggleClass('shown');
+			$('.status-container .status-content').removeClass(status);
+		}, 3000);
 	}
