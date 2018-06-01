@@ -24,6 +24,7 @@
 				console.log(data);
 				if(data != null){
 					sessionStorage.setItem("username", data);
+					toggleNavbar();
 					$(".content-container").load("Brugerliste.html");
 				}
 			},
@@ -34,4 +35,5 @@
 	}
 	
 	</script>
+	<script src="assets/js/main.js"></script>
 </div>
