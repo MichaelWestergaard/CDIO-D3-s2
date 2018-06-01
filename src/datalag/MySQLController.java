@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
+//import com.mysql.jdbc.Connection;
+//import com.mysql.jdbc.PreparedStatement;
+//import com.mysql.jdbc.Statement;
 
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 public class MySQLController {
-	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
-//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
+//	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
+	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
@@ -164,7 +164,22 @@ public class MySQLController {
 		}
 	}
 	
+	public List<ReceptDTO> getRecepter() throws SQLException {
+		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM recept";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ReceptDTO recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
+			recepter.add(recept);
+		}
+		statement.close();
+		return recepter;
 	
+	}
 	
 	
 	
