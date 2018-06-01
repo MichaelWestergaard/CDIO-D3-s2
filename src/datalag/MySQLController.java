@@ -199,6 +199,42 @@ public class MySQLController {
 	
 	}
 	
+
+	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
+		ReceptComponentDTO receptComponent = null;
+		ResultSet results = null;
+		
+		String query = "Select * from receptkomponent WHERE recept_id = ? and raavare_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, receptID );
+		preparedStatement.setInt(2, ingredientID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nomNetto"), results.getDouble("tolerance"));
+			preparedStatement.close();
+			return receptComponent;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public void createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
+		if(getIngredient(ingredientID) == null && getRecept(receptID) == null) ) {
+			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
+			
+			String query = "Call opretRaavare(?, ?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, receptComponent.getReceptID());
+			preparedStatement.setInt(2, receptComponent.getIngredientID());
+			preparedStatement.setDouble(3, receptComponent.getNomNetto());
+			preparedStatement.setDouble(4, receptComponent.getTolerance());
+			preparedStatement.execute();
+			preparedStatement.close();
+					
+		}
+	}
+
 	public List<IngBatchDTO> getIngBatches() throws SQLException {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
 		ResultSet results = null;
@@ -213,6 +249,7 @@ public class MySQLController {
 		}
 		statement.close();
 		return ingBatches;
+
 	
 	}
 	

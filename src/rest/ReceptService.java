@@ -12,8 +12,11 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
 
+import datalag.IngredientDTO;
 import datalag.MySQLController;
+import datalag.ReceptComponentDTO;
 import datalag.ReceptDTO;
+import datalag.UserDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,7 +57,48 @@ public class ReceptService {
 		return returnMsg;
 	}
 	
-	
+	//Tilføj en ReceptKomponent, der skal laves en fejl besked
+		@POST
+		@Path("createReceptComponent")
+		public Response createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
+			try {
+				
+				List<ReceptDTO> recepts = mySQLController.getRecepter();
+				List<IngredientDTO> ingredients = mySQLController.getIngredients();
+				boolean receptFound = false;
+				boolean ingredientFound = false;		
+						
+				for (ReceptDTO recept : recepts) {
+					if(mySQLController.getRecept() != null) {
+						receptFound = true;
+					}
+				}	
+				for (IngredientDTO ingredient : ingredients) {
+					if(mySQLController.getIngredient(ingredientID) != null) {
+						ingredientFound = true;
+					}
+				}
+				if(receptFound && ingredientFound) {
+				
+					
+					
+				mySQLController.createReceptComponent(receptID, ingredientID, nomNetto, tolerance);
+		
+				}
+				
+				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
+					UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+			        builder.path("index.html");
+			        return Response.seeOther(builder.build()).build();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+			builder.path("index.html");
+			return Response.seeOther(builder.build()).build();
+		}
 	
 	
 	
