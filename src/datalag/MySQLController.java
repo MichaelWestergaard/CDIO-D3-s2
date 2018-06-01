@@ -182,7 +182,22 @@ public class MySQLController {
 	
 	}
 	
+	public List<IngredientDTO> getIngredients() throws SQLException {
+		List<IngredientDTO> ingredients = new ArrayList<IngredientDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM raavare";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			IngredientDTO ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"), results.getString("leverandoer"));
+			ingredients.add(ingredient);
+		}
+		statement.close();
+		return ingredients;
 	
+	}
 	
 	
 	

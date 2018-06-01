@@ -7,11 +7,13 @@
 	$('#createRecept').on('click', function(){
 		$(".content-container").load("createRecept.html");
 	});
-	
+	$('#createIngredient').on('click', function(){
+		$(".content-container").load("createIngredient.html");
+	});
 	$('input[name=login]').on('click', function(){
 		login();
 	});
-		
+	
 	function login(){
 		$.ajax({
 			type: "POST",
@@ -56,6 +58,7 @@
 	        					break;
 	        				case "Pharmacist":
 	        					$('.navbar .navigation').append('<li><a href="#" id="receptliste">Receptliste</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="ingredientliste">Råvareliste</a></li>');
 	        					break;
 	        				case "Produktionsleder":
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Produktionsleder</a></li>');
