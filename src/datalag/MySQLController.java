@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
+//import com.mysql.jdbc.Connection;
+//import com.mysql.jdbc.PreparedStatement;
+//import com.mysql.jdbc.Statement;
 
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 public class MySQLController {
-	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
-//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
+//	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
+	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
@@ -199,6 +199,7 @@ public class MySQLController {
 	
 	}
 	
+
 	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
 		ResultSet results = null;
@@ -233,6 +234,38 @@ public class MySQLController {
 					
 		}
 	}
+
+	public List<IngBatchDTO> getIngBatches() throws SQLException {
+		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
+		ResultSet results = null;
+//		ResultSet nameResults = null;
+//		int nameCounter = 0;
+		
+//		String names = null;
+		String query = "SELECT * FROM raavarebatch";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+//		while(results.next()) {
+//			if(nameCounter > 0) {
+//				names += ",";
+//			}
+//			names += Integer.toString(results.getInt("raavare_id"));
+//			nameCounter++;
+//		}
+//		
+//		String nameQuery = "SELECT * FROM raavare WHERE raavare_id IN (" + names + ")";
+//		statement = (Statement) getConnection().createStatement();
+//		nameResults = statement.executeQuery(nameQuery);
+		
+		while(results.next()) {
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("maengde"));
+			ingBatches.add(ingBatch);
+		}
+		statement.close();
+		return ingBatches;
+
 	
+	}
 	
 }

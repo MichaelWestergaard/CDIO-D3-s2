@@ -18,6 +18,12 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="status-container">
+			<div class="status-content">
+				<div class="status-message"></div>
+			</div>
+		</div>
 				
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<script src="assets/js/main.js"></script>
@@ -60,6 +66,9 @@
 
 					case "ingredientliste":
 						$(".content-container").load("ingredientliste.html");
+						break;
+					case "ingbatchliste":
+						$(".content-container").load("ingbatchliste.html");
 						break;
 						
 					default:
