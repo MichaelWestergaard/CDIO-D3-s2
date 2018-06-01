@@ -1,12 +1,11 @@
 	$('#homeBtn').on('click', function(){
-		console.log("home");
-		$(".content-container").empty();
 		$(".content-container").load("startpage.html");
 	});
 	$('#createBtn').on('click', function(){
-		console.log("create");
-		$(".content-container").empty();
 		$(".content-container").load("createUser.html");
+	});
+	$('#createRecept').on('click', function(){
+		$(".content-container").load("createRecept.html");
 	});
 	
 	$('input[name=login]').on('click', function(){
@@ -56,7 +55,7 @@
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Brugerliste</a></li>');
 	        					break;
 	        				case "Pharmacist":
-	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Pharmacist</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="receptliste">Receptliste</a></li>');
 	        					break;
 	        				case "Produktionsleder":
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Produktionsleder</a></li>');

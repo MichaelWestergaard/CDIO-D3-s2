@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import datalag.UserDTO;
 import datalag.IUserDAO;
+import datalag.IngredientDTO;
 import datalag.MySQLController;
 import datalag.Roles;
 import datalag.UserDAO;
@@ -168,5 +169,26 @@ public class UserService {
 		return "false";
 	}
 	
+	//Tilføj en Råvare
+	@POST
+	@Path("createIngredient")
+	public Response createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
+		try {
+			mySQLController.createIngredient(ingredientID, ingredientName, supplier);
+			IngredientDTO createIngredient = mySQLController.getIngredient(ingredientID);
+			
+			if(createIngredient != null) {
+				UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+		        builder.path("index.html");
+		        return Response.seeOther(builder.build()).build();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+		builder.path("index.html");
+		return Response.seeOther(builder.build()).build();
+	}
 	
 }

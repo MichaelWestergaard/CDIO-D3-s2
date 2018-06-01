@@ -143,6 +143,25 @@ table {
 	font-size: 12px; 
 }
 
+#createRecept {
+	margin-top: 20px;
+	display: block;
+	background: #6666ff;
+	color: #fff;
+	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	border: 0;
+	font-weight: 700;
+	width: 100%;
+	outline: none;
+	cursor: pointer;
+	padding: 10px;
+	transition: all 0.15s ease;
+	text-align: center;
+	text-decoration: none;
+	font-size: 12px; 
+}
+
 .user-table {
 	border-collapse: collapse;
 	overflow: hidden;
