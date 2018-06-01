@@ -11,12 +11,13 @@
 		<tbody></tbody>
 	</table>
 	<a href="javascript:;" id="createRecept">Opret recept</a>
+	<a href="javascript:;" id="homeBtn">Tilbage</a>
 </div>
 
 <script type="text/javascript" src="assets/js/main.js"></script>
 
 <script>
-.ajax({
+$.ajax({
 	type: 'GET',
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptList',
 	dataType: 'json',

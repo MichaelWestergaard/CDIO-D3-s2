@@ -13,6 +13,8 @@
 					<ul class="navigation">
 						<li><a href="#" id="opretRåvare">Opret råvare</a></li>
 						<li><a href="#" id="logout">Log Ud</a></li>
+						<li><a href="#" id="brugerliste">Brugerliste</a></li>
+						<li><a href="#" id="receptliste">Receptliste</a></li>
 					</ul>
 				</div>
 				<div class="content-container">
@@ -49,6 +51,14 @@
 						$(".content-container").load("createRaavare.html");
 						break;
 
+					case "brugerliste":
+						$(".content-container").load("Brugerliste.html");
+						break;
+	
+					case "receptliste":
+						$(".content-container").load("receptliste.html");
+						break;					
+						
 					default:
 						console.log("Error");
 						break;
