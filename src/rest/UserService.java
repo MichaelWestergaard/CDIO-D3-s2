@@ -3,29 +3,22 @@ package rest;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import datalag.UserDTO;
-import datalag.IUserDAO;
-import datalag.IngredientDTO;
 import datalag.MySQLController;
-import datalag.Roles;
-import datalag.UserDAO;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.servlet.ServletContext;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
-
+import datalag.UserDTO;
 
 @Path("user")
 public class UserService {
@@ -44,20 +37,37 @@ public class UserService {
 	//Login
 	@POST
 	@Path("login")
-	public int login(@FormParam("username") String username) {
+	public String login(@FormParam("username") String username) {
+		JsonObject response = new JsonObject();
+		
 		try {
 			List<UserDTO> users = mySQLController.getUsers();
 			
 			for (UserDTO user : users) {
 				if(user.getUserName().equals(username)) {
-					return user.getUserID();
+					response.addProperty("response_status", "success");
+					response.addProperty("response_message", user.getUserID());
+					return response.toString();
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			response.addProperty("response_status", "error");
+			JsonObject errorMessage = new JsonObject();
+			errorMessage.addProperty("response_code", e.getErrorCode());
+			errorMessage.addProperty("response_message", "Du kunne ikke logge ind, prøv igen.");
+			response.add("error", errorMessage);
+			
+			return response.toString();
 		}
-		return 0;
+		
+		//Måske lav en metode til den her
+		response.addProperty("response_status", "error");
+		JsonObject errorMessage = new JsonObject();
+		errorMessage.addProperty("response_code", 0);
+		errorMessage.addProperty("response_message", "Du kunne ikke logge ind, prøv igen.");
+		response.add("error", errorMessage);
+		
+		return response.toString();
 	}
 	
 	//Tilføj en bruger
@@ -169,26 +179,5 @@ public class UserService {
 		return "false";
 	}
 	
-	//Tilføj en Råvare
-	@POST
-	@Path("createIngredient")
-	public Response createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
-		try {
-			mySQLController.createIngredient(ingredientID, ingredientName, supplier);
-			IngredientDTO createIngredient = mySQLController.getIngredient(ingredientID);
-			
-			if(createIngredient != null) {
-				UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-		        builder.path("index.html");
-		        return Response.seeOther(builder.build()).build();
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-		builder.path("index.html");
-		return Response.seeOther(builder.build()).build();
-	}
 	
 }

@@ -153,12 +153,6 @@ table {
 	color: #575962;
 }
 
-
-
-
-
-
-
 #updateUsers td {
 	text-align: center;
 }
@@ -198,4 +192,32 @@ table {
 	text-decoration: none;
 	font-size: 14px;
 	width: 100%;
+}
+
+.status-container {
+	position: fixed;
+	top: 10px;
+	right: 10px;
+}
+
+.status-container .status-content {
+	position: relative;
+	padding: 15px;
+	border-radius: 3px;
+	opacity: 0;
+	color: #fff;
+	box-shadow: 0 0 10px #0003;
+	transition: .8s all ease;
+}
+
+.status-container.shown .status-content {
+	opacity: .7;
+}
+
+.status-container .status-content.error {
+	background-color: #f44336;
+}
+
+.status-container .status-content.success {
+	background-color: #43A047;
 }
