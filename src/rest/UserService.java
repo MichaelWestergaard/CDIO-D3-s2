@@ -44,20 +44,20 @@ public class UserService {
 	//Login
 	@POST
 	@Path("login")
-	public String login(@FormParam("username") String username) {
+	public int login(@FormParam("username") String username) {
 		try {
 			List<UserDTO> users = mySQLController.getUsers();
 			
 			for (UserDTO user : users) {
 				if(user.getUserName().equals(username)) {
-					return user.getUserName();
+					return user.getUserID();
 				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 	
 	//Tilføj en bruger

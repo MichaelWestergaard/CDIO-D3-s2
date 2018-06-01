@@ -23,7 +23,7 @@
 			success: function(data){
 				console.log(data);
 				if(data != null){
-					sessionStorage.setItem("username", data);
+					sessionStorage.setItem("userID", data);
 					toggleNavbar();
 					$(".content-container").load("Brugerliste.html");
 				}
