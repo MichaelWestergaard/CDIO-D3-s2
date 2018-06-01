@@ -136,9 +136,10 @@ public class MySQLController {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;
 		
-		String query = "Selet * from raavare WHERE raavare_id = =";
+		String query = "Select * from raavare WHERE raavare_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingredientID);
+		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
 			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"), results.getString("leverandoer"));

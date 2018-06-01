@@ -13,5 +13,21 @@
 	
 	
 	function toggleNavbar(){
+		//Fjern alle knapper
+		$('.navbar .navigation').empty();
+
+		//Få brugerens roller
+		$.ajax({
+        	type: "GET",
+        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+        	dataType: 'json',
+        	data: {
+        		userID: sessionStorage.getItem("userID")
+        	},
+        	success: function(data){
+        		console.log(data.role);
+        	}
+		});
+		
 		$('.navbar').toggle();
 	}
