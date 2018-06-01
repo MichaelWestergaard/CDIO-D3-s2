@@ -6,9 +6,14 @@
 		<link rel="stylesheet" href="assets/css/style.css">
 	</head>
 	<body>
-
+		
 		<div class="container">
 			<div class="row">
+				<div class="navbar">
+					<ul class="navigation">
+						<li><a href="#" id="logout">Log Ud</a></li>
+					</ul>
+				</div>
 				<div class="content-container">
 					<!-- Loaded content here -->
 				</div>
@@ -16,12 +21,33 @@
 		</div>
 				
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="assets/js/main.js"></script>
 		<script>
 			if(sessionStorage.getItem("username")){
 				$(".content-container").load("Brugerliste.html");
 			} else {
+				toggleNavbar();
 				$(".content-container").load("login.html");
 			}
+			
+			$(".navigation li a").click(function(event) {
+				event.preventDefault();
+				var buttonVal = $(this).attr("id");
+
+				switch(buttonVal){
+
+					case "logout":
+						sessionStorage.clear();
+						toggleNavbar();
+						$(".content-container").load("login.html");
+						break;
+
+					default:
+						console.log("Error");
+						break;
+				}
+				
+			});
 		</script>
 	</body>
 </html>

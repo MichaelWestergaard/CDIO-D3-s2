@@ -43,7 +43,7 @@ body {
 	margin-right: auto;
 	max-width: 100%;
 	width: 1140px;
-	height: inherit;
+	/*height: inherit;*/
 }
 
 .container .row {
@@ -51,11 +51,12 @@ body {
 	flex-wrap: wrap;
 	margin-right: -15px;
 	margin-left: -15px;
-	height: inherit;
+	/*height: inherit;*/
 }
 
 .content-container {
 	margin: auto;
+	/*width: 100%;*/
 	background: #fff;
 	border-radius: 2px;
 	position: relative;
@@ -178,4 +179,34 @@ table {
 
 #updateUsers td {
 	text-align: center;
+}
+
+.navbar {
+	width: 100%;	
+}
+
+.navigation {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	padding-bottom: 20px;
+}
+
+.navigation li a {
+	display: block;
+	margin-top: 20px;
+	display: block;
+	background: #5b73c0;
+	color: #fff;
+	box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+	border-radius: 4px;
+	border: 0;
+	outline: none;
+	cursor: pointer;
+	padding: 10px;
+	transition: all 0.15s ease;
+	text-align: center;
+	text-decoration: none;
+	font-size: 14px;
+	max-width: 10%;
 }
