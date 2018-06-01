@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 
 import datalag.MySQLController;
 import datalag.IngredientDTO;
+import datalag.IngBatchDTO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,7 +55,23 @@ public class IngredientService {
 		return returnMsg;
 	}
 	
-	
+	//Råvarebatchliste
+	@GET
+	@Path("getIngBatchList")
+	public String getIngBatchList() {
+		String returnMsg = "";
+			
+		try {
+			List<IngBatchDTO> ingBatches = mySQLController.getIngBatches();
+			String json = new Gson().toJson(ingBatches);
+			returnMsg = json;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return returnMsg;
+	}	
 	
 	
 	

@@ -105,7 +105,7 @@ table {
 	display: block;
 }
 
-#homeBtn, #createBtn, #createRecept, #createIngredient {
+#homeBtn, #createBtn, #createRecept, #createIngredient, #createIngBatch {
 	margin-top: 20px;
 	display: block;
 	background: #8080ff;

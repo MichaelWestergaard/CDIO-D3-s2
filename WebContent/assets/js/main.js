@@ -61,7 +61,7 @@
 	        					$('.navbar .navigation').append('<li><a href="#" id="ingredientliste">Råvareliste</a></li>');
 	        					break;
 	        				case "Produktionsleder":
-	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Produktionsleder</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste">Råvarebatches</a></li>');
 	        					break;
 	        				case "Laborant":
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Laborant</a></li>');
