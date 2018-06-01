@@ -11,9 +11,15 @@ import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.Statement;
+
 public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
