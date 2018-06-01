@@ -4,12 +4,12 @@ public class IngBatchDTO {
 
 	int ingBatchID;
 	int ingredientID;
-	String ingBatchName;
+	String amount;
 	
-	public IngBatchDTO(int ingBatchID, int ingredientID, String ingBatchName) {
+	public IngBatchDTO(int ingBatchID, int ingredientID, String amount) {
 		this.ingBatchID = ingBatchID;
 		this.ingredientID = ingredientID;
-		this.ingBatchName = ingBatchName;
+		this.amount = amount;
 	}
 	
 	

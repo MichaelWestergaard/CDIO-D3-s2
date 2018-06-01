@@ -202,25 +202,10 @@ public class MySQLController {
 	public List<IngBatchDTO> getIngBatches() throws SQLException {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
 		ResultSet results = null;
-//		ResultSet nameResults = null;
-//		int nameCounter = 0;
-		
-//		String names = null;
+
 		String query = "SELECT * FROM raavarebatch";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
-//		while(results.next()) {
-//			if(nameCounter > 0) {
-//				names += ",";
-//			}
-//			names += Integer.toString(results.getInt("raavare_id"));
-//			nameCounter++;
-//		}
-//		
-//		String nameQuery = "SELECT * FROM raavare WHERE raavare_id IN (" + names + ")";
-//		statement = (Statement) getConnection().createStatement();
-//		nameResults = statement.executeQuery(nameQuery);
 		
 		while(results.next()) {
 			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("maengde"));

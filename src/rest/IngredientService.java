@@ -55,6 +55,25 @@ public class IngredientService {
 		return returnMsg;
 	}
 	
+	@GET
+	@Path("getIngredient")
+	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
+		String returnMsg = "";
+		
+		try {
+			IngredientDTO ingredient = mySQLController.getIngredient(ingredientID);
+			String json = new Gson().toJson(ingredient);
+			returnMsg = json;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return returnMsg;
+	}
+	
+	
+	
+	
 	//Råvarebatchliste
 	@GET
 	@Path("getIngBatchList")
