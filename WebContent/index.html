@@ -11,8 +11,6 @@
 			<div class="row">
 				<div class="navbar">
 					<ul class="navigation">
-						<li><a href="#" id="opretRåvare">Opret råvare</a></li>
-						<li><a href="#" id="logout">Log Ud</a></li>
 					</ul>
 				</div>
 				<div class="content-container">
@@ -25,35 +23,41 @@
 		<script src="assets/js/main.js"></script>
 		<script>
 
-		console.log(sessionStorage.getItem("userID"));
 			if(sessionStorage.getItem("userID")){
-				$(".content-container").load("Brugerliste.html");
-			} else {
 				toggleNavbar();
+				$(".content-container").load("startpage.html");
+			} else {
+				$('.navbar').hide();
 				$(".content-container").load("login.html");
 			}
 			
-			$(".navigation li a").click(function(event) {
+			
+			$(document).on('click', '.navbar ul li a', function(event){
 				event.preventDefault();
 				var buttonVal = $(this).attr("id");
-
+				
+				console.log(buttonVal);
+				
 				switch(buttonVal){
 
 					case "logout":
 						sessionStorage.clear();
-						toggleNavbar();
+						$('.navbar').hide();
 						$(".content-container").load("login.html");
 						break;
 						
-					case "opretRåvare":
-						$(".content-container").load("createRaavare.html");
+					case "userList":
+						$(".content-container").load("Brugerliste.html");
+						break;
+						
+					case "startpage":
+						$(".content-container").load("startpage.html");
 						break;
 
 					default:
 						console.log("Error");
 						break;
 				}
-				
 			});
 		</script>
 	</body>

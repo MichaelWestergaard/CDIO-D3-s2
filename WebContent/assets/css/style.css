@@ -183,7 +183,8 @@ table {
 }
 
 .navbar {
-	width: 100%;	
+	width: 100%;
+	text-align: center;
 }
 
 .navigation {
@@ -195,7 +196,8 @@ table {
 
 .navigation li {
 	display: inline-block;
-	width: 10%;
+	width: 7vw;
+	margin: 0 5px;
 }
 
 .navigation li a {
