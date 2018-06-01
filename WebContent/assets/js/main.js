@@ -66,9 +66,6 @@
 	        				case "Produktionsleder":
 	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste">Råvarebatches</a></li>');
 	        					break;
-	        				case "Laborant":
-	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Laborant</a></li>');
-	        					break;
 	        			}
 	        		}
 	        		$('.navbar .navigation').append('<li><a href="#" id="logout">Log Ud</a></li>');
