@@ -18,16 +18,19 @@
 		$.ajax({
 			type: "POST",
 			url: "http://localhost:8080/CDIO-D3-s2/rest/user/login",
-			datatype: "json",
+			datatype: "application/json",
 			data: {
 				username: $('input[name=username]').val()
 			},
 			success: function(data){
-				if(data != null){
-					sessionStorage.setItem("userID", data);
+				data = JSON.parse(data);
+				if(data.response_status == "success"){
+					sessionStorage.setItem("userID", data.response_message);
 					toggleNavbar();
 					$(".content-container").empty();
 					$(".content-container").load("startpage.html");
+				} else {
+					showStatusMessage("Fejl " + data.error.response_code + ": " + data.error.response_message, "error");
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
