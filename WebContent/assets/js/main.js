@@ -1,6 +1,9 @@
-	$('#homeBtn').on('click', function(){
-		$(".content-container").load("startpage.html");
-	});
+	
+	$('#homeBtn').click(function(e) {
+		e.preventDefault();
+		$(".content-container").load($(this).attr("href"));
+    });
+	
 	$('#createBtn').on('click', function(){
 		$(".content-container").load("createUser.html");
 	});
@@ -18,8 +21,6 @@
 		e.preventDefault();
 		
 		var form = $(this).closest("form");
-		
-		console.log("Method: " + $(form).attr('method') + ", action: " + $(form).attr('action'));
 		
 		$.ajax({
            type: $(form).attr('method'),

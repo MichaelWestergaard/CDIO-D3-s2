@@ -1,43 +1,42 @@
 ﻿<div class="content">
-
-		<table class="user-table">
-			<thead>
-				<tr>
-					<th>BrugerID</th>
-					<th>Brugernavn</th>
-					<th>Fornavn</th>
-					<th>Efternavn</th>
-					<th>Password</th>
-					<th>CPR</th>
-					<th>Rolle</th>
-					<th>Aktiv</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td><input name="userID" disabled="true"></td>
-					<!--id skal ikke kunne ændres-->
-					<td><input type="text" name="userName" form="my_form" /></td>
-					<td><input type="text" name="firstName" form="my_form" /></td>
-					<td><input type="text" name="lastName" form="my_form" /></td>
-					<td><input type="text" name="password" form="my_form" /></td>
-					<td><input type="text" name="CPR" form="my_form" /></td>
-					<td class="align-left">
-						<input type="checkbox" name="role" value="Admin">Admin <br>
-						<input type="checkbox" name="role" value="Pharmacist">Pharmacist <br>
-						<input type="checkbox" name="role" value="Laborant">Laborant <br>
-						<input type="checkbox" name="role" value="Produktionsleder">Produktionsleder
-					</td>
-					<td>
-						<input type="radio" name="active" value="1">Ja
-						<input type="radio" name="active" value="0">Nej
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<input type="submit" name="updateUser" value="Gem ændringerne">
-	<a href="javascript:;" id="homeBtn">Tilbage</a>
+	<table class="user-table">
+		<thead>
+			<tr>
+				<th>BrugerID</th>
+				<th>Brugernavn</th>
+				<th>Fornavn</th>
+				<th>Efternavn</th>
+				<th>Password</th>
+				<th>CPR</th>
+				<th>Rolle</th>
+				<th>Aktiv</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input name="userID" disabled="true"></td>
+				<!--id skal ikke kunne ændres-->
+				<td><input type="text" name="userName" form="my_form" /></td>
+				<td><input type="text" name="firstName" form="my_form" /></td>
+				<td><input type="text" name="lastName" form="my_form" /></td>
+				<td><input type="text" name="password" form="my_form" /></td>
+				<td><input type="text" name="CPR" form="my_form" /></td>
+				<td class="align-left">
+					<input type="checkbox" name="role" value="Admin">Admin <br>
+					<input type="checkbox" name="role" value="Pharmacist">Pharmacist <br>
+					<input type="checkbox" name="role" value="Laborant">Laborant <br>
+					<input type="checkbox" name="role" value="Produktionsleder">Produktionsleder
+				</td>
+				<td>
+					<input type="radio" name="active" value="1">Ja
+					<input type="radio" name="active" value="0">Nej
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" name="updateUser" value="Gem ændringerne">
+	<a href="Brugerliste.html" id="homeBtn">Tilbage</a>
 </div>
 
 <script type="text/javascript">
