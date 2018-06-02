@@ -24,39 +24,10 @@ $.ajax({
 	dataType: 'json',
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
-			
 			$(".user-table tbody").append('<tr id="' + data[i].ingredientID + '"><td>' + data[i].ingredientID + '</td><td>' + data[i].ingredientName + '</td><td> ' + data[i].supplier + ' </td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteIngredient">Slet råvare</option><option value="updateIngredient">Opdater råvare</option><option value="resetIngredient">Nulstil råvare</option></select></td></tr>');
-	
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+					
+	}	
 	
 });
 </script>

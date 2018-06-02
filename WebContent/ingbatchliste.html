@@ -23,15 +23,15 @@ $.ajax({
 	type: 'GET',
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngBatchList',
 	dataType: 'json',
+	async: false,
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
 			$.ajax({
 				type: 'GET',
 				url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngredient',
 				dataType: 'json',
-				data: {
-					ingredientID : data[i].ingredientID
-				},
+				data: {ingredientID: data[i].ingredientID},
+				async: false,
 				success: function(ingredient){
 					$(".user-table tbody").append('<tr id="' + data[i].ingBatchID + '"><td>' + data[i].ingBatchID + '</td><td>' + data[i].ingredientID + '</td><td> ' + ingredient.ingredientName + '</td><td> ' + data[i].amount + ' </td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteIngBatch">Slet råvarebatch</option><option value="updateIngBatch">Opdater råvarebatch</option><option value="resetIngBatch">Nulstil råvarebatch</option></select></td></tr>');	
 				
@@ -39,10 +39,10 @@ $.ajax({
 				
 			});
 			
-
 		}	
 	
 	}	
 	
 });
+
 </script>
