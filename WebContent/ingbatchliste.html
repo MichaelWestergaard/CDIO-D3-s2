@@ -33,8 +33,7 @@ $.ajax({
 				data: {ingredientID: data[i].ingredientID},
 				async: false,
 				success: function(ingredient){
-					$(".user-table tbody").append('<tr id="' + data[i].ingBatchID + '"><td>' + data[i].ingBatchID + '</td><td>' + data[i].ingredientID + '</td><td> ' + ingredient.ingredientName + '</td><td> ' + data[i].amount + ' </td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteIngBatch">Slet råvarebatch</option><option value="updateIngBatch">Opdater råvarebatch</option><option value="resetIngBatch">Nulstil råvarebatch</option></select></td></tr>');	
-				
+					$(".user-table tbody").append('<tr id="' + data[i].ingBatchID + '"><td>' + data[i].ingBatchID + '</td><td>' + data[i].ingredientID + '</td><td> ' + ingredient.ingredientName + '</td><td> ' + data[i].amount + ' </td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteIngBatch">Slet råvarebatch</option><option value="updateIngBatch">Opdater råvarebatch</option><option value="resetIngBatch">Nulstil råvarebatch</option></select></td></tr>');		
 				}
 				
 			});
