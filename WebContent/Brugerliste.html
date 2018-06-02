@@ -106,25 +106,25 @@ $.ajax({
 				}
 				
 				if (this.value == "resetPass") {
-					$(".content-container").load('resetPassword.html');
+					
 					$.ajax({
-			        	type: "GET",
-			        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+						type: "POST",
+						url: "http://localhost:8080/CDIO-D3-s2/rest/user/resetPassword",
 			        	dataType: 'json',
-			        	data: {
-			        		userID: userID
-			        	},
-			        	success: function(data){
+						data: {
+							userID: userID,
+							password: generatePassword()
+						},
+						success: function(data){
 			        		if(data.response_status == "success"){
-				        		var response = JSON.parse(data.response_message);
-				        		$("#userID").html(response.userID);
-								$("input[name=userID]").val(response.userID);
-								$("input[name=password]").val(response.password);
-			        		} else {
-			        			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-			        		}
-			        	}
-			        });
+								$(".content-container").load("Brugerliste.html");
+							}
+			        		showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+			   	        	alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			   	    	}
+					});
 				}
 				
 			});
@@ -133,4 +133,31 @@ $.ajax({
 		}
 	}
 });
+
+function generatePassword(){
+	var charList = '';
+	var password = '';
+	
+	//password.dtu.dk's regler
+    var charRules = {
+		'numbers': '0123456789',
+		'lowercase': 'abcdefghijklmnopqrstuvwxyz',
+		'uppercase': 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+		'special': '.-_+!?='
+	    };
+    
+    $.each(charRules, function(key, value) {
+    	charList += value;
+	    });
+	    
+    //Loop fra 0 til 6 - 14 (tilfældigt)
+	    for (var i = 0; i < Math.floor((Math.random() * 14) + 6); i++) {
+		//vælg et tilfældigt tegn
+		var index = Math.floor(Math.random() * charList.length);
+		
+		password += charList[index];
+	    }
+	    
+	    return password;
+}
 </script>
