@@ -296,4 +296,39 @@ public class MySQLController {
 		}
 	}
 	
+	public ProductBatchDTO getProductBatch(int productBatchID) throws SQLException {
+		ProductBatchDTO productBatch = null;
+		ResultSet results = null;
+		
+		String query = "Select * from productbatch WHERE pb_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, productBatchID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("stauts"), results.getInt("recept_id"));
+			preparedStatement.close();
+			return productBatch;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public boolean createProductBatch(int productBatchID, int status, int receptID) throws SQLException {
+		if(getProductBatch(productBatchID) == null) {
+			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID);
+			
+			String query = "Call opretProduktBatch(?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, productBatch.getProductBatchID());
+			preparedStatement.setInt(2, productBatch.getStatus());
+			preparedStatement.setInt(3, productBatch.getReceptID());
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} else {
+			return false;	
+		}
+	}
+	
 }
