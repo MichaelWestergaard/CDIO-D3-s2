@@ -76,22 +76,22 @@
         	success: function(data){
         		var response = JSON.parse(data.response_message);
         		if(data != null){
-	        		$('.navbar .navigation').append('<li><a href="#" id="startpage">Forside</a></li>');
+	        		$('.navbar .navigation').append('<li><a href="#" id="startpage"><span>Forside</span></a></li>');
 	        		for (var i = 0; i < response.role.length; i++) {
 	        			switch(response.role[i]){        			
 	        				case "Admin":
-	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Brugerliste</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="userList"><span>Brugerliste</span></a></li>');
 	        					break;
 	        				case "Pharmacist":
-	        					$('.navbar .navigation').append('<li><a href="#" id="receptliste">Receptliste</a></li>');
-	        					$('.navbar .navigation').append('<li><a href="#" id="ingredientliste">Råvareliste</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="receptliste"><span>Receptliste</span></a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="ingredientliste"><span>Råvareliste</span></a></li>');
 	        					break;
 	        				case "Produktionsleder":
-	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste">Råvarebatches</a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste"><span>Råvarebatches</span></a></li>');
 	        					break;
 	        			}
 	        		}
-	        		$('.navbar .navigation').append('<li><a href="#" id="logout">Log Ud</a></li>');
+	        		$('.navbar .navigation').append('<li><a href="#" id="logout"><span>Log Ud</span></a></li>');
 	        		$('.navbar').show();
         		}
         	}

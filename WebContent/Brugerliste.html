@@ -58,9 +58,11 @@ $.ajax({
 			        		userID: userID
 			        	},
 			        	success: function(data){
-			        		if(data == "true"){
+			        		data = JSON.parse(data);
+			        		if(data.response_status == "success"){
 			        			$(".user-table tr#" + userID).remove();
 			        		}
+			        		showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 			        	}
 			        });
 			    }
@@ -76,22 +78,28 @@ $.ajax({
 		        		userID: userID
 		        	},
 		        	success: function(data){
-		        		$("input[name=userID]").val(data.userID);
-		        		$("input[name=userName]").val(data.userName);
-						$("input[name=firstName]").val(data.name);
-						$("input[name=lastName]").val(data.lastName);
-						$("input[name=password]").val(data.password);
-						$("input[name=CPR]").val(data.cpr);
-						
-						for (var j = 0; j < data.role.length; j++) {
-							$("input[name=role][value=" + data.role[j] + "]").prop("checked", true);
-						}
-						
-						if(data.active == 1){
-							$("input[name=active][value=1]").prop("checked", true);
-						} else {
-							$("input[name=active][value=0]").prop("checked", true);
-						}
+		        		if(data.response_status == "success"){
+			        		var response = JSON.parse(data.response_message);
+			        		
+			        		$("input[name=userID]").val(response.userID);
+			        		$("input[name=userName]").val(response.userName);
+							$("input[name=firstName]").val(response.name);
+							$("input[name=lastName]").val(response.lastName);
+							$("input[name=password]").val(response.password);
+							$("input[name=CPR]").val(response.cpr);
+							
+							for (var j = 0; j < response.role.length; j++) {
+								$("input[name=role][value=" + response.role[j] + "]").prop("checked", true);
+							}
+							
+							if(response.active == 1){
+								$("input[name=active][value=1]").prop("checked", true);
+							} else {
+								$("input[name=active][value=0]").prop("checked", true);
+							}
+		        		} else {
+		        			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+		        		}
 		        	}
 		        });
 			
@@ -107,9 +115,14 @@ $.ajax({
 		        		userID: userID
 		        	},
 		        	success: function(data){
-		        		$("#userID").html(data.userID);
-						$("input[name=userID]").val(data.userID);
-						$("input[name=password]").val(data.password);
+		        		if(data.response_status == "success"){
+			        		var response = JSON.parse(data.response_message);
+			        		$("#userID").html(response.userID);
+							$("input[name=userID]").val(response.userID);
+							$("input[name=password]").val(response.password);
+		        		} else {
+		        			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+		        		}
 		        	}
 		        });
 			}

@@ -58,6 +58,7 @@
 		$.ajax({
         	type: "POST",
         	url: "http://localhost:8080/CDIO-D3-s2/rest/user/updateUser",
+        	dataType: 'json',
         	data: {
         		userID: userID,
         		userName: userName,
@@ -69,11 +70,10 @@
         		active: active
         	},
         	success: function(data){
-        		if(data == "true"){
+        		if(data.response_status == "success"){
         			$(".content-container").load("Brugerliste.html");
-        		} else {
-        			console.log("fejl");
         		}
+        		showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
         	},
         	error: function(xhr, ajaxOptions, thrownError) {
               alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
