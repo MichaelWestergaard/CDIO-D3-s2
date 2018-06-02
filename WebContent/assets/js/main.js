@@ -28,7 +28,10 @@
            success: function(data){
         	   data = JSON.parse(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-        	   $('.content-container').load($(form).attr('id'));
+
+        	   if(data.response_status == "success"){
+            	   $('.content-container').load($(form).attr('id'));
+        	   }
            }
          });
 	});
@@ -58,6 +61,7 @@
 	}
 
 	function toggleNavbar(){
+		console.log(sessionStorage.getItem("userID"));
 		//Fjern alle knapper
 		$('.navbar .navigation').empty();
 		var userID = sessionStorage.getItem("userID");
@@ -70,10 +74,11 @@
         		userID: userID
         	},
         	success: function(data){
+        		var response = JSON.parse(data.response_message);
         		if(data != null){
 	        		$('.navbar .navigation').append('<li><a href="#" id="startpage">Forside</a></li>');
-	        		for (var i = 0; i < data.role.length; i++) {
-	        			switch(data.role[i]){        			
+	        		for (var i = 0; i < response.role.length; i++) {
+	        			switch(response.role[i]){        			
 	        				case "Admin":
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Brugerliste</a></li>');
 	        					break;

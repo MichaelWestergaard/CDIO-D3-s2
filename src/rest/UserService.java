@@ -89,7 +89,7 @@ public class UserService extends ResponseHandler {
 	@Path("getUser")
 	public String getUser(@QueryParam("userID") int userID) {
 		try {
-			return createResponse("success", 1, String.valueOf(mySQLController.getUser(userID)));
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getUser(userID)));
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
