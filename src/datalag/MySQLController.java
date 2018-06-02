@@ -77,7 +77,7 @@ public class MySQLController {
 		return users;
 	}
 	
-	public void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
+	public boolean createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
 		if(getUser(userID) == null) {
 			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active);
 			
@@ -93,6 +93,9 @@ public class MySQLController {
 			preparedStatement.setInt(8, user.getActive());
 			preparedStatement.execute();
 			preparedStatement.close();
+			return true;
+		} else {
+			return false;
 		}		
 	}
 	
@@ -112,12 +115,13 @@ public class MySQLController {
 			return true;
 	}
 	
-	public void deleteUser(int userID) throws SQLException {
+	public boolean deleteUser(int userID) throws SQLException {
 		String query = "call sletBruger(?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
 		preparedStatement.execute();
 		preparedStatement.close();
+		return true;
 	}
 	
 	//Mangler storedProcedure 'nulstilkode', og eventuelt også en ændring i viewet.
@@ -221,7 +225,7 @@ public class MySQLController {
 	
 	//Mangler getRecept????
 	public void createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
-		if(getIngredient(ingredientID) == null && getRecept(receptID) == null) ) {
+		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
 			String query = "Call opretRaavare(?, ?, ?, ?)";
@@ -252,6 +256,38 @@ public class MySQLController {
 		return ingBatches;
 
 	
+	}
+	
+	public ReceptDTO getRecept(int receptID) throws SQLException {
+		ReceptDTO recept = null;
+		ResultSet results = null;
+		
+		String query = "Select * from recept WHERE recept_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, receptID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
+			preparedStatement.close();
+			return recept;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public void createRecept(int receptID, String receptName) throws SQLException {
+		if(getRecept(receptID) == null) {
+			ReceptDTO recept = new ReceptDTO(receptID, receptName);
+			
+			String query = "Call opretRecept(?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, recept.getReceptID());
+			preparedStatement.setString(2, recept.getReceptName());
+			preparedStatement.execute();
+			preparedStatement.close();
+					
+		}
 	}
 	
 }

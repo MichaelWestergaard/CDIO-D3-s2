@@ -14,6 +14,28 @@
 		login();
 	});
 	
+	$('form').submit(function(e){
+		e.preventDefault();
+		
+		var form = $(this).closest("form");
+		
+		console.log("Method: " + $(form).attr('method') + ", action: " + $(form).attr('action'));
+		
+		$.ajax({
+           type: $(form).attr('method'),
+           url: $(form).attr('action'),
+           data: $('form').serialize(),
+           success: function(data){
+        	   data = JSON.parse(data);
+        	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+
+        	   if(data.response_status == "success"){
+            	   $('.content-container').load($(form).attr('id'));
+        	   }
+           }
+         });
+	});
+	
 	function login(){
 		$.ajax({
 			type: "POST",
@@ -27,10 +49,9 @@
 				if(data.response_status == "success"){
 					sessionStorage.setItem("userID", data.response_message);
 					toggleNavbar();
-					$(".content-container").empty();
 					$(".content-container").load("startpage.html");
 				} else {
-					showStatusMessage("Fejl " + data.error.response_code + ": " + data.error.response_message, "error");
+					showStatusMessage("Fejl " + data.response_code + ": " + data.response_message, "error");
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
@@ -40,6 +61,7 @@
 	}
 
 	function toggleNavbar(){
+		console.log(sessionStorage.getItem("userID"));
 		//Fjern alle knapper
 		$('.navbar .navigation').empty();
 		var userID = sessionStorage.getItem("userID");
@@ -52,10 +74,11 @@
         		userID: userID
         	},
         	success: function(data){
+        		var response = JSON.parse(data.response_message);
         		if(data != null){
 	        		$('.navbar .navigation').append('<li><a href="#" id="startpage">Forside</a></li>');
-	        		for (var i = 0; i < data.role.length; i++) {
-	        			switch(data.role[i]){        			
+	        		for (var i = 0; i < response.role.length; i++) {
+	        			switch(response.role[i]){        			
 	        				case "Admin":
 	        					$('.navbar .navigation').append('<li><a href="#" id="userList">Brugerliste</a></li>');
 	        					break;
