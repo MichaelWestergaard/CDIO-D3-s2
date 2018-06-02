@@ -39,10 +39,13 @@ public class UserService extends ResponseHandler {
 	public String login(@FormParam("username") String username) {		
 		try {
 			List<UserDTO> users = mySQLController.getUsers();
-			
 			for (UserDTO user : users) {
-				if(user.getUserName().equals(username)) {
-					return createResponse("success", 1, String.valueOf(user.getUserID()));
+				if(user.getUserName().equalsIgnoreCase(username)) {
+					if(user.getActive() == 1) {
+						return createResponse("success", 1, String.valueOf(user.getUserID()));
+					} else {
+						return createResponse("error", 0, "Brugeren er inaktiv!");
+					}
 				}
 			}
 		} catch (SQLException e) {
