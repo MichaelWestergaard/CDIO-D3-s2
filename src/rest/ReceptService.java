@@ -137,7 +137,23 @@ public class ReceptService {
 			return Response.seeOther(builder.build()).build();
 		}
 	
-	
+		//Receptkomponentliste
+		@GET
+		@Path("getReceptComponentList")
+		public String getReceptComponentList() {
+			String returnMsg = "";
+			
+			try {
+				List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents();
+				String json = new Gson().toJson(receptComponents);
+				returnMsg = json;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return returnMsg;
+		}	
 	
 	
 	

@@ -16,6 +16,7 @@
 
 <script type="text/javascript" src="assets/js/main.js"></script>
 
+<!-- Fix så man kan oprette receptkomponenter fra listen, og link opret-knappn så den loader createReceptComponent.html. (Opret i ReceptService? aka spørg Michael) -->
 <script>
 $.ajax({
 	type: 'GET',
@@ -23,39 +24,47 @@ $.ajax({
 	dataType: 'json',
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
-			
-			$(".user-table tbody").append('<tr id="' + data[i].receptID + '"><td>' + data[i].receptID + '</td><td>' + data[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
-	
+			$(".user-table tbody").append('<tr id="' + data[i].receptID + '"><td>' + data[i].receptID + '</td><td>' + data[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="showReceptComponent">Vis RCK</option></select></td></tr>');
 		}
 		
+	//	$('.user-table').on('change', 'tr select', function(){
 		
-		
-		
-		
-		
-		
-		
-		
+			/* var receptID = $(this).closest("tr").attr("id");
+			 console.log(receptID);*/
+			
+		//	if (this.value == "showReceptComponent") {
+			//	$(".content-container").load('ReceptComponentList.html');
+			/*	$. ajax({
+					type: 'GET',
+					url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getRecept',
+					dataType: 'json',
+					data: {receptID: receptID},
+					success: function(data){
+						if(data.response_status == "success"){
+			        		var response = JSON.parse(data.response_message);
+							$("input[name=receptID]").val(response.receptID);
+							$("input[name=receptName]").val(response.receptName);
+		        		} else {
+		        			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+		        		}
+					}
+					
+					
+					
+				});
+ */
+		//	}
+			
+			
+			
+			
+			
+			
+			
+			
+	//	}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 });
 </script>

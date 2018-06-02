@@ -203,6 +203,21 @@ public class MySQLController {
 	
 	}
 	
+	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
+		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM receptkomponent";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
+			receptComponents.add(receptComponent);
+		}
+		statement.close();
+		return receptComponents;
+	}
 
 	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
