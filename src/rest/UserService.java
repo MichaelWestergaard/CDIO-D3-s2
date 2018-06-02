@@ -72,17 +72,11 @@ public class UserService extends ResponseHandler {
 	@GET 
 	@Path("getUserList")
 	public String getUserList() {
-		String returnMsg = "";
 		try {
-			List<UserDTO> users = mySQLController.getUsers();
-
-			String json = new Gson().toJson(users);
-			returnMsg = json;
-			
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getUsers()));
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return returnMsg;
 	}
 
 	@GET

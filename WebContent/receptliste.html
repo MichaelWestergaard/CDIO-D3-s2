@@ -22,40 +22,15 @@ $.ajax({
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptList',
 	dataType: 'json',
 	success: function(data){
-		for(var i = 0; i < data.length; i++){
-			
-			$(".user-table tbody").append('<tr id="' + data[i].receptID + '"><td>' + data[i].receptID + '</td><td>' + data[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
-	
+		if(data.response_status == "success"){
+			response = JSON.parse(data.response_message);
+			for(var i = 0; i < response.length; i++){
+				
+				$(".user-table tbody").append('<tr id="' + response[i].receptID + '"><td>' + response[i].receptID + '</td><td>' + response[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
+			}
+		} else {
+			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 });
 </script>

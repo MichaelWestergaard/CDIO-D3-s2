@@ -71,24 +71,15 @@ public class IngredientService extends ResponseHandler {
 		}
 	}
 	
-	
-	
-	
 	//Råvarebatchliste
 	@GET
 	@Path("getIngBatchList")
 	public String getIngBatchList() {
-		String returnMsg = "";
-			
 		try {
-			List<IngBatchDTO> ingBatches = mySQLController.getIngBatches();
-			String json = new Gson().toJson(ingBatches);
-			returnMsg = json;
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatches()));
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-			
-		return returnMsg;
 	}	
 
 	//Tilføj en Råvare

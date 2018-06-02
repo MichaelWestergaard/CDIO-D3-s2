@@ -44,17 +44,11 @@ public class ReceptService extends ResponseHandler{
 	@GET
 	@Path("getReceptList")
 	public String getReceptList() {
-		String returnMsg = "";
-		
 		try {
-			List<ReceptDTO> recepter = mySQLController.getRecepter();
-			String json = new Gson().toJson(recepter);
-			returnMsg = json;
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getRecepter()));
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		
-		return returnMsg;
 	}
 	
 	//Tilføj en ReceptKomponent, der skal laves en fejl besked
@@ -128,17 +122,4 @@ public class ReceptService extends ResponseHandler{
 			}
 			return createResponse("error", 0, "Kunne ikke oprette Recepten");
 		}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
