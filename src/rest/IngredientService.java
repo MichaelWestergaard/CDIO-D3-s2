@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.gson.Gson;
 
 import datalag.MySQLController;
+import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
 import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
@@ -101,10 +102,36 @@ public class IngredientService extends ResponseHandler {
 		return createResponse("error", 0, "Kunne ikke oprette Råvare");
 	}
 	
+	@POST
+	@Path("createIngBatch")
+	public String createIngBatch(@FormParam("ingBatchID") int ingBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @Context ServletContext context) throws IOException  {
+		try {
+			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingBatchID) == null) {
+				if(mySQLController.createIngBatch(ingBatchID, ingredientID, amount)) {
+			IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingBatchID);
+			
+			if(createdIngBatch != null) {
+				return createResponse("success", 1, "Råvarebatchen med råvaren \"" + mySQLController.getIngredient(createdIngBatch.getIngredientID()).getIngredientName() + "\" blev oprettet");
+			}
+				}
+			}
+		} catch (SQLException e) {
+			return createResponse("error", e.getErrorCode(), e.getMessage());
+		}
+		return createResponse("error", 0, "Kunne ikke oprette Råvarebatchen");
+	}
 	
 	
+	@GET
+	@Path("getIngBatch")
+	public String getIngBatch(@QueryParam("ingBatchID") int ingBatchID) {
+		try {
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatch(ingBatchID)));
+		} catch (SQLException e) {
+			return createResponse("error", e.getErrorCode(), e.getMessage());
+		}
 	
-	
+	}
 	
 }
 

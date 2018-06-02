@@ -269,7 +269,7 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("maengde"));
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
 			ingBatches.add(ingBatch);
 		}
 		statement.close();
@@ -347,4 +347,38 @@ public class MySQLController {
 		}
 	}
 	
+	public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
+		IngBatchDTO ingBatch = null;
+		ResultSet results = null;
+		
+		String query = "Select * from raavarebatch WHERE rb_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, ingBatchID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
+			preparedStatement.close();
+			return ingBatch;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount) throws SQLException {
+		if(getIngBatch(ingBatchID) == null) {
+			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount);
+			
+			String query = "Call opretProduktBatch(?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, ingBatch.getIngBatchID());
+			preparedStatement.setInt(2, ingBatch.getIngredientID());
+			preparedStatement.setDouble(3, ingBatch.getAmount());
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} else {
+			return false;	
+		}
+	}
 }
