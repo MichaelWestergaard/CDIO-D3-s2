@@ -77,7 +77,7 @@ public class MySQLController {
 		return users;
 	}
 	
-	public void createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
+	public boolean createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
 		if(getUser(userID) == null) {
 			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active);
 			
@@ -93,6 +93,9 @@ public class MySQLController {
 			preparedStatement.setInt(8, user.getActive());
 			preparedStatement.execute();
 			preparedStatement.close();
+			return true;
+		} else {
+			return false;
 		}		
 	}
 	

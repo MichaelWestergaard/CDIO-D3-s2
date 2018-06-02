@@ -18,10 +18,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import datalag.MySQLController;
+import datalag.ResponseHandler;
 import datalag.UserDTO;
 
 @Path("user")
-public class UserService {
+public class UserService extends ResponseHandler {
 	
 	private MySQLController mySQLController;
 	
@@ -37,59 +38,38 @@ public class UserService {
 	//Login
 	@POST
 	@Path("login")
-	public String login(@FormParam("username") String username) {
-		JsonObject response = new JsonObject();
-		
+	public String login(@FormParam("username") String username) {		
 		try {
 			List<UserDTO> users = mySQLController.getUsers();
 			
 			for (UserDTO user : users) {
 				if(user.getUserName().equals(username)) {
-					response.addProperty("response_status", "success");
-					response.addProperty("response_message", user.getUserID());
-					return response.toString();
+					return createResponse("success", 1, String.valueOf(user.getUserID()));
 				}
 			}
 		} catch (SQLException e) {
-			response.addProperty("response_status", "error");
-			JsonObject errorMessage = new JsonObject();
-			errorMessage.addProperty("response_code", e.getErrorCode());
-			errorMessage.addProperty("response_message", "Du kunne ikke logge ind, prøv igen.");
-			response.add("error", errorMessage);
-			
-			return response.toString();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 		
-		//Måske lav en metode til den her
-		response.addProperty("response_status", "error");
-		JsonObject errorMessage = new JsonObject();
-		errorMessage.addProperty("response_code", 0);
-		errorMessage.addProperty("response_message", "Du kunne ikke logge ind, prøv igen.");
-		response.add("error", errorMessage);
-		
-		return response.toString();
+		return createResponse("error", 0, "Du kunne ikke logge ind, prøv igen.");
 	}
 	
 	//Tilføj en bruger
 	@POST
 	@Path("createUser")
-	public Response createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
+	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
 		try {
-			mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active);
-			UserDTO createdUser = mySQLController.getUser(userID);
-				
-			if(createdUser != null) {
-				UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-		        builder.path("index.html");
-		        return Response.seeOther(builder.build()).build();
+			if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
+				UserDTO createdUser = mySQLController.getUser(userID);
+					
+				if(createdUser != null) {
+					return createResponse("success", 1, "Brugeren \"" + createdUser.getUserName() + "\" blev oprettet");
+				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-        builder.path("index.html");
-        return Response.seeOther(builder.build()).build();
+		return createResponse("error", 0, "Kunne ikke oprette brugeren");
 	}
 	
 	//BRuerliste
