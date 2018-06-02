@@ -30,12 +30,10 @@ public class UserService extends ResponseHandler {
 		try {
 			mySQLController = new MySQLController();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	//Login
 	@POST
 	@Path("login")
 	public String login(@FormParam("username") String username) {		
@@ -54,7 +52,6 @@ public class UserService extends ResponseHandler {
 		return createResponse("error", 0, "Du kunne ikke logge ind, prøv igen.");
 	}
 	
-	//Tilføj en bruger
 	@POST
 	@Path("createUser")
 	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
@@ -72,7 +69,6 @@ public class UserService extends ResponseHandler {
 		return createResponse("error", 0, "Kunne ikke oprette brugeren");
 	}
 	
-	//BRuerliste
 	@GET 
 	@Path("getUserList")
 	public String getUserList() {
@@ -82,82 +78,65 @@ public class UserService extends ResponseHandler {
 
 			String json = new Gson().toJson(users);
 			returnMsg = json;
-						
-//			for (UserDTO user : users) {
-//				returnMsg += user.toString() + "\n";
-//			}
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 		return returnMsg;
 	}
 
-	//få en bruger ud fra id
 	@GET
 	@Path("getUser")
 	public String getUser(@QueryParam("userID") int userID) {
 		try {
-			String json = new Gson().toJson(mySQLController.getUser(userID));
-			return json;
+			return createResponse("success", 1, String.valueOf(mySQLController.getUser(userID)));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return null;
 	}
 
-
-	//Slette UserDTO createdUser = userDAO.getUser(userID);
+	//Skal ændres til at ændre status
 	@GET
 	@Path("deleteUser")
 	public String deleteUser(@QueryParam("userID") int userID) {
 		try {
-			mySQLController.deleteUser(userID);
-			return "true";
-						
+			if(mySQLController.deleteUser(userID)) {
+				return createResponse("success", 1, "Brugeren blev fjernet");
+			} else {
+				return createResponse("error", 0, "Brugeren ikke fjernet fjernet");
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return "false";
 	}
 	
-	//Opdatere
 	@POST
 	@Path("updateUser")
 	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
 		try {
 			boolean state = mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, role, active); 
 			if(state) {
-				return "true";
+				return createResponse("success", 1, "Brugeren blev opdateret");
 			} else {
-				return "false";
+				return createResponse("error", 1, "Brugeren blev ikke opdateret");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return "false";
 	}
 
-	//Ikke testet
 	@POST
 	@Path("resetPassword")
 	public String resetPassword(@FormParam("userID") int userID, @FormParam("password") String password) {
 		try {
 			boolean state = mySQLController.resetPassword(userID, password);
 			if(state) {
-				return "true";
+				return createResponse("success", 1, "Adgangskoden blev opdateret");
 			} else {
-				return "false";
+				return createResponse("error", 1, "Adgangskoden blev ikke opdateret");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		
-		return "false";
 	}
-	
-	
 }

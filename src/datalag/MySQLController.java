@@ -115,12 +115,13 @@ public class MySQLController {
 			return true;
 	}
 	
-	public void deleteUser(int userID) throws SQLException {
+	public boolean deleteUser(int userID) throws SQLException {
 		String query = "call sletBruger(?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
 		preparedStatement.execute();
 		preparedStatement.close();
+		return true;
 	}
 	
 	//Mangler storedProcedure 'nulstilkode', og eventuelt også en ændring i viewet.
