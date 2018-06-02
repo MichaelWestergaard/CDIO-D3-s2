@@ -100,25 +100,26 @@ public class MySQLController {
 	}
 	
 	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String role, int active) throws SQLException {
-			String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
-			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, userID);
-			preparedStatement.setString(2, userName);
-			preparedStatement.setString(3, firstName);
-			preparedStatement.setString(4, lastName);
-			preparedStatement.setString(5, cpr);
-			preparedStatement.setString(6, password);
-			preparedStatement.setString(7, role);
-			preparedStatement.setInt(8, active);
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-	}
-	
-	public boolean deleteUser(int userID) throws SQLException {
-		String query = "call sletBruger(?)";
+		String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
+		preparedStatement.setString(2, userName);
+		preparedStatement.setString(3, firstName);
+		preparedStatement.setString(4, lastName);
+		preparedStatement.setString(5, cpr);
+		preparedStatement.setString(6, password);
+		preparedStatement.setString(7, role);
+		preparedStatement.setInt(8, active);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
+	public boolean changeStatus(int userID, int status) throws SQLException {
+		String query = "call opdaterStatus(?, ?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setInt(2, status);
 		preparedStatement.execute();
 		preparedStatement.close();
 		return true;
