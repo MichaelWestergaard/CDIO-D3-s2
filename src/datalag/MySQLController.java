@@ -241,7 +241,6 @@ public class MySQLController {
 		return null;
 	}
 	
-	//Mangler getRecept????
 	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
