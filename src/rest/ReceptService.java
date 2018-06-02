@@ -127,26 +127,11 @@ public class ReceptService extends ResponseHandler{
 		@GET
 		@Path("getReceptComponentList")
 		public String getReceptComponentList() {
-			String returnMsg = "";
-			
 			try {
-				List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents();
-				String json = new Gson().toJson(receptComponents);
-				returnMsg = json;
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getReceptComponents()));
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
-			
-			return returnMsg;
 		}	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }

@@ -17,37 +17,29 @@
 		</tbody>
 	</table>
 	<a href="javascript:;" id="createReceptComponent">Opret receptkomponent</a>
-	<a href="javascript:;" id="homeBtn">Tilbage</a>
+	<a href="receptliste.html" id="homeBtn">Tilbage</a>
 </div>
 
 <script type="text/javascript" src="assets/js/main.js"></script>
 
 <script>
-
-var receptID = document.getElementById("receptID").value;
-var receptName = document.getElementById("receptName").value;
-
 $.ajax({
 	type: 'GET',
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
 	dataType: 'json',
 	success: function(data){
-		for(var i = 0; i < data.length; i++){
-			if(receptID == data[i].receptID){
-			$(".user-table tbody").append('<tr id="' + receptID + data[i].ingredientID + '"><td>' + receptID + '</td><td>' + receptName + '</td><td>' + data[i].ingredientID + '</td><td>' + data[i].nomNetto + '</td><td>' + data[i].tolerance + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
-			}
-		}
-	
+		if(data.response_status == "success"){
+			response = JSON.parse(data.response_message);
 			
+			var receptID = $('input[name=receptID]').val();
+			var receptName = $('input[name=receptName]').val();
+						
+			for(var i = 0; i < response.length; i++){
+				if(response[i].receptID == receptID){
+					$(".user-table tbody").append('<tr id="' + receptID + response[i].ingredientID + '"><td>' + receptID + '</td><td>' + receptName + '</td><td>' + response[i].ingredientID + '</td><td>' + response[i].nomNetto + '</td><td>' + response[i].tolerance + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
+				}
+			}
+		}	
 	}
 });
-
-
-
-
-
-
-
-
-*/
 </script>
