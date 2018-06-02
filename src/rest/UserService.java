@@ -2,6 +2,7 @@ package rest;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -59,12 +60,48 @@ public class UserService extends ResponseHandler {
 	@Path("createUser")
 	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
 		try {
-			if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
-				UserDTO createdUser = mySQLController.getUser(userID);
-					
-				if(createdUser != null) {
-					return createResponse("success", 1, "Brugeren \"" + createdUser.getUserName() + "\" blev oprettet");
+			boolean valid = false;
+			//Validering af data
+			if(userID >= 1 && userID <= 999) {
+				if(userName.length() >= 2 && userName.length() <= 20) {
+					if(CPR.length() == 11) {
+						String[] splitCPR = CPR.split("-");
+						String combinedCPR = splitCPR[0] + splitCPR[1];
+						char[] cprChars = combinedCPR.toCharArray();
+						int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
+						int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
+						int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
+						boolean cprDublicate = false;
+
+						if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
+							List<UserDTO> users = mySQLController.getUsers();
+							for (UserDTO user : users) {
+								if(user.getCpr().equals(CPR)) {
+									return createResponse("error", 0, "CPR-nummeret findes allerede!");
+								}
+							}
+						} else {
+							return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+						}
+					} else {
+						return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+					}
+				} else {
+					return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
 				}
+			} else {
+				return createResponse("error", 0, "Bruger ID skal i mellem 1-999!");
+			}
+			if(mySQLController.getUser(userID) == null) {
+				if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
+					UserDTO createdUser = mySQLController.getUser(userID);
+						
+					if(createdUser != null) {
+						return createResponse("success", 1, "Brugeren \"" + createdUser.getUserName() + "\" blev oprettet");
+					}
+				}
+			} else {
+				return createResponse("error", 0, "Bruger ID'et er taget");
 			}
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
