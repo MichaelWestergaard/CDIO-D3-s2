@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.google.gson.Gson;
 
 import datalag.MySQLController;
+import datalag.ResponseHandler;
 import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
 
@@ -24,7 +25,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
 @Path("ingredient")
-public class IngredientService {
+public class IngredientService extends ResponseHandler {
 
 	private MySQLController mySQLController;
 	
@@ -48,8 +49,7 @@ public class IngredientService {
 			String json = new Gson().toJson(ingredients);
 			returnMsg = json;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 		
 		return returnMsg;
@@ -64,54 +64,41 @@ public class IngredientService {
 			IngredientDTO ingredient = mySQLController.getIngredient(ingredientID);
 			String json = new Gson().toJson(ingredient);
 			returnMsg = json;
+			
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngredient(ingredientID)));
 		} catch (SQLException e) {
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		
-		return returnMsg;
 	}
-	
-	
-	
 	
 	//Råvarebatchliste
 	@GET
 	@Path("getIngBatchList")
 	public String getIngBatchList() {
-		String returnMsg = "";
-			
 		try {
-			List<IngBatchDTO> ingBatches = mySQLController.getIngBatches();
-			String json = new Gson().toJson(ingBatches);
-			returnMsg = json;
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatches()));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-			
-		return returnMsg;
 	}	
 
 	//Tilføj en Råvare
 	@POST
 	@Path("createIngredient")
-	public Response createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
+	public String createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
 		try {
-			mySQLController.createIngredient(ingredientID, ingredientName, supplier);
-			IngredientDTO createIngredient = mySQLController.getIngredient(ingredientID);
 			
-			if(createIngredient != null) {
-				UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-		        builder.path("index.html");
-		        return Response.seeOther(builder.build()).build();
+			if(mySQLController.createIngredient(ingredientID, ingredientName, supplier)) {
+				IngredientDTO createdIngredient = mySQLController.getIngredient(ingredientID);
+			
+				if(createdIngredient != null) {
+					return createResponse("success", 1, "Råvaren \"" + createdIngredient.getIngredientName() + "\" blev oprettet");
+				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-		builder.path("index.html");
-		return Response.seeOther(builder.build()).build();
+		return createResponse("error", 0, "Kunne ikke oprette Råvare");
 	}
 	
 	

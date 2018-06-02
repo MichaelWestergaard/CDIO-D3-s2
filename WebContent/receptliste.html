@@ -11,7 +11,7 @@
 		<tbody></tbody>
 	</table>
 	<a href="javascript:;" id="createRecept">Opret recept</a>
-	<a href="javascript:;" id="homeBtn">Tilbage</a>
+	<a href="startpage.html" id="homeBtn">Tilbage</a>
 </div>
 
 <script type="text/javascript" src="assets/js/main.js"></script>
@@ -25,6 +25,16 @@ $.ajax({
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
 			$(".user-table tbody").append('<tr id="' + data[i].receptID + '"><td>' + data[i].receptID + '</td><td>' + data[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="showReceptComponent">Vis RCK</option></select></td></tr>');
+		
+		//WTF is this?	
+		if(data.response_status == "success"){
+			response = JSON.parse(data.response_message);
+			for(var i = 0; i < response.length; i++){
+				
+				$(".user-table tbody").append('<tr id="' + response[i].receptID + '"><td>' + response[i].receptID + '</td><td>' + response[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="resetRecept">Nulstil recept</option></select></td></tr>');
+			}
+		} else {
+			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 		}
 		
 	//	$('.user-table').on('change', 'tr select', function(){
@@ -64,7 +74,7 @@ $.ajax({
 			
 	//	}
 		
+
 	}
-	
 });
 </script>

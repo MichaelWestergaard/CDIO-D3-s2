@@ -39,10 +39,13 @@ public class UserService extends ResponseHandler {
 	public String login(@FormParam("username") String username) {		
 		try {
 			List<UserDTO> users = mySQLController.getUsers();
-			
 			for (UserDTO user : users) {
-				if(user.getUserName().equals(username)) {
-					return createResponse("success", 1, String.valueOf(user.getUserID()));
+				if(user.getUserName().equalsIgnoreCase(username)) {
+					if(user.getActive() == 1) {
+						return createResponse("success", 1, String.valueOf(user.getUserID()));
+					} else {
+						return createResponse("error", 0, "Brugeren er inaktiv!");
+					}
 				}
 			}
 		} catch (SQLException e) {
@@ -72,17 +75,11 @@ public class UserService extends ResponseHandler {
 	@GET 
 	@Path("getUserList")
 	public String getUserList() {
-		String returnMsg = "";
 		try {
-			List<UserDTO> users = mySQLController.getUsers();
-
-			String json = new Gson().toJson(users);
-			returnMsg = json;
-			
+			return createResponse("success", 1, new Gson().toJson(mySQLController.getUsers()));
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return returnMsg;
 	}
 
 	@GET
@@ -97,17 +94,29 @@ public class UserService extends ResponseHandler {
 
 	//Skal ændres til at ændre status
 	@GET
-	@Path("deleteUser")
-	public String deleteUser(@QueryParam("userID") int userID) {
+	@Path("changeStatus")
+	public String changeStatus(@QueryParam("userID") int userID) {
 		try {
-			if(mySQLController.deleteUser(userID)) {
-				return createResponse("success", 1, "Brugeren blev fjernet");
+			UserDTO user = mySQLController.getUser(userID);
+			if(user != null) {
+				
+				int newStatus = ((user.getActive() == 0) ? 1 : 0);
+				if(mySQLController.changeStatus(userID, newStatus)) {
+					String msg = "";
+					if(newStatus == 0) {
+						msg = "Brugeren er hermed inaktiveret!";
+					} else {
+						msg = "Brugeren blev aktiveret igen!";
+					}
+					return createResponse("success", 1, msg);
+				}
 			} else {
-				return createResponse("error", 0, "Brugeren ikke fjernet fjernet");
+				return createResponse("error", 0, "Brugeren findes ikke");
 			}
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
+		return createResponse("error", 0, "Kunne ikke ændre statussen");
 	}
 	
 	@POST

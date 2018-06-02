@@ -100,25 +100,26 @@ public class MySQLController {
 	}
 	
 	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String role, int active) throws SQLException {
-			String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
-			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, userID);
-			preparedStatement.setString(2, userName);
-			preparedStatement.setString(3, firstName);
-			preparedStatement.setString(4, lastName);
-			preparedStatement.setString(5, cpr);
-			preparedStatement.setString(6, password);
-			preparedStatement.setString(7, role);
-			preparedStatement.setInt(8, active);
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-	}
-	
-	public boolean deleteUser(int userID) throws SQLException {
-		String query = "call sletBruger(?)";
+		String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
+		preparedStatement.setString(2, userName);
+		preparedStatement.setString(3, firstName);
+		preparedStatement.setString(4, lastName);
+		preparedStatement.setString(5, cpr);
+		preparedStatement.setString(6, password);
+		preparedStatement.setString(7, role);
+		preparedStatement.setInt(8, active);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
+	public boolean changeStatus(int userID, int status) throws SQLException {
+		String query = "call opdaterStatus(?, ?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setInt(2, status);
 		preparedStatement.execute();
 		preparedStatement.close();
 		return true;
@@ -154,7 +155,7 @@ public class MySQLController {
 		return null;
 	}
 	
-	public void createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+	public boolean createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
 		if(getIngredient(ingredientID) == null) {
 			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName, supplier);
 			
@@ -165,7 +166,9 @@ public class MySQLController {
 			preparedStatement.setString(3, ingredient.getSupplier());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -239,7 +242,7 @@ public class MySQLController {
 	}
 	
 	//Mangler getRecept????
-	public void createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
+	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
@@ -251,7 +254,9 @@ public class MySQLController {
 			preparedStatement.setDouble(4, receptComponent.getTolerance());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;			
 		}
 	}
 
@@ -291,7 +296,7 @@ public class MySQLController {
 		return null;
 	}
 	
-	public void createRecept(int receptID, String receptName) throws SQLException {
+	public boolean createRecept(int receptID, String receptName) throws SQLException {
 		if(getRecept(receptID) == null) {
 			ReceptDTO recept = new ReceptDTO(receptID, receptName);
 			
@@ -301,7 +306,9 @@ public class MySQLController {
 			preparedStatement.setString(2, recept.getReceptName());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;	
 		}
 	}
 	
