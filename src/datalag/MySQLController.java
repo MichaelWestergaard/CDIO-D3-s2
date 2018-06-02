@@ -154,7 +154,7 @@ public class MySQLController {
 		return null;
 	}
 	
-	public void createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+	public boolean createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
 		if(getIngredient(ingredientID) == null) {
 			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName, supplier);
 			
@@ -165,7 +165,9 @@ public class MySQLController {
 			preparedStatement.setString(3, ingredient.getSupplier());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
@@ -224,7 +226,7 @@ public class MySQLController {
 	}
 	
 	//Mangler getRecept????
-	public void createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
+	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
@@ -236,7 +238,9 @@ public class MySQLController {
 			preparedStatement.setDouble(4, receptComponent.getTolerance());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;			
 		}
 	}
 
@@ -276,7 +280,7 @@ public class MySQLController {
 		return null;
 	}
 	
-	public void createRecept(int receptID, String receptName) throws SQLException {
+	public boolean createRecept(int receptID, String receptName) throws SQLException {
 		if(getRecept(receptID) == null) {
 			ReceptDTO recept = new ReceptDTO(receptID, receptName);
 			
@@ -286,7 +290,9 @@ public class MySQLController {
 			preparedStatement.setString(2, recept.getReceptName());
 			preparedStatement.execute();
 			preparedStatement.close();
-					
+			return true;
+		} else {
+			return false;	
 		}
 	}
 	

@@ -16,6 +16,7 @@ import datalag.IngredientDTO;
 import datalag.MySQLController;
 import datalag.ReceptComponentDTO;
 import datalag.ReceptDTO;
+import datalag.ResponseHandler;
 import datalag.UserDTO;
 
 import javax.ws.rs.GET;
@@ -26,7 +27,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
 @Path("recept")
-public class ReceptService {
+public class ReceptService extends ResponseHandler{
 
 	private MySQLController mySQLController;
 	
@@ -50,8 +51,7 @@ public class ReceptService {
 			String json = new Gson().toJson(recepter);
 			returnMsg = json;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 		
 		return returnMsg;
@@ -60,9 +60,8 @@ public class ReceptService {
 	//Tilføj en ReceptKomponent, der skal laves en fejl besked
 		@POST
 		@Path("createReceptComponent")
-		public Response createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
+		public String createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
 			try {
-				
 				List<ReceptDTO> recepts = mySQLController.getRecepter();
 				List<IngredientDTO> ingredients = mySQLController.getIngredients();
 				boolean receptFound = false;
@@ -78,63 +77,56 @@ public class ReceptService {
 						ingredientFound = true;
 					}
 				}
-				if(receptFound && ingredientFound) {
-				
-					
-					
+				if(receptFound && ingredientFound) {					
 				mySQLController.createReceptComponent(receptID, ingredientID, nomNetto, tolerance);
 		
+				} else if (!receptFound && ingredientFound ) {
+					return createResponse("error", 0, "ReceptID eksistere ikke");
+				} else if (receptFound && !ingredientFound ) {
+					return createResponse("error", 0, "ingredientID eksistere ikke");
 				}
 				
-				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
-					UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-			        builder.path("index.html");
-			        return Response.seeOther(builder.build()).build();
+				if(mySQLController.getReceptComponent(receptID, ingredientID) == null) {
+					ReceptComponentDTO createdReceptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
+					
+					if(createdReceptComponent != null) {
+						return createResponse("success", 1, "RecepKomponenten med Recepten \"" + mySQLController.getRecept(createdReceptComponent.getReceptID()).getReceptName() + "\" blev oprettet");
+					}
+				} else {
+					return createResponse("error", 0, "ReceptKomponenten eksitere allereade");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
-			UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-			builder.path("index.html");
-			return Response.seeOther(builder.build()).build();
+			return createResponse("error", 0, "Kunne ikke oprette ReceptKomponenten");
 		}
 	
 		@GET
 		@Path("getRecept")
 		public String getRecept(@QueryParam("receptID") int receptID) {
-			String returnMsg = "";
-			
 			try {
-				ReceptDTO recept = mySQLController.getRecept(receptID);
-				String json = new Gson().toJson(recept);
-				returnMsg = json;
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getRecept(receptID)));
 			} catch (SQLException e) {
-				e.printStackTrace();
+				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
-			
-			return returnMsg;
+		
 		}
 
 		@POST
 		@Path("createRecept")
-		public Response createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
+		public String createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
 			try {
-				mySQLController.createRecept(receptID, receptName);
-				ReceptDTO createRecept = mySQLController.getRecept(receptID);
+				if(mySQLController.createRecept(receptID, receptName)) {
+				ReceptDTO createdRecept = mySQLController.getRecept(receptID);
 				
-				if(createRecept != null) {
-					UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-			        builder.path("index.html");
-			        return Response.seeOther(builder.build()).build();
+				if(createdRecept != null) {
+					return createResponse("success", 1, "Recepten \"" + createdRecept.getReceptName() + "\" blev oprettet");
+				}
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
-			UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
-			builder.path("index.html");
-			return Response.seeOther(builder.build()).build();
+			return createResponse("error", 0, "Kunne ikke oprette Recepten");
 		}
 	
 	
