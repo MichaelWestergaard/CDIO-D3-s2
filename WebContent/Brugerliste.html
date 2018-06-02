@@ -42,30 +42,28 @@ $.ajax({
 					status = "Nej";
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteUser">Slet bruger</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="changeStatus">Ændre Status</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
 			}
 	
 			$('.user-table').on('change', 'tr select', function() {
 				
 				var userID = $(this).closest("tr").attr("id");
 				
-				if (this.value == "deleteUser") {
-					if (confirm("Er du sikker på at du vil fjerne denne bruger?")) {
-						$.ajax({
-				        	type: "GET",
-				        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/deleteUser",
-				        	data: {
-				        		userID: userID
-				        	},
-				        	success: function(data){
-				        		data = JSON.parse(data);
-				        		if(data.response_status == "success"){
-				        			$(".user-table tr#" + userID).remove();
-				        		}
-				        		showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-				        	}
-				        });
-				    }
+				if (this.value == "changeStatus") {
+					$.ajax({
+			        	type: "GET",
+			        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/changeStatus",
+			        	dataType: 'json',
+			        	data: {
+			        		userID: userID
+			        	},
+			        	success: function(data){
+			        		if(data.response_status == "success"){
+								$(".content-container").load("Brugerliste.html");
+			        		}
+			        		showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+			        	}
+			        });
 				}
 				
 				if (this.value == "updateUser") {
