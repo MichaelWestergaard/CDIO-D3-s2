@@ -69,7 +69,7 @@ public class ReceptService {
 				boolean ingredientFound = false;		
 						
 				for (ReceptDTO recept : recepts) {
-					if(mySQLController.getRecept() != null) {
+					if(mySQLController.getRecept(receptID) != null) {
 						receptFound = true;
 					}
 				}	
@@ -100,7 +100,42 @@ public class ReceptService {
 			return Response.seeOther(builder.build()).build();
 		}
 	
-	
+		@GET
+		@Path("getRecept")
+		public String getRecept(@QueryParam("receptID") int receptID) {
+			String returnMsg = "";
+			
+			try {
+				ReceptDTO recept = mySQLController.getRecept(receptID);
+				String json = new Gson().toJson(recept);
+				returnMsg = json;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			return returnMsg;
+		}
+
+		@POST
+		@Path("createRecept")
+		public Response createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
+			try {
+				mySQLController.createRecept(receptID, receptName);
+				ReceptDTO createRecept = mySQLController.getRecept(receptID);
+				
+				if(createRecept != null) {
+					UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+			        builder.path("index.html");
+			        return Response.seeOther(builder.build()).build();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			UriBuilder builder = UriBuilder.fromPath(context.getContextPath());
+			builder.path("index.html");
+			return Response.seeOther(builder.build()).build();
+		}
 	
 	
 	

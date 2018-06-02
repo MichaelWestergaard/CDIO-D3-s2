@@ -221,7 +221,7 @@ public class MySQLController {
 	
 	//Mangler getRecept????
 	public void createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
-		if(getIngredient(ingredientID) == null && getRecept(receptID) == null) ) {
+		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
 			String query = "Call opretRaavare(?, ?, ?, ?)";
@@ -252,6 +252,38 @@ public class MySQLController {
 		return ingBatches;
 
 	
+	}
+	
+	public ReceptDTO getRecept(int receptID) throws SQLException {
+		ReceptDTO recept = null;
+		ResultSet results = null;
+		
+		String query = "Select * from recept WHERE recept_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, receptID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
+			preparedStatement.close();
+			return recept;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public void createRecept(int receptID, String receptName) throws SQLException {
+		if(getRecept(receptID) == null) {
+			ReceptDTO recept = new ReceptDTO(receptID, receptName);
+			
+			String query = "Call opretRecept(?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, recept.getReceptID());
+			preparedStatement.setString(2, recept.getReceptName());
+			preparedStatement.execute();
+			preparedStatement.close();
+					
+		}
 	}
 	
 }
