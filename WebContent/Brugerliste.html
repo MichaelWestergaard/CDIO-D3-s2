@@ -1,0 +1,120 @@
+<div class="content">
+	<h1>Brugerliste dfgdgdfg</h1>
+	<table class="user-table">
+		<thead>
+			<tr>
+				<th>BrugerID</th>
+				<th>Brugernavn</th>
+				<th>Fornavn</th>
+				<th>Efternavn</th>
+				<th>Password</th>
+				<th>Rolle</th>
+				<th>Aktiv</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody></tbody>
+	</table> 
+	<a href="javascript:;" id="createBtn">Opret bruger</a>
+	<a href="javascript:;" id="homeBtn">Tilbage</a>
+</div>
+<script src="assets/js/main.js"></script>
+<script>
+$.ajax({
+	type: 'GET',
+	url: 'http://localhost:8080/CDIO-D3-s2/rest/user/getUserList',
+	dataType: 'json',
+	success: function(data){
+		for (var i = 0; i < data.length; i++) {
+			
+		 var roles = "";
+		 var status;
+		 
+		 for (var j = 0; j < data[i]['role'].length; j++) {
+		 	roles += data[i].role[j] + ", ";
+		 }
+		 
+		 if(data[i].active == 1){
+			 status = "Ja";
+		 } else {
+			 status = "Nej";
+		 }
+			 
+			$(".user-table tbody").append('<tr id="' + data[i].userID + '"><td>' + data[i].userID + '</td><td>' + data[i].userName + '</td><td>' + data[i].name + '</td><td>' + data[i].lastName + '</td><td>' + data[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteUser">Slet bruger</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
+		}
+
+		$('.user-table').on('change', 'tr select', function() {
+			
+			var userID = $(this).closest("tr").attr("id");
+			console.log(userID);
+
+			
+			if (this.value == "deleteUser") {
+				if (confirm("Er du sikker på at du vil fjerne denne bruger?")) {
+					$.ajax({
+			        	type: "GET",
+			        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/deleteUser",
+			        	data: {
+			        		userID: userID
+			        	},
+			        	success: function(data){
+			        		if(data == "true"){
+			        			$(".user-table tr#" + userID).remove();
+			        		}
+			        	}
+			        });
+			    }
+			}
+			
+			if (this.value == "updateUser") {
+				$(".content-container").load('editUser.html');
+				$.ajax({
+		        	type: "GET",
+		        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+		        	dataType: 'json',
+		        	data: {
+		        		userID: userID
+		        	},
+		        	success: function(data){
+		        		$("input[name=userID]").val(data.userID);
+		        		$("input[name=userName]").val(data.userName);
+						$("input[name=firstName]").val(data.name);
+						$("input[name=lastName]").val(data.lastName);
+						$("input[name=password]").val(data.password);
+						$("input[name=CPR]").val(data.cpr);
+						
+						for (var j = 0; j < data.role.length; j++) {
+							$("input[name=role][value=" + data.role[j] + "]").prop("checked", true);
+						}
+						
+						if(data.active == 1){
+							$("input[name=active][value=1]").prop("checked", true);
+						} else {
+							$("input[name=active][value=0]").prop("checked", true);
+						}
+		        	}
+		        });
+			
+			}
+			
+			if (this.value == "resetPass") {
+				$(".content-container").load('resetPassword.html');
+				$.ajax({
+		        	type: "GET",
+		        	url: "http://localhost:8080/CDIO-D3-s2/rest/user/getUser",
+		        	dataType: 'json',
+		        	data: {
+		        		userID: userID
+		        	},
+		        	success: function(data){
+		        		$("#userID").html(data.userID);
+						$("input[name=userID]").val(data.userID);
+						$("input[name=password]").val(data.password);
+		        	}
+		        });
+			}
+			
+		});
+	}
+});
+</script>
