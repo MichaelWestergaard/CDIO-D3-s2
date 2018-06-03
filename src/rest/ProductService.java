@@ -109,7 +109,7 @@ import javax.ws.rs.FormParam;
 				
 				if(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID) != null) {
 					ProductBatchComponentDTO createdProductBatchComponent = mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID);
-					return createResponse("success", 1, "ProduktBatchkomponenten med produktbatchen \"" + createdProductBatchComponent.getProductBatchID()) + "\" blev oprettet");
+					return createResponse("success", 1, "ProduktBatchkomponenten med produktbatchen \"" + createdProductBatchComponent.getProductBatchID() + "\" blev oprettet");
 
 				} else {
 					return createResponse("error", 0, "Kunne ikke oprette produktbatchkomponenten");
