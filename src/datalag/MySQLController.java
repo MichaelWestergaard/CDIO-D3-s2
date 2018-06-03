@@ -331,7 +331,7 @@ public class MySQLController {
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
 		
-		String query = "Select * from productbatch WHERE pb_id = ?";
+		String query = "Select * from produktbatch WHERE pb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID);
 		results = preparedStatement.executeQuery();
