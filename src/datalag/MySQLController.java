@@ -249,7 +249,7 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nomNetto"), results.getDouble("tolerance"));
+			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			preparedStatement.close();
 			return receptComponent;
 		}
