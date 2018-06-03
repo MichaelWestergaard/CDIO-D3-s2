@@ -60,7 +60,11 @@ public class ReceptService extends ResponseHandler{
 				List<IngredientDTO> ingredients = mySQLController.getIngredients();
 				boolean receptFound = false;
 				boolean ingredientFound = false;		
-						
+				
+				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
+					return createResponse("error", 0, "receptkomponenten eksisterer allerede");
+				}
+				
 				for (ReceptDTO recept : recepts) {
 					if(mySQLController.getRecept(receptID) != null) {
 						receptFound = true;
@@ -75,24 +79,21 @@ public class ReceptService extends ResponseHandler{
 				mySQLController.createReceptComponent(receptID, ingredientID, nomNetto, tolerance);
 		
 				} else if (!receptFound && ingredientFound ) {
-					return createResponse("error", 0, "ReceptID eksistere ikke");
+					return createResponse("error", 0, "receptID eksistere ikke");
 				} else if (receptFound && !ingredientFound ) {
 					return createResponse("error", 0, "ingredientID eksistere ikke");
 				}
 				
-				if(mySQLController.getReceptComponent(receptID, ingredientID) == null) {
+				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
 					ReceptComponentDTO createdReceptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
-					
-					if(createdReceptComponent != null) {
-						return createResponse("success", 1, "RecepKomponenten med Recepten \"" + mySQLController.getRecept(createdReceptComponent.getReceptID()).getReceptName() + "\" blev oprettet");
-					}
+					return createResponse("success", 1, "Recepkomponenten med recepten \"" + mySQLController.getRecept(createdReceptComponent.getReceptID()).getReceptName() + "\" blev oprettet");
+
 				} else {
-					return createResponse("error", 0, "ReceptKomponenten eksitere allereade");
+					return createResponse("error", 0, "Kunne ikke oprette receptkomponenten");
 				}
 			} catch (SQLException e) {
 				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
-			return createResponse("error", 0, "Kunne ikke oprette ReceptKomponenten");
 		}
 	
 		@GET

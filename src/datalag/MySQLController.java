@@ -242,10 +242,10 @@ public class MySQLController {
 	}
 	
 	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
-		if(getIngredient(ingredientID) == null && getRecept(receptID) == null)  {
+		if(getReceptComponent(receptID, ingredientID) == null)  {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
-			String query = "Call opretRaavare(?, ?, ?, ?)";
+			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, receptComponent.getReceptID());
 			preparedStatement.setInt(2, receptComponent.getIngredientID());
