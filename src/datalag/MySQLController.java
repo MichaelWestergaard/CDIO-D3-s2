@@ -286,6 +286,45 @@ public class MySQLController {
 		}
 	}
 
+	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
+		ProductBatchComponentDTO productBatchComponent = null;
+		ResultSet results = null;
+		
+		String query = "Select * from produktbatchkomponent WHERE pb_id = ? and rb_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, productBatchID );
+		preparedStatement.setInt(2, raavareBatchID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("opr_id"), results.getDouble("netto"), results.getDouble("tara"));
+			preparedStatement.close();
+			return productBatchComponent;
+		}
+		preparedStatement.close();
+		return null;
+	}
+	
+	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
+		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
+			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(productBatchID, raavareBatchID, operatorID, netto, tara);
+			
+			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)";
+			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, productBatchComponent.getProductBatchID());
+			preparedStatement.setInt(2, productBatchComponent.getRaavareBatchID());
+			preparedStatement.setInt(3, productBatchComponent.getOperatorID());
+			preparedStatement.setDouble(4, productBatchComponent.getNetto());
+			preparedStatement.setDouble(5, productBatchComponent.getTara());
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} else {
+			return false;			
+		}
+	}
+
+	
 	public List<IngBatchDTO> getIngBatches() throws SQLException {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
 		ResultSet results = null;
