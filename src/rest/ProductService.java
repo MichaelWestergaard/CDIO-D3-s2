@@ -28,7 +28,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
 
-	@Path("product")
+	@Path("Product")
 	public class ProductService extends ResponseHandler{
 
 		private MySQLController mySQLController;
@@ -43,6 +43,17 @@ import javax.ws.rs.FormParam;
 		}
 		
 
+		//ProduktBatch-Liste
+		@GET
+		@Path("getProductBatchList")
+		public String getProductBatchList() {
+			try {
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatches()));
+			} catch (SQLException e) {
+				return createResponse("error", e.getErrorCode(), e.getMessage());
+			}
+		}
+		
 		@POST
 		@Path("createProductBatch")
 		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @Context ServletContext context) throws IOException  {
