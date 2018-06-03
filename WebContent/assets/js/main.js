@@ -22,6 +22,10 @@
 		$(".content-container").load("createRaavareBatch.html");
 	});
 	
+	$('#createProductBatch').on('click', function(){
+		$(".content-container").load("createProductBatch.html");
+	});
+	
 	$('input[name=login]').on('click', function(){
 		login();
 	});
