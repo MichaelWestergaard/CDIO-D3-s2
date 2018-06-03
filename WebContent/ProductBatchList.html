@@ -3,8 +3,9 @@
 	<table class="user-table">
 		<thead>
 			<tr>
-				<th>ProduktBatchID</th>
-				<th>ProduktBatch-Navn</th>
+				<th>ProduktBatch ID</th>
+				<th>Status</th>
+				<th>Recept ID</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -25,8 +26,28 @@ $.ajax({
 	success: function(data){
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
+			console.log(response);
 			for(var i = 0; i < response.length; i++){
-				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].status + '</td><td>' + response[i].receptID + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteProductBatch">Slet ProduktBatch</option><option value="updateProductBatch">Opdater ProduktBatch</option><option value="showProductBatchComponent">Vis PBCK</option></select></td></tr>');
+				
+				switch(response[i].status){
+					case 0:
+						status = "Ikke påbegyndt";
+						break;
+					
+					case 1:
+						status = "Under Produktion";
+						break;
+						
+					case 2:
+						status = "Afsluttet";
+						break;
+						
+					default:
+						status = "Ugyldig Status";
+						break;
+				}
+				
+				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteProductBatch">Slet ProduktBatch</option><option value="updateProductBatch">Opdater ProduktBatch</option><option value="showProductBatchComponent">Vis PBCK</option></select></td></tr>');
 			}
 			
 			$('.user-table').on('change', 'tr select', function(){
