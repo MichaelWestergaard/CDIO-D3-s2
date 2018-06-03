@@ -158,7 +158,6 @@ public class UserService extends ResponseHandler {
 	@Path("updateUser")
 	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
 		try {
-			
 			if(userName.length() >= 2 && userName.length() <= 20) {
 				if(CPR.length() == 11) {
 					String[] splitCPR = CPR.split("-");
