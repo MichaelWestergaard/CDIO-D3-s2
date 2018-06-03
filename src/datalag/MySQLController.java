@@ -286,7 +286,7 @@ public class MySQLController {
 		}
 	}
 
-	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
+	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID) throws SQLException {
 		ProductBatchComponentDTO productBatchComponent = null;
 		ResultSet results = null;
 		
@@ -294,6 +294,7 @@ public class MySQLController {
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID );
 		preparedStatement.setInt(2, raavareBatchID);
+		preparedStatement.setInt(3, operatorID);
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
