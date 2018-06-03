@@ -30,7 +30,6 @@ function editIngredient(ingredientID){
 		success: function(data){
 			if(data.response_status == "success"){
 				var response = JSON.parse(data.response_message);
-				console.log(response);
 				$("input[name=ingredientID]").val(response.ingredientID);
 				$("input[name=ingredientName]").val(response.ingredientName);
 				$("input[name=supplier]").val(response.supplier);
