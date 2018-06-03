@@ -172,6 +172,23 @@ public class MySQLController {
 		}
 	}
 	
+	public List<ProductBatchDTO> getProductBatches() throws SQLException {
+		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM productbatch";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"));
+			productBatches.add(productBatch);
+		}
+		statement.close();
+		return productBatches;
+	
+	}
+	
 	public List<ReceptDTO> getRecepter() throws SQLException {
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
 		ResultSet results = null;
@@ -321,7 +338,7 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("stauts"), results.getInt("recept_id"));
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"));
 			preparedStatement.close();
 			return productBatch;
 		}
