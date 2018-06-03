@@ -13,6 +13,11 @@
 	$('#createReceptComponent').on('click', function(){
 		$(".content-container").load("createReceptComponent.html");
 	});
+	
+	$('#createIngredient').on('click', function(){
+		$(".content-container").load("createIngredient.html");
+	});
+
 	$('#createIngredient').on('click', function(){
 		$(".content-container").load("createIngredient.html");
 	});
@@ -25,7 +30,7 @@
 		e.preventDefault();
 		
 		var form = $(this).closest("form");
-		
+
 		$.ajax({
            type: $(form).attr('method'),
            url: $(form).attr('action'),
@@ -33,11 +38,13 @@
            success: function(data){
         	   data = JSON.parse(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-
         	   if(data.response_status == "success"){
             	   $('.content-container').load($(form).attr('id'));
         	   }
-           }
+           },
+			error: function(xhr, ajaxOptions, thrownError) {
+				showStatusMessage("Fejl ved indsendelse af formularen, prøv igen!", "error");
+	    	}
          });
 	});
 	

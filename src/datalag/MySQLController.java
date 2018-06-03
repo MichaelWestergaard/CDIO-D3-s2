@@ -136,7 +136,6 @@ public class MySQLController {
 		return true;
 	}
 	
-	
 	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;

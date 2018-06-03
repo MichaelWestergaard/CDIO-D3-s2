@@ -105,7 +105,7 @@ public class ReceptService extends ResponseHandler{
 			}
 		
 		}
-
+				
 		@POST
 		@Path("createRecept")
 		public String createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {

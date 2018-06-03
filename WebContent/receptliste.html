@@ -26,7 +26,7 @@ $.ajax({
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
 			for(var i = 0; i < response.length; i++){
-				$(".user-table tbody").append('<tr id="' + response[i].receptID + '"><td>' + response[i].receptID + '</td><td>' + response[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteRecept">Slet recept</option><option value="updateRecept">Opdater recept</option><option value="showReceptComponent">Vis RCK</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].receptID + '"><td>' + response[i].receptID + '</td><td>' + response[i].receptName + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="updateRecept">Opdater recept</option><option value="showReceptComponent">Vis RCK</option></select></td></tr>');
 			}
 			
 			$('.user-table').on('change', 'tr select', function(){
