@@ -171,6 +171,17 @@ public class MySQLController {
 		}
 	}
 	
+	public boolean editIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+		String query = "call redigerRaavare(?, ?, ?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		preparedStatement.setString(2, ingredientName);
+		preparedStatement.setString(3, supplier);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
 	public List<ProductBatchDTO> getProductBatches() throws SQLException {
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
 		ResultSet results = null;
