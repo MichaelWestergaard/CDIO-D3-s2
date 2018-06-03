@@ -55,6 +55,22 @@ public class ReceptService extends ResponseHandler{
 		@POST
 		@Path("createReceptComponent")
 		public String createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
+			if(receptID < 1 || receptID > 99999999) {
+				return createResponse("error", 0, "Recept ID skal være mellem 1 - 99999999");
+			}
+			
+			if(ingredientID < 1 || ingredientID > 99999999) {
+				return createResponse("error", 0, "Råvare ID skal være mellem 1 - 99999999");
+			}
+			
+			if(nomNetto < 0.05 || nomNetto > 20.0) {
+				return createResponse("error", 0, "Nettovæten skal være mellem 0.05 - 20.0");
+			}
+			
+			if(tolerance < 0.1 || tolerance > 10.0) {
+				return createResponse("error", 0, "Tolerancen skal være mellem 0.1 - 10.0");
+			}
+			
 			try {
 				List<ReceptDTO> recepts = mySQLController.getRecepter();
 				List<IngredientDTO> ingredients = mySQLController.getIngredients();
