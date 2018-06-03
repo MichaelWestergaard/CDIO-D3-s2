@@ -1,23 +1,21 @@
 <div class="content">
 <h1>Opret Råvarebatch</h1>
-<form method="POST" action="rest/user/creatReKomponent" id="ingbatchliste.html">
-
-	<table class="">
-		<tr>
-			<td>Råvarebatch ID:</td>
-			<td><input type="text" class="text-field" name="ingredientBatchID"></td>
-		</tr>
-		<tr>
-			<td>Råvare ID:</td>
-			<td><input type="text" class="text-field" name="ingredientID"></td>
-		</tr>
-		<tr>
-			<td>Mængde:</td>
-			<td><input type="text" class="text-field" name="amount"></td>
-		</tr>
-	</table>
-	
-		<input type="submit" name="createIngBatch" value="Opret Råvarebatch">
+	<form method="POST" action="rest/ingredient/createIngredientBatch" id="ingbatchliste.html">
+		<table class="">
+			<tr>
+				<td>Råvarebatch ID:</td>
+				<td><input type="text" class="text-field" name="ingredientBatchID"></td>
+			</tr>
+			<tr>
+				<td>Råvare ID:</td>
+				<td><input type="text" class="text-field" name="ingredientID"></td>
+			</tr>
+			<tr>
+				<td>Mængde:</td>
+				<td><input type="text" class="text-field" name="amount"></td>
+			</tr>
+		</table>
+		<input type="submit" value="Opret Råvarebatch">
 	</form>
 <a href="ingredientliste.html" id="homeBtn">Tilbage</a>
 </div>

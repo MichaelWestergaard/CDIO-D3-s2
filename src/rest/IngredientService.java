@@ -117,16 +117,16 @@ public class IngredientService extends ResponseHandler {
 	}
 	
 	@POST
-	@Path("createIngBatch")
-	public String createIngBatch(@FormParam("ingBatchID") int ingBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @Context ServletContext context) throws IOException  {
+	@Path("createIngredientBatch")
+	public String createIngBatch(@FormParam("ingredientBatchID") int ingredientBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @Context ServletContext context) throws IOException  {
 		try {
-			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingBatchID) == null) {
-				if(mySQLController.createIngBatch(ingBatchID, ingredientID, amount)) {
-			IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingBatchID);
-			
-			if(createdIngBatch != null) {
-				return createResponse("success", 1, "Råvarebatchen med råvaren \"" + mySQLController.getIngredient(createdIngBatch.getIngredientID()).getIngredientName() + "\" blev oprettet");
-			}
+			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingredientBatchID) == null) {
+				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount)) {
+					IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingredientBatchID);
+					
+					if(createdIngBatch != null) {
+						return createResponse("success", 1, "Råvarebatchen med råvaren \"" + mySQLController.getIngredient(createdIngBatch.getIngredientID()).getIngredientName() + "\" blev oprettet");
+					}
 				}
 			}
 		} catch (SQLException e) {

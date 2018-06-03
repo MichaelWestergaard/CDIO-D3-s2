@@ -18,8 +18,8 @@
 		$(".content-container").load("createIngredient.html");
 	});
 
-	$('#createIngredient').on('click', function(){
-		$(".content-container").load("createIngredient.html");
+	$('#createIngBatch').on('click', function(){
+		$(".content-container").load("createRaavareBatch.html");
 	});
 	
 	$('input[name=login]').on('click', function(){
