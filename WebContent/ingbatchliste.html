@@ -7,7 +7,6 @@
 				<th>RåvareID</th>
 				<th>Råvarenavn</th>
 				<th>Mængde</th>
-				<th></th>
 			</tr>
 		</thead>
 		<tbody></tbody>
@@ -37,7 +36,7 @@ $.ajax({
 					success: function(ingredient){
 						if(ingredient.response_status == "success"){
 							ingredientResponse = JSON.parse(ingredient.response_message);
-							$(".user-table tbody").append('<tr id="' + response[i].ingBatchID + '"><td>' + response[i].ingBatchID + '</td><td>' + response[i].ingredientID + '</td><td> ' + ingredientResponse.ingredientName + '</td><td> ' + response[i].amount + ' </td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteIngBatch">Slet råvarebatch</option><option value="updateIngBatch">Opdater råvarebatch</option><option value="resetIngBatch">Nulstil råvarebatch</option></select></td></tr>');		
+							$(".user-table tbody").append('<tr id="' + response[i].ingBatchID + '"><td>' + response[i].ingBatchID + '</td><td>' + response[i].ingredientID + '</td><td> ' + ingredientResponse.ingredientName + '</td><td> ' + response[i].amount + ' </td></tr>');		
 						} else {
 							showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 						}

@@ -47,7 +47,7 @@ $.ajax({
 						break;
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="deleteProductBatch">Slet ProduktBatch</option><option value="updateProductBatch">Opdater ProduktBatch</option><option value="showProductBatchComponent">Vis PBCK</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="showProductBatchComponent">Vis PBCK</option></select></td></tr>');
 			}
 			
 			$('.user-table').on('change', 'tr select', function(){
