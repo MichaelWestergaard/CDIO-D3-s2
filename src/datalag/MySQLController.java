@@ -309,7 +309,7 @@ public class MySQLController {
 		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(productBatchID, raavareBatchID, operatorID, netto, tara);
 			
-			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)";
+			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, productBatchComponent.getProductBatchID());
 			preparedStatement.setInt(2, productBatchComponent.getRaavareBatchID());
