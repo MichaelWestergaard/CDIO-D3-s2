@@ -60,7 +60,6 @@ public class UserService extends ResponseHandler {
 	@Path("createUser")
 	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
 		try {
-			boolean valid = false;
 			//Validering af data
 			if(userID >= 1 && userID <= 999) {
 				if(userName.length() >= 2 && userName.length() <= 20) {
@@ -71,7 +70,6 @@ public class UserService extends ResponseHandler {
 						int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
 						int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
 						int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
-						boolean cprDublicate = false;
 
 						if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
 							List<UserDTO> users = mySQLController.getUsers();
@@ -160,8 +158,34 @@ public class UserService extends ResponseHandler {
 	@Path("updateUser")
 	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
 		try {
-			boolean state = mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, role, active); 
-			if(state) {
+			
+			if(userName.length() >= 2 && userName.length() <= 20) {
+				if(CPR.length() == 11) {
+					String[] splitCPR = CPR.split("-");
+					String combinedCPR = splitCPR[0] + splitCPR[1];
+					char[] cprChars = combinedCPR.toCharArray();
+					int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
+					int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
+					int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
+					
+					if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
+						List<UserDTO> users = mySQLController.getUsers();
+						for (UserDTO user : users) {
+							if(user.getCpr().equals(CPR) && user.getUserID() != userID) {
+								return createResponse("error", 0, "CPR-nummeret findes allerede!");
+							}
+						}
+					} else {
+						return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+					}
+				} else {
+					return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+				}
+			} else {
+				return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
+			}
+			
+			if(mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
 				return createResponse("success", 1, "Brugeren blev opdateret");
 			} else {
 				return createResponse("error", 1, "Brugeren blev ikke opdateret");
@@ -175,8 +199,7 @@ public class UserService extends ResponseHandler {
 	@Path("resetPassword")
 	public String resetPassword(@FormParam("userID") int userID, @FormParam("password") String password) {
 		try {
-			boolean state = mySQLController.resetPassword(userID, password);
-			if(state) {
+			if(mySQLController.resetPassword(userID, password)) {
 				return createResponse("success", 1, "Adgangskoden blev opdateret");
 			} else {
 				return createResponse("error", 1, "Adgangskoden blev ikke opdateret");

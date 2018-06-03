@@ -7,6 +7,7 @@
 				<th>Brugernavn</th>
 				<th>Fornavn</th>
 				<th>Efternavn</th>
+				<th>CPR</th>
 				<th>Password</th>
 				<th>Rolle</th>
 				<th>Aktiv</th>
@@ -27,6 +28,7 @@ $.ajax({
 	success: function(data){
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
+			console.log(response);
 			for (var i = 0; i < response.length; i++) {
 				
 				var roles = "";
@@ -42,7 +44,7 @@ $.ajax({
 					status = "Nej";
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="changeStatus">Ændre Status</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].cpr + '</td><td>' + response[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="changeStatus">Ændre Status</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
 			}
 	
 			$('.user-table').on('change', 'tr select', function() {
