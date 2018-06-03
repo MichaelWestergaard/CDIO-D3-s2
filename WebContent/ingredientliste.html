@@ -6,6 +6,7 @@
 				<th>RåvareID</th>
 				<th>Råvarenavn</th>
 				<th>Leverandør</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody></tbody>
@@ -17,13 +18,37 @@
 <script type="text/javascript" src="assets/js/main.js"></script>
 
 <script>
+function editIngredient(ingredientID){
+	$(".content-container").load('editIngredient.html');
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngredient',
+		dataType: 'json',
+		data: {
+			ingredientID: ingredientID
+		},
+		success: function(data){
+			if(data.response_status == "success"){
+				var response = JSON.parse(data.response_message);
+				console.log(response);
+				$("input[name=ingredientID]").val(response.ingredientID);
+				$("input[name=ingredientName]").val(response.ingredientName);
+				$("input[name=supplier]").val(response.supplier);
+			} else {
+				showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+			}
+		}
+	});
+}
+
+
 $.ajax({
 	type: 'GET',
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngredientList',
 	dataType: 'json',
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
-			$(".user-table tbody").append('<tr id="' + data[i].ingredientID + '"><td>' + data[i].ingredientID + '</td><td>' + data[i].ingredientName + '</td><td> ' + data[i].supplier + ' </td></tr>');
+			$(".user-table tbody").append('<tr id="' + data[i].ingredientID + '"><td>' + data[i].ingredientID + '</td><td>' + data[i].ingredientName + '</td><td> ' + data[i].supplier + ' </td><td><button class="tableBtn" onclick="editIngredient(' + data[i].ingredientID + ')">Rediger</button></td></tr>');
 		}
 					
 	}	
