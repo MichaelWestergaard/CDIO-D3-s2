@@ -34,7 +34,7 @@
 		e.preventDefault();
 		
 		var form = $(this).closest("form");
-
+		
 		$.ajax({
            type: $(form).attr('method'),
            url: $(form).attr('action'),
