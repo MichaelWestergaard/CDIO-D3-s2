@@ -384,7 +384,7 @@ public class MySQLController {
 		if(getIngBatch(ingBatchID) == null) {
 			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount);
 			
-			String query = "Call opretProduktBatch(?, ?, ?)";
+			String query = "Call opretRaavarebatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());

@@ -120,7 +120,18 @@ public class IngredientService extends ResponseHandler {
 	@Path("createIngredientBatch")
 	public String createIngBatch(@FormParam("ingredientBatchID") int ingredientBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @Context ServletContext context) throws IOException  {
 		try {
+			//Validering af data
+			if(ingredientBatchID >= 1 && ingredientBatchID <= 99999999) {
+				if(ingredientID >= 1 && ingredientID <= 99999999) {
+					//All good
+				} else {
+					return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
+				}
+			} else {
+				return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
+			}
 			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingredientBatchID) == null) {
+				
 				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount)) {
 					IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingredientBatchID);
 					
