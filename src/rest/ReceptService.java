@@ -40,7 +40,7 @@ public class ReceptService extends ResponseHandler{
 		}
 	}
 	
-	//Receptliste
+	//Receptliste 
 	@GET
 	@Path("getReceptList")
 	public String getReceptList() {
