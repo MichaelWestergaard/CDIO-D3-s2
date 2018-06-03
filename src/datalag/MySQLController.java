@@ -233,6 +233,23 @@ public class MySQLController {
 	
 	}
 	
+	public List<IngBatchDTO> getIngredientBatches() throws SQLException {
+		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM raavarebatch";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
+			ingBatches.add(ingBatch);
+		}
+		statement.close();
+		return ingBatches;
+	
+	}
+		
 	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
@@ -307,7 +324,7 @@ public class MySQLController {
 	}
 	
 	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
-		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
+		if(getProductBatchComponent(productBatchID, raavareBatchID, operatorID) == null)  {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(productBatchID, raavareBatchID, operatorID, netto, tara);
 			
 			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 

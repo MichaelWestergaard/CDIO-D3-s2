@@ -12,8 +12,10 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
 
+import datalag.IngBatchDTO;
 import datalag.IngredientDTO;
 import datalag.MySQLController;
+import datalag.ProductBatchComponentDTO;
 import datalag.ProductBatchDTO;
 import datalag.ReceptComponentDTO;
 import datalag.ReceptDTO;
