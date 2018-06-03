@@ -100,6 +100,7 @@
 	        					break;
 	        				case "Produktionsleder":
 	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste"><span>Råvarebatches</span></a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="productBatch"><span>Produktbatches</span></a></li>');
 	        					break;
 	        			}
 	        		}
