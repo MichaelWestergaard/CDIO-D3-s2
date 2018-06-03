@@ -136,7 +136,6 @@ public class MySQLController {
 		return true;
 	}
 	
-	
 	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;
@@ -170,6 +169,23 @@ public class MySQLController {
 		} else {
 			return false;
 		}
+	}
+	
+	public List<ProductBatchDTO> getProductBatches() throws SQLException {
+		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM produktbatch";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"));
+			productBatches.add(productBatch);
+		}
+		statement.close();
+		return productBatches;
+	
 	}
 	
 	public List<ReceptDTO> getRecepter() throws SQLException {
@@ -315,13 +331,13 @@ public class MySQLController {
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
 		
-		String query = "Select * from productbatch WHERE pb_id = ?";
+		String query = "Select * from produktbatch WHERE pb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID);
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("stauts"), results.getInt("recept_id"));
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"));
 			preparedStatement.close();
 			return productBatch;
 		}
@@ -368,7 +384,7 @@ public class MySQLController {
 		if(getIngBatch(ingBatchID) == null) {
 			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount);
 			
-			String query = "Call opretProduktBatch(?, ?, ?)";
+			String query = "Call opretRaavarebatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());

@@ -101,7 +101,7 @@ table {
 	display: block;
 }
 
-#homeBtn, #createBtn, #createRecept, #createIngredient, #createIngBatch, #createReceptComponent {
+#homeBtn, #createBtn, #createRecept, #createIngredient, #createIngBatch, #createReceptComponent, #createProductBatch {
 	margin-top: 20px;
 	display: block;
 	background: #8080ff;

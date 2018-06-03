@@ -13,8 +13,17 @@
 	$('#createReceptComponent').on('click', function(){
 		$(".content-container").load("createReceptComponent.html");
 	});
+	
 	$('#createIngredient').on('click', function(){
 		$(".content-container").load("createIngredient.html");
+	});
+
+	$('#createIngBatch').on('click', function(){
+		$(".content-container").load("createRaavareBatch.html");
+	});
+	
+	$('#createProductBatch').on('click', function(){
+		$(".content-container").load("createProductBatch.html");
 	});
 	
 	$('input[name=login]').on('click', function(){
@@ -25,7 +34,7 @@
 		e.preventDefault();
 		
 		var form = $(this).closest("form");
-		
+
 		$.ajax({
            type: $(form).attr('method'),
            url: $(form).attr('action'),
@@ -33,11 +42,13 @@
            success: function(data){
         	   data = JSON.parse(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-
         	   if(data.response_status == "success"){
             	   $('.content-container').load($(form).attr('id'));
         	   }
-           }
+           },
+			error: function(xhr, ajaxOptions, thrownError) {
+				showStatusMessage("Fejl ved indsendelse af formularen, prøv igen!", "error");
+	    	}
          });
 	});
 	
@@ -93,6 +104,7 @@
 	        					break;
 	        				case "Produktionsleder":
 	        					$('.navbar .navigation').append('<li><a href="#" id="ingbatchliste"><span>Råvarebatches</span></a></li>');
+	        					$('.navbar .navigation').append('<li><a href="#" id="productBatch"><span>Produktbatches</span></a></li>');
 	        					break;
 	        			}
 	        		}
