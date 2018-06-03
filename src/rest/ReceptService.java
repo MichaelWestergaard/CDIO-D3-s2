@@ -110,6 +110,18 @@ public class ReceptService extends ResponseHandler{
 		@Path("createRecept")
 		public String createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
 			try {
+				
+				//Validering af data
+				if(receptID >= 1 && receptID <= 99999999) {
+					if(receptName.length() >= 2 && receptName.length() <= 20) {
+						//All good
+					} else {
+						return createResponse("error", 0, "Recept navnet skal være 2-20 tegn!");
+					}
+				} else {
+					return createResponse("error", 0, "Recept ID skal være i mellem 1-99999999!");
+				}
+				
 				if(mySQLController.createRecept(receptID, receptName)) {
 				ReceptDTO createdRecept = mySQLController.getRecept(receptID);
 				

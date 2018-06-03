@@ -88,7 +88,7 @@ public class UserService extends ResponseHandler {
 					return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
 				}
 			} else {
-				return createResponse("error", 0, "Bruger ID skal i mellem 1-999!");
+				return createResponse("error", 0, "Bruger ID skal være i mellem 1-999!");
 			}
 			if(mySQLController.getUser(userID) == null) {
 				if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active)) {

@@ -64,7 +64,7 @@ body {
 .content-container .content {
 	padding: 15px 20px;
 	margin: 0 auto;
-	display: table;
+	display: block;
 	min-width: 35vw;
 }
 

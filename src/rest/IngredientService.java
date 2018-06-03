@@ -88,6 +88,20 @@ public class IngredientService extends ResponseHandler {
 	@Path("createIngredient")
 	public String createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
 		try {
+			//Validering af data
+			if(ingredientID >= 1 && ingredientID <= 99999999) {
+				if(ingredientName.length() >= 2 && ingredientName.length() <= 20) {
+					if(supplier.length() >= 2 && supplier.length() <= 20) {
+						//All good
+					} else {
+						return createResponse("error", 0, "Leverandøren skal være 2-20 tegn!");
+					}
+				} else {
+					return createResponse("error", 0, "Råvare navnet skal være 2-20 tegn!");
+				}
+			} else {
+				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
+			}
 			
 			if(mySQLController.createIngredient(ingredientID, ingredientName, supplier)) {
 				IngredientDTO createdIngredient = mySQLController.getIngredient(ingredientID);

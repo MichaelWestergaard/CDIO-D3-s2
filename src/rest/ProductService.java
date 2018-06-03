@@ -47,6 +47,22 @@ import javax.ws.rs.FormParam;
 		@Path("createProductBatch")
 		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @Context ServletContext context) throws IOException  {
 			try {
+				
+				//Validering af data
+				if(productBatchID >= 1 && productBatchID <= 99999999) {
+					if(status == 0 || status == 1 || status == 2) {
+						if(receptID >= 1 && receptID <= 99999999) {
+							//All good
+						} else {
+							return createResponse("error", 0, "Recept ID skal være i mellem 1-99999999!");
+						}
+					} else {
+						return createResponse("error", 0, "Status skal enten være 0, 1 eller 2!");
+					}
+				} else {
+					return createResponse("error", 0, "Produktbatch ID skal være i mellem 1-99999999!");
+				}
+				
 				if(mySQLController.getRecept(receptID) != null && mySQLController.getProductBatch(productBatchID) == null) {
 					if(mySQLController.createProductBatch(productBatchID, status, receptID)) {
 				ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
