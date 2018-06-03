@@ -28,7 +28,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 
 
-	@Path("Product")
+	@Path("product")
 	public class ProductService extends ResponseHandler{
 
 		private MySQLController mySQLController;

@@ -10,9 +10,13 @@
 	$('#createRecept').on('click', function(){
 		$(".content-container").load("createRecept.html");
 	});
+	$('#createReceptComponent').on('click', function(){
+		$(".content-container").load("createReceptComponent.html");
+	});
 	$('#createIngredient').on('click', function(){
 		$(".content-container").load("createIngredient.html");
 	});
+	
 	$('input[name=login]').on('click', function(){
 		login();
 	});
