@@ -120,6 +120,10 @@ table {
 	font-size: 12px;
 }
 
+#homeBtn {
+	background: #ff8980;
+}
+
 .tableBtn {
 	background: #3ecf8e;
 	color: #fff;
