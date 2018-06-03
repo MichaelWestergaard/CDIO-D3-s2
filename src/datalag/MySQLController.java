@@ -175,7 +175,7 @@ public class MySQLController {
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
 		ResultSet results = null;
 		
-		String query = "SELECT * FROM productbatch";
+		String query = "SELECT * FROM produktbatch";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
 		
