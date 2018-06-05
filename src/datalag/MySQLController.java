@@ -52,7 +52,7 @@ public class MySQLController {
 		
 		if(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(",")); 
-			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("initialer"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
+			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), results.getString("initialer"), roles, results.getInt("status"));
 			preparedStatement.close();
 			return user;
 		}
@@ -71,7 +71,7 @@ public class MySQLController {
 		
 		while(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(","));
-			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("initialer"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
+			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), results.getString("initialer"), roles, results.getInt("status"));
 			users.add(user);
 		}
 		statement.close();

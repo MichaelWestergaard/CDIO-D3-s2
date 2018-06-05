@@ -195,7 +195,7 @@ public class UserService extends ResponseHandler {
 				if(initial.length() >= 2 && initial.length() <= 4) {
 					List<UserDTO> users = mySQLController.getUsers();
 					for (UserDTO user : users) {
-						if(user.getInitial().equals(initial)) {
+						if(user.getInitial().equals(initial) && user.getUserID() != userID) {
 							return createResponse("error", 0, "Initialerne findes allerede!");
 						}
 					}
@@ -206,7 +206,7 @@ public class UserService extends ResponseHandler {
 				return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
 			}
 			
-			if(mySQLController.updateUser(userID, userName, firstName, lastName, initial, CPR, password, role, active)) {
+			if(mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, initial, role, active)) {
 				return createResponse("success", 1, "Brugeren blev opdateret");
 			} else {
 				return createResponse("error", 1, "Brugeren blev ikke opdateret");
