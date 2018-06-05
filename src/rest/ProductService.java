@@ -44,6 +44,17 @@ import javax.ws.rs.FormParam;
 			}
 		}
 		
+		//ProduktBatchkomponent-Liste
+		@GET
+		@Path("getProductBatchComponentList")
+		public String getProductBatchComponentList() {
+			try {
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatchComponents()));
+			} catch (SQLException e) {
+				return createResponse("error", e.getErrorCode(), e.getMessage());
+			}
+		}
+		
 		//Tilføj en ProduktBatchKomponent. Der skal laves en fejl besked
 		@POST
 		@Path("createProductBatchComponent")
@@ -117,6 +128,17 @@ import javax.ws.rs.FormParam;
 			} catch (SQLException e) {
 				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}
+		}
+		
+		@GET
+		@Path("getProductBatchComponent")
+		public String getProductBatchComponent(@QueryParam("productBatchID") int productBatchID, @QueryParam("raavareBatchID") int raavareBatchID, @QueryParam("operatorID") int operatorID) {
+			try {
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID)));
+			} catch (SQLException e) {
+				return createResponse("error", e.getErrorCode(), e.getMessage());
+			}
+		
 		}
 		
 		//ProduktBatch-Liste
