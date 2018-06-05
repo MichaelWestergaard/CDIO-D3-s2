@@ -52,7 +52,6 @@ $.ajax({
 	success: function(data){
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
-			console.log(response);
 			for(var i = 0; i < response.length; i++){
 				
 				switch(response[i].status){

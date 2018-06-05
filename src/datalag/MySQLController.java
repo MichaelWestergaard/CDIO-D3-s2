@@ -264,22 +264,6 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
-
-	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
-		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
-		ResultSet results = null;
-		
-		String query = "SELECT * FROM produktbatchkomponent";
-		statement = (Statement) getConnection().createStatement();
-		results = statement.executeQuery(query);
-		
-		while(results.next()) {
-			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("opr_id"), results.getDouble("netto"), results.getDouble("tara"));
-			productBatchComponents.add(productBatchComponent);
-		}
-		statement.close();
-		return productBatchComponents;
-	}
 	
 	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
@@ -317,12 +301,29 @@ public class MySQLController {
 			return false;			
 		}
 	}
+	
+
+	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
+		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM produkt_batch_komponent";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
+			productBatchComponents.add(productBatchComponent);
+		}
+		statement.close();
+		return productBatchComponents;
+	}
 
 	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID) throws SQLException {
 		ProductBatchComponentDTO productBatchComponent = null;
 		ResultSet results = null;
 		
-		String query = "Select * from produktbatchkomponent WHERE pb_id = ? and rb_id = ?";
+		String query = "Select * from produkt_batch_komponent WHERE pb_id = ? and rb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID );
 		preparedStatement.setInt(2, raavareBatchID);
@@ -330,7 +331,7 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("opr_id"), results.getDouble("netto"), results.getDouble("tara"));
+			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getString("rb_raavare_name"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			preparedStatement.close();
 			return productBatchComponent;
 		}
@@ -340,15 +341,14 @@ public class MySQLController {
 	
 	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
 		if(getProductBatchComponent(productBatchID, raavareBatchID, operatorID) == null)  {
-			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(productBatchID, raavareBatchID, operatorID, netto, tara);
 			
 			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, productBatchComponent.getProductBatchID());
-			preparedStatement.setInt(2, productBatchComponent.getRaavareBatchID());
-			preparedStatement.setInt(3, productBatchComponent.getOperatorID());
-			preparedStatement.setDouble(4, productBatchComponent.getNetto());
-			preparedStatement.setDouble(5, productBatchComponent.getTara());
+			preparedStatement.setInt(1, productBatchID);
+			preparedStatement.setInt(2, raavareBatchID);
+			preparedStatement.setInt(3, operatorID);
+			preparedStatement.setDouble(4, netto);
+			preparedStatement.setDouble(5, tara);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
