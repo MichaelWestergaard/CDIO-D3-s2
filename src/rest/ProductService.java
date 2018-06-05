@@ -81,7 +81,7 @@ import javax.ws.rs.FormParam;
 			
 			try {
 				List<ProductBatchDTO> productBatches = mySQLController.getProductBatches();
-				List<IngBatchDTO> ingBatches = mySQLController.getIngredientBatches();
+				List<IngBatchDTO> ingBatches = mySQLController.getIngBatches();
 				List<UserDTO> users = mySQLController.getUsers();
 				boolean productBatchFound = false;
 				boolean ingredientBatchFound = false;		
@@ -173,7 +173,7 @@ import javax.ws.rs.FormParam;
 				}
 				
 				if(mySQLController.getRecept(receptID) != null && mySQLController.getProductBatch(productBatchID) == null) {
-					if(mySQLController.createProductBatch(productBatchID, status, receptID)) {
+					if(mySQLController.createProductBatch(productBatchID, status, receptID, startDate, endDate)) {
 				ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
 				
 				if(createdProductBatch != null) {

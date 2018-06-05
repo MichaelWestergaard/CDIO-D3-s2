@@ -3,12 +3,32 @@ package datalag;
 public class ProductBatchDTO {
 	int productBatchID;
 	int status;                     
-	int receptID;                    
+	int receptID;     
+	String startDate;
+	String endDate;
 	
-	public ProductBatchDTO(int productBatchID, int status, int receptID) {
+	public ProductBatchDTO(int productBatchID, int status, int receptID, String startDate, String endDate) {
 		this.productBatchID = productBatchID;
 		this.status = status;
 		this.receptID = receptID;
+		this.startDate =startDate;
+		this.endDate = endDate;
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 
 	public int getProductBatchID() {
