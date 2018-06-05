@@ -6,31 +6,31 @@ public class ProductBatchDTO {
 	int productBatchID;
 	int status;                     
 	int receptID;     
-	Timestamp startTime;
-	Timestamp endTime;
+	Timestamp startdato;
+	Timestamp slutdato;
 	
-	public ProductBatchDTO(int productBatchID, int status, int receptID, Timestamp startTime, Timestamp endTime) {
+	public ProductBatchDTO(int productBatchID, int status, int receptID, Timestamp startdato, Timestamp slutdato) {
 		this.productBatchID = productBatchID;
 		this.status = status;
 		this.receptID = receptID;
-		this.startTime = startTime;
-		this.endTime = endTime;
+		this.startdato = startdato;
+		this.slutdato = slutdato;
 	}
 
-	public Timestamp getStartDate() {
-		return startTime;
+	public Timestamp getStartdato() {
+		return startdato;
 	}
 
-	public void setStartDate(Timestamp startTime) {
-		this.startTime = startTime;
+	public void setStartdato(Timestamp startdato) {
+		this.startdato = startdato;
 	}
 
-	public Timestamp getEndDate() {
-		return endTime;
+	public Timestamp getSlutdato() {
+		return slutdato;
 	}
 
-	public void setEndDate(Timestamp endTime) {
-		this.endTime = endTime;
+	public void setSlutdato(Timestamp slutdato) {
+		this.slutdato = slutdato;
 	}
 
 	public int getProductBatchID() {

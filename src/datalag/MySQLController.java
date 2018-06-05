@@ -415,17 +415,15 @@ public class MySQLController {
 		return null;
 	}
 	
-	public boolean createProductBatch(int productBatchID, int status, int receptID, Timestamp startTime, Timestamp endTime) throws SQLException {
+	public boolean createProductBatch(int productBatchID, int status, int receptID, Timestamp startdato, Timestamp slutdato) throws SQLException {
 		if(getProductBatch(productBatchID) == null) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID, startTime, endTime);
+			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID, startdato, slutdato);
 			
-			String query = "Call opretProduktBatch(?, ?, ?, ?, ?)";
+			String query = "Call opretProduktBatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, productBatch.getProductBatchID());
 			preparedStatement.setInt(2, productBatch.getStatus());
 			preparedStatement.setInt(3, productBatch.getReceptID());
-			preparedStatement.setTimestamp(4, productBatch.getStartDate());
-			preparedStatement.setTimestamp(5, productBatch.getEndDate());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

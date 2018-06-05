@@ -73,7 +73,7 @@ $.ajax({
 						break;
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><button class="tableBtn" onclick="showProductBatchComponent(' + response[i].productBatchID + ')">Vis PBK</button></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td>' + response[i].startdato + '</td><td>' + response[i].slutdato + '</td><td><button class="tableBtn" onclick="showProductBatchComponent(' + response[i].productBatchID + ')">Vis PBK</button></td></tr>');
 			}
 		} else {
 			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
