@@ -81,7 +81,7 @@ import javax.ws.rs.FormParam;
 			
 			try {
 				List<ProductBatchDTO> productBatches = mySQLController.getProductBatches();
-				List<IngBatchDTO> ingBatches = mySQLController.getIngredientBatches();
+				List<IngBatchDTO> ingBatches = mySQLController.getIngBatches();
 				List<UserDTO> users = mySQLController.getUsers();
 				boolean productBatchFound = false;
 				boolean ingredientBatchFound = false;		
