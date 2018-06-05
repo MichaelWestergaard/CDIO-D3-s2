@@ -191,6 +191,17 @@ public class UserService extends ResponseHandler {
 				} else {
 					return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
 				}
+				
+				if(initial.length() >= 2 && initial.length() <= 4) {
+					List<UserDTO> users = mySQLController.getUsers();
+					for (UserDTO user : users) {
+						if(user.getInitial().equals(initial)) {
+							return createResponse("error", 0, "Initialerne findes allerede!");
+						}
+					}
+				} else {
+					return createResponse("error", 0, "Initialer skal være 2-4 tegn!");
+				}
 			} else {
 				return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
 			}
