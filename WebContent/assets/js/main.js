@@ -46,7 +46,8 @@
             	   $('.content-container').load($(form).attr('id'));
         	   }
            },
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function(response, ajaxOptions, thrownError) {
+				//alert(response.responseText);
 				showStatusMessage("Fejl ved indsendelse af formularen, prøv igen!", "error");
 	    	}
          });
@@ -76,7 +77,12 @@
 		});
 	}
 	
+	//Komma til punktum i decimal felter
+	$(document).on('change', '.decimal', function() {
+		$(this).val($(this).val().replace(/,/g, '.'));
+	});
 	
+	//Login med enter
 	$(document).keyup(function (e) {
 	    if (e.keyCode === 13 && $('.content').is("#loginpage")) {
 	    	login();
