@@ -58,7 +58,7 @@ public class UserService extends ResponseHandler {
 	
 	@POST
 	@Path("createUser")
-	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
+	public String createUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("initial") String initial, @FormParam("role") List<String> role, @FormParam("active") int active, @Context ServletContext context)  {
 		try {
 			//Validering af data
 			if(userID >= 1 && userID <= 999) {
@@ -91,7 +91,7 @@ public class UserService extends ResponseHandler {
 				return createResponse("error", 0, "Bruger ID skal være i mellem 1-999!");
 			}
 			if(mySQLController.getUser(userID) == null) {
-				if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
+				if(mySQLController.createUser(userID, userName, firstName, lastName, CPR, password, initial, role, active)) {
 					UserDTO createdUser = mySQLController.getUser(userID);
 						
 					if(createdUser != null) {
@@ -156,7 +156,7 @@ public class UserService extends ResponseHandler {
 	
 	@POST
 	@Path("updateUser")
-	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
+	public String updateUser(@FormParam("userID") int userID, @FormParam("userName") String userName, @FormParam("firstName") String firstName, @FormParam("lastName") String lastName, @FormParam("CPR") String CPR, @FormParam("password") String password, @FormParam("initial") String initial, @FormParam("role") String role, @FormParam("active") int active) throws IOException  {
 		try {
 			
 			if(userName.length() >= 2 && userName.length() <= 20) {
@@ -185,7 +185,7 @@ public class UserService extends ResponseHandler {
 				return createResponse("error", 0, "Brugernavnet skal være 2-20 tegn!");
 			}
 			
-			if(mySQLController.updateUser(userID, userName, firstName, lastName, CPR, password, role, active)) {
+			if(mySQLController.updateUser(userID, userName, firstName, lastName, initial, CPR, password, role, active)) {
 				return createResponse("success", 1, "Brugeren blev opdateret");
 			} else {
 				return createResponse("error", 1, "Brugeren blev ikke opdateret");

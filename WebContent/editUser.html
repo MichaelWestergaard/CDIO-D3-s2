@@ -7,6 +7,7 @@
 				<th>Fornavn</th>
 				<th>Efternavn</th>
 				<th>Password</th>
+				<th>Initial</th>
 				<th>CPR</th>
 				<th>Rolle</th>
 				<th>Aktiv</th>
@@ -21,6 +22,7 @@
 				<td><input type="text" name="firstName" form="my_form" /></td>
 				<td><input type="text" name="lastName" form="my_form" /></td>
 				<td><input type="text" name="password" form="my_form" /></td>
+				<td><input type="text" name="initial" form="my_form" /></td>
 				<td><input type="text" name="CPR" form="my_form" /></td>
 				<td class="align-left">
 					<input type="checkbox" name="role" value="Admin">Admin <br>
@@ -46,6 +48,7 @@
 		var firstName	= $("input[name=firstName]").val();
 		var lastName	= $("input[name=lastName]").val();
 		var password	= $("input[name=password]").val();
+		var initial	= $("input[name=initial]").val();
 		var cpr 		= $("input[name=CPR]").val();
 		var role = "";
 		$('input[name=role]:checked').each(function() {
@@ -64,6 +67,7 @@
         		firstName: firstName,
         		lastName: lastName,
         		password: password,
+        		initial: initial,
         		CPR: cpr,
         		role: role,
         		active: active

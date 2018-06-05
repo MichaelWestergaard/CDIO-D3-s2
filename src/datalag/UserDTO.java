@@ -10,16 +10,18 @@ public class UserDTO {
 	String lastName;
 	String cpr;                 
 	String password;
+	String initial;
 	List<String> role;
 	int active;
 	
-	public UserDTO(int userID, String userName, String name, String lastName, String cpr, String password, List<String> role, int active) {
+	public UserDTO(int userID, String userName, String name, String lastName, String cpr, String password, String initial, List<String> role, int active) {
 		this.userID = userID;
 		this.userName = userName;
 		this.name = name;
 		this.lastName = lastName;
 		this.cpr = cpr;
 		this.password = password;
+		this.initial = initial;
 		this.role = role;
 		this.active = active;
 	}
@@ -54,6 +56,14 @@ public class UserDTO {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getInitial() {
+		return initial;
+	}
+
+	public void setInitial(String initial) {
+		this.initial = initial;
 	}
 
 	public String getCpr() {
@@ -90,7 +100,7 @@ public class UserDTO {
 
 	@Override
 	public String toString() {
-		return "[userID=" + userID + ", userName=" + userName + ", name=" + name + ", lastName=" + lastName + ", cpr=" + cpr + ", password=" + password + ", role=" + role + ", active=" + active + "]";
+		return "[userID=" + userID + ", userName=" + userName + ", name=" + name + ", lastName=" + lastName + ", cpr=" + cpr + ", password=" + password + ", initial=" + initial + ", role=" + role + ", active=" + active + "]";
 	}
 	
 	

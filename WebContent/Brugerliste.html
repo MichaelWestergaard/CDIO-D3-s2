@@ -9,6 +9,7 @@
 				<th>Efternavn</th>
 				<th>CPR</th>
 				<th>Password</th>
+				<th>Initialer</th>
 				<th>Rolle</th>
 				<th>Aktiv</th>
 				<th></th>
@@ -44,7 +45,7 @@ $.ajax({
 					status = "Nej";
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].cpr + '</td><td>' + response[i].password + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="changeStatus">Ændre Status</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].userID + '"><td>' + response[i].userID + '</td><td>' + response[i].userName + '</td><td>' + response[i].name + '</td><td>' + response[i].lastName + '</td><td>' + response[i].cpr + '</td><td>' + response[i].password + '</td><td>' + response[i].initial + '</td><td>' + roles + '</td><td>' + status + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="changeStatus">Ændre Status</option><option value="updateUser">Opdater bruger</option><option value="resetPass">Nulstil kode</option></select></td></tr>');
 			}
 	
 			$('.user-table').on('change', 'tr select', function() {
@@ -86,6 +87,7 @@ $.ajax({
 								$("input[name=firstName]").val(response.name);
 								$("input[name=lastName]").val(response.lastName);
 								$("input[name=password]").val(response.password);
+								$("input[name=initial]").val(response.initial);
 								$("input[name=CPR]").val(response.cpr);
 								
 								for (var j = 0; j < response.role.length; j++) {

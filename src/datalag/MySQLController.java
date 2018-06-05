@@ -51,7 +51,7 @@ public class MySQLController {
 		
 		if(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(",")); 
-			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
+			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("initialer"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
 			preparedStatement.close();
 			return user;
 		}
@@ -70,18 +70,18 @@ public class MySQLController {
 		
 		while(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(","));
-			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
+			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("initialer"), results.getString("cpr"), results.getString("Password"), roles, results.getInt("status"));
 			users.add(user);
 		}
 		statement.close();
 		return users;
 	}
 	
-	public boolean createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, List<String> role, int active) throws SQLException {
+	public boolean createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String initial, List<String> role, int active) throws SQLException {
 		if(getUser(userID) == null) {
-			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, role, active);
+			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, initial, role, active);
 			
-			String query = "call opretBruger(?, ?, ?, ?, ?, ?, ?, ?)";
+			String query = "call opretBruger(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, user.getUserID());
 			preparedStatement.setString(2, user.getUserName());
@@ -89,8 +89,9 @@ public class MySQLController {
 			preparedStatement.setString(4, user.getLastName());
 			preparedStatement.setString(5, user.getCpr());
 			preparedStatement.setString(6, user.getPassword());
-			preparedStatement.setString(7, String.join(",", user.getRole()));
-			preparedStatement.setInt(8, user.getActive());
+			preparedStatement.setString(7, user.getInitial());
+			preparedStatement.setString(8, String.join(",", user.getRole()));
+			preparedStatement.setInt(9, user.getActive());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -99,8 +100,8 @@ public class MySQLController {
 		}		
 	}
 	
-	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String role, int active) throws SQLException {
-		String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?)";
+	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String initial, String role, int active) throws SQLException {
+		String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
 		preparedStatement.setString(2, userName);
@@ -108,8 +109,9 @@ public class MySQLController {
 		preparedStatement.setString(4, lastName);
 		preparedStatement.setString(5, cpr);
 		preparedStatement.setString(6, password);
-		preparedStatement.setString(7, role);
-		preparedStatement.setInt(8, active);
+		preparedStatement.setString(7, initial);
+		preparedStatement.setString(8, role);
+		preparedStatement.setInt(9, active);
 		preparedStatement.execute();
 		preparedStatement.close();
 		return true;
