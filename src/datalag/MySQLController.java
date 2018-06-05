@@ -192,7 +192,7 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("starttid"), results.getTimestamp("sluttid"));
+			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("startdato"), results.getTimestamp("slutdato"));
 			productBatches.add(productBatch);
 		}
 		statement.close();
@@ -405,7 +405,7 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("starttid"), results.getTimestamp("sluttid"));
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("startdato"), results.getTimestamp("slutdato"));
 			preparedStatement.close();
 			return productBatch;
 		}
