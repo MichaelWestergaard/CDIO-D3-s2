@@ -6,6 +6,8 @@
 				<th>ProduktBatch ID</th>
 				<th>Status</th>
 				<th>Recept ID</th>
+				<th>Startdato</th>
+				<th>Slutdato</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -34,6 +36,8 @@ function showProductBatchComponent(productBatchID){
 				$("input[name=productBatchID]").val(response.productBatchID);
 				$("input[name=status]").val(response.status);
 				$("input[name=receptID]").val(response.receptID);
+				$("input[name=startdato]").val(response.startdato);
+				$("input[name=slutdato]").val(response.slutdato);
 			} else {
 				showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 			}
