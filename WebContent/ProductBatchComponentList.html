@@ -34,10 +34,17 @@ $.ajax({
 			console.log(response);
 			var productBatchID = $('input[name=productBatchID]').val();
 			
+			var pbCount = 0;
+			
 			for(var i = 0; i < response.length; i++){
 				if(response[i].productBatchID == productBatchID){
 					$(".user-table tbody").append('<tr><td>' + response[i].productBatchID + '</td><td>' + response[i].ingredientBatchID + '</td><td>' + response[i].ingredientName + '</td><td>' + response[i].operatorID + '</td><td>' + response[i].initials + '</td><td>' + response[i].netto + '</td><td>' + response[i].tara + '</td></tr>');
+					pbCount++;
 				}
+			}
+			
+			if(pbCount == 0){
+				showStatusMessage("Der blev ikke fundet nogle komponenter for dette produktbatch", "error");
 			}
 		}	
 	}
