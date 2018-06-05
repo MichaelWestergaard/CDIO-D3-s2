@@ -232,24 +232,7 @@ public class MySQLController {
 		return ingredients;
 	
 	}
-	
-	public List<IngBatchDTO> getIngredientBatches() throws SQLException {
-		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
-		ResultSet results = null;
-		
-		String query = "SELECT * FROM raavarebatch";
-		statement = (Statement) getConnection().createStatement();
-		results = statement.executeQuery(query);
-		
-		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
-			ingBatches.add(ingBatch);
-		}
-		statement.close();
-		return ingBatches;
-	
-	}
-		
+			
 	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
@@ -347,12 +330,12 @@ public class MySQLController {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
 		ResultSet results = null;
 
-		String query = "SELECT * FROM raavarebatch";
+		String query = "SELECT * FROM raavare_batch";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"));
 			ingBatches.add(ingBatch);
 		}
 		statement.close();
@@ -434,13 +417,13 @@ public class MySQLController {
 		IngBatchDTO ingBatch = null;
 		ResultSet results = null;
 		
-		String query = "Select * from raavarebatch WHERE rb_id = ?";
+		String query = "Select * from raavare_batch WHERE rb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingBatchID);
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"));
+			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"));
 			preparedStatement.close();
 			return ingBatch;
 		}
@@ -450,7 +433,7 @@ public class MySQLController {
 	
 	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount) throws SQLException {
 		if(getIngBatch(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount);
+			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "");
 			
 			String query = "Call opretRaavarebatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);

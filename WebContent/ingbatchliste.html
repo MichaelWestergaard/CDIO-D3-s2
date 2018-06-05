@@ -27,23 +27,7 @@ $.ajax({
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
 			for(var i = 0; i < response.length; i++){
-				$.ajax({
-					type: 'GET',
-					url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngredient',
-					dataType: 'json',
-					data: {ingredientID: response[i].ingredientID},
-					async: false,
-					success: function(ingredient){
-						if(ingredient.response_status == "success"){
-							ingredientResponse = JSON.parse(ingredient.response_message);
-							$(".user-table tbody").append('<tr id="' + response[i].ingBatchID + '"><td>' + response[i].ingBatchID + '</td><td>' + response[i].ingredientID + '</td><td> ' + ingredientResponse.ingredientName + '</td><td> ' + response[i].amount + ' </td></tr>');		
-						} else {
-							showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-						}
-					}
-					
-				});
-				
+				$(".user-table tbody").append('<tr id="' + response[i].ingBatchID + '"><td>' + response[i].ingBatchID + '</td><td>' + response[i].ingredientID + '</td><td> ' + response[i].ingredientName + '</td><td> ' + response[i].amount + ' </td></tr>');
 			}	
 		} else {
 			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
