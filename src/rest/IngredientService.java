@@ -166,7 +166,7 @@ public class IngredientService extends ResponseHandler {
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return createResponse("error", 0, "Kunne ikke oprette Råvarebatchen");
+		return createResponse("error", 0, String.valueOf(amount));
 	}
 	
 	
