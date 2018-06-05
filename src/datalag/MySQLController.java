@@ -249,6 +249,22 @@ public class MySQLController {
 		return receptComponents;
 	}
 
+	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
+		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
+		ResultSet results = null;
+		
+		String query = "SELECT * FROM produktbatchkomponent";
+		statement = (Statement) getConnection().createStatement();
+		results = statement.executeQuery(query);
+		
+		while(results.next()) {
+			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("opr_id"), results.getDouble("netto"), results.getDouble("tara"));
+			productBatchComponents.add(productBatchComponent);
+		}
+		statement.close();
+		return productBatchComponents;
+	}
+	
 	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
 		ResultSet results = null;
