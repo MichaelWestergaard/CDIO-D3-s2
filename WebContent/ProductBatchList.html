@@ -19,6 +19,28 @@
 
 <!-- Fix så man kan oprette receptkomponenter fra listen, og link opret-knappn så den loader createReceptComponent.html. (Opret i ReceptService? aka spørg Michael) -->
 <script>
+function showProductBatchComponent(productBatchID){
+	$(".content-container").load('ProductBatchComponentList.html');
+	$.ajax({
+		type: 'GET',
+		url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatch',
+		dataType: 'json',
+		data: {
+			productBatchID: productBatchID
+		},
+		success: function(data){
+			if(data.response_status == "success"){
+				var response = JSON.parse(data.response_message);
+				$("input[name=productBatchID]").val(response.productBatchID);
+				$("input[name=status]").val(response.status);
+				$("input[name=receptID]").val(response.receptID);
+			} else {
+				showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+			}
+		}
+	});
+}
+
 $.ajax({
 	type: 'GET',
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatchList',
@@ -47,35 +69,8 @@ $.ajax({
 						break;
 				}
 				
-				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><select id="options"><option value="vælg">-Vælg-</option><option value="showProductBatchComponent">Vis PBCK</option></select></td></tr>');
+				$(".user-table tbody").append('<tr id="' + response[i].productBatchID + '"><td>' + response[i].productBatchID + '</td><td>' + status + '</td><td>' + response[i].receptID + '</td><td><button class="tableBtn" onclick="showProductBatchComponent(' + response[i].productBatchID + ')">Vis PBK</button></td></tr>');
 			}
-			
-			$('.user-table').on('change', 'tr select', function(){
-				
-				var receptID = $(this).closest("tr").attr("id");
-				
-				if (this.value == "showProductBatchComponent"){
-					$(".content-container").load('ProductBatchComponentList.html');
-					$.ajax({
-						type: 'GET',
-						url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatch',
-						dataType: 'json',
-						data: {
-							productBatchID: productBatchID
-						},
-						success: function(data){
-							if(data.response_status == "success"){
-								var response = JSON.parse(data.response_message);
-								$("input[name=productBatchID]").val(response.productBatchID);
-								$("input[name=status]").val(response.status);
-								$("input[name=receptID]").val(response.receptID);
-							} else {
-								showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-							}
-						}
-					});
-				}
-			});
 		} else {
 			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 		}

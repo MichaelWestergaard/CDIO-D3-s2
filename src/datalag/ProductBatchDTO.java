@@ -1,14 +1,36 @@
 package datalag;
 
+import java.sql.Timestamp;
+
 public class ProductBatchDTO {
 	int productBatchID;
 	int status;                     
-	int receptID;                    
+	int receptID;     
+	Timestamp startTime;
+	Timestamp endTime;
 	
-	public ProductBatchDTO(int productBatchID, int status, int receptID) {
+	public ProductBatchDTO(int productBatchID, int status, int receptID, Timestamp startTime, Timestamp endTime) {
 		this.productBatchID = productBatchID;
 		this.status = status;
 		this.receptID = receptID;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+
+	public Timestamp getStartDate() {
+		return startTime;
+	}
+
+	public void setStartDate(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	public Timestamp getEndDate() {
+		return endTime;
+	}
+
+	public void setEndDate(Timestamp endTime) {
+		this.endTime = endTime;
 	}
 
 	public int getProductBatchID() {

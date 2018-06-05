@@ -34,7 +34,7 @@
 		e.preventDefault();
 		
 		var form = $(this).closest("form");
-
+		
 		$.ajax({
            type: $(form).attr('method'),
            url: $(form).attr('action'),
@@ -46,12 +46,13 @@
             	   $('.content-container').load($(form).attr('id'));
         	   }
            },
-			error: function(xhr, ajaxOptions, thrownError) {
+			error: function(response, ajaxOptions, thrownError) {
+				//alert(response.responseText);
 				showStatusMessage("Fejl ved indsendelse af formularen, prøv igen!", "error");
 	    	}
          });
 	});
-	
+
 	function login(){
 		$.ajax({
 			type: "POST",
@@ -75,11 +76,20 @@
 	    	}
 		});
 	}
+	
+	//Komma til punktum i decimal felter
+	$(document).on('change', '.decimal', function() {
+		$(this).val($(this).val().replace(/,/g, '.'));
+	});
+	
+	//Login med enter
+	$(document).keyup(function (e) {
+	    if (e.keyCode === 13 && $('.content').is("#loginpage")) {
+	    	login();
+	    }
+	 });
 
 	function toggleNavbar(){
-		console.log(sessionStorage.getItem("userID"));
-		//Fjern alle knapper
-		$('.navbar .navigation').empty();
 		var userID = sessionStorage.getItem("userID");
 		//Få brugerens roller
 		$.ajax({
@@ -92,6 +102,8 @@
         	success: function(data){
         		var response = JSON.parse(data.response_message);
         		if(data != null){
+
+        			$('.navbar .navigation').empty();
 	        		$('.navbar .navigation').append('<li><a href="#" id="startpage"><span>Forside</span></a></li>');
 	        		for (var i = 0; i < response.role.length; i++) {
 	        			switch(response.role[i]){        			

@@ -72,6 +72,29 @@ public class IngredientService extends ResponseHandler {
 		}
 	}
 	
+	@POST
+	@Path("editIngredient")
+	public String editIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier) {
+		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
+			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
+		}
+		
+		if(supplier.length() < 2 || supplier.length() > 20) {
+			return createResponse("error", 0, "Leverandørnavnet skal være mellem 2 - 20 tegn");
+		}
+		
+		try {
+			if(mySQLController.editIngredient(ingredientID, ingredientName, supplier)) {
+				return createResponse("success", 1, "Råvaren blev opdateret");
+			} else {
+				return createResponse("error", 0, "Råvaren kunne ikke opdateres");
+			}
+		} catch (SQLException e){
+			return createResponse("error", e.getErrorCode(), e.getMessage());
+		}
+			
+	}
+		
 	//Råvarebatchliste
 	@GET
 	@Path("getIngBatchList")
@@ -143,7 +166,7 @@ public class IngredientService extends ResponseHandler {
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
-		return createResponse("error", 0, "Kunne ikke oprette Råvarebatchen");
+		return createResponse("error", 0, String.valueOf(amount));
 	}
 	
 	
