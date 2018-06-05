@@ -4,9 +4,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Date;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -19,8 +21,8 @@ import com.mysql.jdbc.Statement;
 public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 //	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
-	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false";
-//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";
+	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&zeroDateTimeBehavior=convertToNull";
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull";
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
@@ -194,7 +196,18 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("startdato"), results.getTimestamp("slutdato"));
+			String endDate = "";
+			String startDate = "";
+			
+			if(results.getTimestamp("slutdato") != null) {
+				endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("slutdato"));
+			}
+			
+			if(results.getTimestamp("startdato") != null) {
+				startDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("startdato"));
+			}
+			
+			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), startDate, endDate);
 			productBatches.add(productBatch);
 		}
 		statement.close();
@@ -407,7 +420,18 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("startdato"), results.getTimestamp("slutdato"));
+			String endDate = "";
+			String startDate = "";
+			
+			if(results.getTimestamp("slutdato") != null) {
+				endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("slutdato"));
+			}
+			
+			if(results.getTimestamp("startdato") != null) {
+				startDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("startdato"));
+			}
+			
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), startDate, endDate);
 			preparedStatement.close();
 			return productBatch;
 		}
@@ -415,15 +439,13 @@ public class MySQLController {
 		return null;
 	}
 	
-	public boolean createProductBatch(int productBatchID, int status, int receptID, Timestamp startdato, Timestamp slutdato) throws SQLException {
+	public boolean createProductBatch(int productBatchID, int status, int receptID) throws SQLException {
 		if(getProductBatch(productBatchID) == null) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID, startdato, slutdato);
-			
 			String query = "Call opretProduktBatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, productBatch.getProductBatchID());
-			preparedStatement.setInt(2, productBatch.getStatus());
-			preparedStatement.setInt(3, productBatch.getReceptID());
+			preparedStatement.setInt(1, productBatchID);
+			preparedStatement.setInt(2, status);
+			preparedStatement.setInt(3, receptID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

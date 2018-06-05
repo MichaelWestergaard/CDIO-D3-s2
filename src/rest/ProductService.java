@@ -155,7 +155,7 @@ import javax.ws.rs.FormParam;
 		
 		@POST
 		@Path("createProductBatch")
-		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @FormParam("startTime") Timestamp startTime, @FormParam("endTime") Timestamp endTime, @Context ServletContext context) throws IOException  {
+		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @Context ServletContext context) throws IOException  {
 			try {
 				
 				//Validering af data
@@ -174,7 +174,7 @@ import javax.ws.rs.FormParam;
 				}
 				
 				if(mySQLController.getRecept(receptID) != null && mySQLController.getProductBatch(productBatchID) == null) {
-					if(mySQLController.createProductBatch(productBatchID, status, receptID, startTime, endTime)) {
+					if(mySQLController.createProductBatch(productBatchID, status, receptID)) {
 						ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
 				
 						if(createdProductBatch != null) {

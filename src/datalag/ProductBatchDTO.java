@@ -6,10 +6,10 @@ public class ProductBatchDTO {
 	int productBatchID;
 	int status;                     
 	int receptID;     
-	Timestamp startdato;
-	Timestamp slutdato;
+	String startdato;
+	String slutdato;
 	
-	public ProductBatchDTO(int productBatchID, int status, int receptID, Timestamp startdato, Timestamp slutdato) {
+	public ProductBatchDTO(int productBatchID, int status, int receptID, String startdato, String slutdato) {
 		this.productBatchID = productBatchID;
 		this.status = status;
 		this.receptID = receptID;
@@ -17,19 +17,19 @@ public class ProductBatchDTO {
 		this.slutdato = slutdato;
 	}
 
-	public Timestamp getStartdato() {
+	public String getStartdato() {
 		return startdato;
 	}
 
-	public void setStartdato(Timestamp startdato) {
+	public void setStartdato(String startdato) {
 		this.startdato = startdato;
 	}
 
-	public Timestamp getSlutdato() {
+	public String getSlutdato() {
 		return slutdato;
 	}
 
-	public void setSlutdato(Timestamp slutdato) {
+	public void setSlutdato(String slutdato) {
 		this.slutdato = slutdato;
 	}
 
