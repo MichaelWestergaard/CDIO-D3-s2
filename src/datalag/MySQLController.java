@@ -3,6 +3,7 @@ package datalag;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -191,7 +192,7 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getString("startdato"), results.getString("slutdato"));
+			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("starttid"), results.getTimestamp("sluttid"));
 			productBatches.add(productBatch);
 		}
 		statement.close();
@@ -404,7 +405,7 @@ public class MySQLController {
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getString("startdato"), results.getString("slutdato"));
+			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), results.getTimestamp("starttid"), results.getTimestamp("sluttid"));
 			preparedStatement.close();
 			return productBatch;
 		}
@@ -412,17 +413,17 @@ public class MySQLController {
 		return null;
 	}
 	
-	public boolean createProductBatch(int productBatchID, int status, int receptID, String startDate, String endDate) throws SQLException {
+	public boolean createProductBatch(int productBatchID, int status, int receptID, Timestamp startTime, Timestamp endTime) throws SQLException {
 		if(getProductBatch(productBatchID) == null) {
-			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID, startDate, endDate);
+			ProductBatchDTO productBatch = new ProductBatchDTO(productBatchID, status, receptID, startTime, endTime);
 			
 			String query = "Call opretProduktBatch(?, ?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, productBatch.getProductBatchID());
 			preparedStatement.setInt(2, productBatch.getStatus());
 			preparedStatement.setInt(3, productBatch.getReceptID());
-			preparedStatement.setString(4, productBatch.getStartDate());
-			preparedStatement.setString(5, productBatch.getEndDate());
+			preparedStatement.setTimestamp(4, productBatch.getStartDate());
+			preparedStatement.setTimestamp(5, productBatch.getEndDate());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

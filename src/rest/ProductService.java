@@ -2,6 +2,7 @@ package rest;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -154,7 +155,7 @@ import javax.ws.rs.FormParam;
 		
 		@POST
 		@Path("createProductBatch")
-		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @Context ServletContext context) throws IOException  {
+		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @FormParam("startTime") Timestamp startTime, @FormParam("endTime") Timestamp endTime, @Context ServletContext context) throws IOException  {
 			try {
 				
 				//Validering af data
@@ -173,12 +174,12 @@ import javax.ws.rs.FormParam;
 				}
 				
 				if(mySQLController.getRecept(receptID) != null && mySQLController.getProductBatch(productBatchID) == null) {
-					if(mySQLController.createProductBatch(productBatchID, status, receptID, startDate, endDate)) {
-				ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
+					if(mySQLController.createProductBatch(productBatchID, status, receptID, startTime, endTime)) {
+						ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
 				
-				if(createdProductBatch != null) {
-					return createResponse("success", 1, "ProductBatchen med Recepten \"" + mySQLController.getRecept(createdProductBatch.getReceptID()).getReceptName() + "\" blev oprettet");
-				}
+						if(createdProductBatch != null) {
+							return createResponse("success", 1, "ProductBatchen med Recepten \"" + mySQLController.getRecept(createdProductBatch.getReceptID()).getReceptName() + "\" blev oprettet");
+						}
 					}
 				}
 			} catch (SQLException e) {
