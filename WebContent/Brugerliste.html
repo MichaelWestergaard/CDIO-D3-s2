@@ -36,7 +36,10 @@ $.ajax({
 				var status;
 							 
 				for (var j = 0; j < response[i]['role'].length; j++) {
-					roles += response[i].role[j] + ", ";
+					roles += response[i].role[j];
+					if(j+1 < response[i]['role'].length){
+						roles += ", ";
+					}
 				}
 							 
 				if(response[i].active == 1){
