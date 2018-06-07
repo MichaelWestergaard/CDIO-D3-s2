@@ -88,7 +88,7 @@ import javax.ws.rs.FormParam;
 				boolean ingredientBatchFound = false;		
 				boolean userFound = false;
 				
-				if(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID) != null) {
+				if(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID) != null) {
 					return createResponse("error", 0, "ProdukBatchkomponenten eksisterer allerede");
 				}
 				
@@ -119,8 +119,8 @@ import javax.ws.rs.FormParam;
 					return createResponse("error", 0, "operatorID eksistere ikke");
 				}
 				
-				if(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID) != null) {
-					ProductBatchComponentDTO createdProductBatchComponent = mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID);
+				if(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID) != null) {
+					ProductBatchComponentDTO createdProductBatchComponent = mySQLController.getProductBatchComponent(productBatchID, raavareBatchID);
 					return createResponse("success", 1, "ProduktBatchkomponenten med produktbatchen \"" + createdProductBatchComponent.getProductBatchID() + "\" blev oprettet");
 
 				} else {
@@ -133,9 +133,9 @@ import javax.ws.rs.FormParam;
 		
 		@GET
 		@Path("getProductBatchComponent")
-		public String getProductBatchComponent(@QueryParam("productBatchID") int productBatchID, @QueryParam("raavareBatchID") int raavareBatchID, @QueryParam("operatorID") int operatorID) {
+		public String getProductBatchComponent(@QueryParam("productBatchID") int productBatchID, @QueryParam("raavareBatchID") int raavareBatchID) {
 			try {
-				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID, operatorID)));
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatchComponent(productBatchID, raavareBatchID)));
 			} catch (SQLException e) {
 				return createResponse("error", e.getErrorCode(), e.getMessage());
 			}

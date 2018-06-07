@@ -253,12 +253,12 @@ public class MySQLController {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 		
-		String query = "SELECT * FROM receptkomponent";
+		String query = "SELECT * FROM recept_komponent";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
+			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			receptComponents.add(receptComponent);
 		}
 		statement.close();
@@ -269,14 +269,14 @@ public class MySQLController {
 		ReceptComponentDTO receptComponent = null;
 		ResultSet results = null;
 		
-		String query = "Select * from receptkomponent WHERE recept_id = ? and raavare_id = ?";
+		String query = "Select * from recept_komponent WHERE recept_id = ? and raavare_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, receptID );
 		preparedStatement.setInt(2, ingredientID);
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
+			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			preparedStatement.close();
 			return receptComponent;
 		}
@@ -286,14 +286,13 @@ public class MySQLController {
 	
 	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getReceptComponent(receptID, ingredientID) == null)  {
-			ReceptComponentDTO receptComponent = new ReceptComponentDTO(receptID, ingredientID, nomNetto, tolerance);
 			
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, receptComponent.getReceptID());
-			preparedStatement.setInt(2, receptComponent.getIngredientID());
-			preparedStatement.setDouble(3, receptComponent.getNomNetto());
-			preparedStatement.setDouble(4, receptComponent.getTolerance());
+			preparedStatement.setInt(1, receptID);
+			preparedStatement.setInt(2, ingredientID);
+			preparedStatement.setDouble(3, nomNetto);
+			preparedStatement.setDouble(4, tolerance);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -312,14 +311,14 @@ public class MySQLController {
 		results = statement.executeQuery(query);
 		
 		while(results.next()) {
-			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
+			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			productBatchComponents.add(productBatchComponent);
 		}
 		statement.close();
 		return productBatchComponents;
 	}
 
-	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID) throws SQLException {
+	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
 		ProductBatchComponentDTO productBatchComponent = null;
 		ResultSet results = null;
 		
@@ -327,11 +326,10 @@ public class MySQLController {
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID );
 		preparedStatement.setInt(2, raavareBatchID);
-		preparedStatement.setInt(3, operatorID);
 		results = preparedStatement.executeQuery();
 		
 		if(results.next()) {
-			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getString("rb_raavare_name"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
+			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			preparedStatement.close();
 			return productBatchComponent;
 		}
@@ -340,7 +338,7 @@ public class MySQLController {
 	}
 	
 	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
-		if(getProductBatchComponent(productBatchID, raavareBatchID, operatorID) == null)  {
+		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
 			
 			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);

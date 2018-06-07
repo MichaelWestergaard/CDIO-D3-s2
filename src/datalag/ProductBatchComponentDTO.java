@@ -3,15 +3,17 @@ package datalag;
 public class ProductBatchComponentDTO {
 	int productBatchID;
 	int ingredientBatchID;
+	int ingredientID;
 	String ingredientName;
 	int operatorID;
 	String initials;
 	double netto;                    
 	double tara;
 	
-	public ProductBatchComponentDTO(int productBatchID, int ingredientBatchID, String ingredientName, int operatorID, String initials, double netto, double tara) {
+	public ProductBatchComponentDTO(int productBatchID, int ingredientBatchID, int ingredientID, String ingredientName, int operatorID, String initials, double netto, double tara) {
 		this.productBatchID = productBatchID;
 		this.ingredientBatchID = ingredientBatchID;
+		this.ingredientID = ingredientID;
 		this.ingredientName = ingredientName;
 		this.operatorID = operatorID;
 		this.initials = initials;
@@ -25,6 +27,10 @@ public class ProductBatchComponentDTO {
 
 	public int getIngredientBatchID() {
 		return ingredientBatchID;
+	}
+
+	public int getIngredientID() {
+		return ingredientID;
 	}
 
 	public String getIngredientName() {
@@ -46,5 +52,7 @@ public class ProductBatchComponentDTO {
 	public double getTara() {
 		return tara;
 	}
+	
+	
 	
 }

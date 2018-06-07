@@ -3,16 +3,17 @@ package datalag;
 public class ReceptComponentDTO {
 
 	int receptID;
-	int ingredientID;                     
+	int ingredientID;  
+	String ingredientName;
 	double nomNetto;                    
 	double tolerance;
 	
-	public ReceptComponentDTO(int receptID, int ingredientID, double nomNetto, double tolerance) {
+	public ReceptComponentDTO(int receptID, int ingredientID, String ingredientName, double nomNetto, double tolerance) {
 		this.receptID = receptID;
 		this.ingredientID = ingredientID;
+		this.ingredientName = ingredientName;
 		this.nomNetto = nomNetto;
 		this.tolerance = tolerance;
-	
 	}
 
 	public int getReceptID() {
@@ -31,6 +32,14 @@ public class ReceptComponentDTO {
 		this.ingredientID = ingredientID;
 	}
 
+	public String getIngredientName() {
+		return ingredientName;
+	}
+
+	public void setIngredientName(String ingredientName) {
+		this.ingredientName = ingredientName;
+	}
+
 	public double getNomNetto() {
 		return nomNetto;
 	}
@@ -46,5 +55,5 @@ public class ReceptComponentDTO {
 	public void setTolerance(double tolerance) {
 		this.tolerance = tolerance;
 	}
-	
+		
 }

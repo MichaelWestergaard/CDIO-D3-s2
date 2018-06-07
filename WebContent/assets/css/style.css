@@ -16,6 +16,16 @@ body {
 	margin: 0;
 }
 
+.page-covered {
+    position:fixed;
+    background-color: #fff;
+    width:100%;
+    height:100%;
+    top:0px;
+    left:0px;
+    z-index:1000;
+}
+
 *, :after, :before {
 	box-sizing: inherit;
 }
@@ -140,6 +150,16 @@ table {
 	font-size: 12px;
 }
 
+.tableBtn:first-child {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.tableBtn:last-child {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
 .user-table {
 	border-collapse: collapse;
 	overflow: hidden;
@@ -239,4 +259,8 @@ table {
 
 .status-container .status-content.success {
 	background-color: #43A047;
+}
+
+.status-container .status-content.info {
+	background-color: #36a3f7;
 }

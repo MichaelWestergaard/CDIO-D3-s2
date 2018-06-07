@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"> 
+<title>Produktbatch - Rapport</title>
+</head>
+<body>
+
+<style type="text/css">
+	.report-content {
+		margin: 0 5px;
+	}
+
+	.report-content .top-info table td, .report-content .recept-components table td {
+		padding-right: 15px;
+	}
+	
+	.recept-components {
+		margin-top: 20px;
+	}
+	
+	.recept-components table {
+		margin-bottom: 20px;
+	}
+	
+	
+	.ingredientTable td {
+		padding-right: 45px !important;
+	}
+	
+	.recept-components table.bordered {
+		border-top: 1px dashed #898989;
+	}
+	
+	.recept-components .info-table th, .recept-components .info-table td {
+		text-align: left;
+		width: 13%;
+	}
+</style>
+
+<div class="report-content">
+	<div class="top-info">
+		<table>
+			<tr>
+				<td>Udskrevet d.</td>
+				<td id="date">06-06-2018</td>
+			</tr>
+			<tr>
+				<td>Produkt Batch Nr.</td>
+				<td id="productBatchID">5</td>
+			</tr>
+			<tr>
+				<td>Recept Nr.</td>
+				<td id="receptID">2</td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="recept-components">
+		<table class="ingredientTable">
+			<tr>
+				<td>Råvare nr.</td>
+				<td>100</td>
+			</tr>
+			<tr>
+				<td>Råvare Navn</td>
+				<td>Vand</td>
+			</tr>
+		</table>
+		<table class="bordered info-table">
+			<thead>
+				<tr>
+					<th>Del</th>
+					<th>Mængde</th>
+					<th>Tolerance</th>
+					<th>Tara</th>
+					<th>Netto(kg)</th>
+					<th>Batch</th>
+					<th>Opr.</th>
+					<th>Terminal</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>5500</td>
+					<td>&plusmn;0.3%</td>
+					<td>0,100</td>
+					<td>5,534</td>
+					<td>101</td>
+					<td>SH</td>
+					<td>1</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table>
+			<tr>
+				<td>Sum Tara:</td>
+				<td id="sumTara">0,100</td>
+			</tr>
+			<tr>
+				<td>Sum Netto:</td>
+				<td id="sumNetto">5,534</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="bottom-info">
+		<table>
+			<tr>
+				<td>Produktion Status:</td>
+				<td id="productionStatus">Startet</td>
+			</tr>
+			<tr>
+				<td>Produktion Startet:</td>
+				<td id="productionStartDate">06-06-2018</td>
+			</tr>
+			<tr>
+				<td>Produktion Slut:</td>
+				<td id="productionEndDate"></td>
+			</tr>
+		</table>
+	</div>
+	
+</div>
+
+</body>
+</html>

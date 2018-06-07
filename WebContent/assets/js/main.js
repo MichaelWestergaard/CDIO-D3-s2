@@ -42,7 +42,12 @@
            success: function(data){
         	   data = JSON.parse(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+        	   console.log(data);
         	   if(data.response_status == "success"){
+        		   if($(form).attr('action') == "rest/Product/createProductBatch"){
+            		   var productBatchID = $('input[name=productBatchID]').val();
+            		   generateReport(productBatchID);
+            	   }
             	   $('.content-container').load($(form).attr('id'));
         	   }
            },
@@ -127,7 +132,118 @@
 		});
 
 	}
+	
+	function generateReport(productBatchID){
+		showStatusMessage("Vent venligst! Dette kan tage noget tid..", "info");
+		$.ajax({
+			type: 'GET',
+			url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatch',
+			dataType: 'json',
+			data: {
+				productBatchID: productBatchID
+			},
+			success: function(data){
+				if(data.response_status == "success"){
+					var response = JSON.parse(data.response_message);
+					
+					var mywindow = window.open('', 'PRINT', 'height=1,width=1');
+					
+					mywindow.document.write('<style type="text/css">.report-content {margin: 0 5px;}.report-content .top-info table td, .report-content .recept-components table td {padding-right: 15px;}.recept-components {margin-top: 20px;}.recept-components table {margin-bottom: 20px;}.ingredientTable td {padding-right: 45px !important;}.recept-components table.bordered {border-top: 1px dashed #898989;}.recept-components .info-table th, .recept-components .info-table td {text-align: left;width: 13%;}</style>');
+				    
+					var date = new Date();
+				    var currentDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+					
+					mywindow.document.write('<div class="report-content"><div class="top-info"><table><tr><td>Udskrevet d.</td><td id="date">'+currentDate+'</td></tr><tr><td>Produkt Batch Nr.</td><td id="productBatchID">'+ response.productBatchID +'</td></tr><tr><td>Recept Nr.</td><td id="receptID">'+response.receptID+'</td></tr></table></div><div class="recept-components">');
+					//Lav om til et kald
+					$.ajax({
+						type: 'GET',
+						url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
+						dataType: 'json',
+						async: false,
+						success: function(dataComponent){
+							if(dataComponent.response_status == "success"){
+								responseReceptComponent = JSON.parse(dataComponent.response_message);
+								
+								var sumTara = 0;
+								var sumNetto = 0;
+								
+								for(var i = 0; i < responseReceptComponent.length; i++){
+									if(responseReceptComponent[i].receptID == response.receptID){
+										var firstElement = '<table class="ingredientTable"><tr><td>Råvare nr.</td><td>'+responseReceptComponent[i].ingredientID+'</td></tr><tr><td>Råvare Navn</td><td>'+responseReceptComponent[i].ingredientName+'</td></tr></table><table class="bordered info-table"><thead><tr><th>Del</th><th>Mængde</th><th>Tolerance</th><th>Tara</th><th>Netto(kg)</th><th>Batch</th><th>Opr.</th><th>Terminal</th></tr></thead><tbody><tr><td>1</td><td>'+responseReceptComponent[i].nomNetto+'</td><td>&plusmn;'+responseReceptComponent[i].tolerance+'%</td>';
+										$.ajax({
+											type: 'GET',
+											url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngBatchList',
+											async: false,
+											dataType: 'json',
+											success: function(dataRB){
+												if(dataRB.response_status == "success"){
+													responseRB = JSON.parse(dataRB.response_message);
+													var inserted = false;
+													for(var j = 0; j < responseRB.length; j++){
+														$.ajax({
+															type: 'GET',
+															url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatchComponent',
+															async: false,
+															data: {
+																productBatchID: productBatchID,
+																raavareBatchID: responseRB[j].ingBatchID
+															},
+															dataType: 'json',
+															success: function(dataPBC){
+																if(dataPBC.response_status == "success"){
+																	responsePBC = JSON.parse(dataPBC.response_message);
+																	if(responsePBC != null && responsePBC.ingredientID == responseReceptComponent[i].ingredientID){
+																		inserted = true;
+																		mywindow.document.write(firstElement + '<td>'+responsePBC.tara+'</td><td>'+responsePBC.netto+'</td><td>'+responsePBC.ingredientBatchID+'</td><td>'+responsePBC.initials+'</td><td>1</td></tr></tbody></table>');
+																		sumTara += responsePBC.tara;
+																		sumNetto += responsePBC.netto;
+																	} else {
+																		if(!inserted && (j+1) == responseRB.length){
+																			mywindow.document.write(firstElement + '<td></td><td></td><td></td><td></td><td></td></tr></tbody></table>');
+																			inserted = true;
+																		}
+																	}
+																}
+															}
+														});
+													}
+												}
+											}
+										});
+									}
+								}
+								
+								mywindow.document.write('<table><tr><td>Sum Tara:</td><td id="sumTara">'+sumTara+'</td></tr><tr><td>Sum Netto:</td><td id="sumNetto">'+sumNetto+'</td></tr></table></div>')
+								
+								switch(response.status){
+									case 0:
+										status = "Startet";
+										break;
+									case 1:
+										status = "Under produktion";
+										break;
+									case 2:
+										status = "Afsluttet";
+										break;
+								}
+								
+								mywindow.document.write('<div class="bottom-info"><table><tr><td>Produktion Status:</td><td id="productionStatus">'+status+'</td></tr><tr><td>Produktion Startet:</td><td id="productionStartDate">'+response.startdato+'</td></tr><tr><td>Produktion Slut:</td><td id="productionEndDate">'+response.slutdato+'</td></tr></table></div>');
+								
+								mywindow.document.close();
+							    mywindow.focus();
 
+							    mywindow.print();
+							    mywindow.close();
+							}	
+						}
+					});
+				} else {
+					showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
+				}
+			}
+		});
+	}
+	
 	function showStatusMessage(text, status){
 		$('.status-container .status-content .status-message').html(text);
 		$('.status-container .status-content').addClass(status);
