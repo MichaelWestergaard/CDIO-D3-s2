@@ -2,29 +2,26 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import data.Batch;
-import data.User;
+import datalag.ProductBatchComponentDTO;
+import datalag.ProductBatchDTO;
+import rest.ProductService;
+import datalag.ReceptDTO;
 import java.util.Scanner;
+import datalag.UserDTO;
+import rest.UserService;
 
 
 public class DAO {
 
 	private double load;
-	private double Tara;
-	private List<User> users = new ArrayList<User>();	
-	private List<Batch> batches = new ArrayList<Batch>();
+	private List<UserDTO> users = new ArrayList<UserDTO>();	
+	private List<ReceptDTO> recepts = new ArrayList<ReceptDTO>();
+	private List<ProductBatchComponentDTO> batches = new ArrayList<ProductBatchComponentDTO>();
 	Scanner scan = new Scanner(System.in);
-
-	public DAO () {		
-		users.add(new User(12, "Anders And"));
-		batches.add(new Batch(1234, "Salt"));
-		
-	}
 
 	
 	public boolean checkUserID(int userID) {
-		if(userID >= 11 && userID <= 99) {
+		if(userID >= 11 && userID <= 99){
 			for(int i = 0; i < users.size(); i++) {
 				if(users.get(i).getUserID() == userID) {
 					return true;
@@ -38,27 +35,27 @@ public class DAO {
 	public String getUsername(int userID) {
 		for(int i = 0; i < users.size(); i++) {
 			if (userID == users.get(i).getUserID() ) {
-				return users.get(i).getUsername();
+				return users.get(i).getUserName();
 			}
 		}
 		return null;
 	}
 	
 	
-	public String getBatchName(int batchID) {
-		for(int i = 0; i < batches.size(); i++) {
-			if (batchID == batches.get(i).getBatchID()) {
-				return batches.get(i).getBatchName();
+	public String getReceptName(int receptID) {
+		for(int i = 0; i < recepts.size(); i++) {
+			if (receptID == recepts.get(i).getReceptID()) {
+				return recepts.get(i).getReceptName();
 			}
 		}
 		return null;
 	}
 	
 	
-	public boolean checkBatchId(int batchID) {
-		if(batchID >= 1000 && batchID <= 9999) {
-			for(int i = 0; i < batches.size(); i++) {
-				if(batches.get(i).getBatchID() == batchID) {
+	public boolean checkReceptId(int receptID) {
+		if(receptID >= 1000 && receptID <= 9999) {
+			for(int i = 0; i < recepts.size(); i++) {
+				if(recepts.get(i).getReceptID() == receptID) {
 					return true;
 				}
 			}
@@ -76,19 +73,19 @@ public class DAO {
 	}
 
 	
-	public void setBatchTara(int batchID, double batchTara) {
+	public void setBatchTara(int productBatchID, double tara) {
 		for(int i = 0; i < batches.size(); i++) {
-			if (batchID == batches.get(i).getBatchID()) {
-				batches.get(i).setBatchTara(batchTara);
+			if (productBatchID == batches.get(i).getProductBatchID()) {
+				batches.get(i).setTara(tara);
 			}
 		}
 	}
 	
 	
-	public double getBatchTara(int batchID) {
+	public double getBatchTara(int productBatchID) {
 		for(int i = 0; i < batches.size(); i++) {
-			if (batchID == batches.get(i).getBatchID()) {
-				return batches.get(i).getBatchTara();
+			if (productBatchID == batches.get(i).getProductBatchID()) {
+				return batches.get(i).getTara();
 			}
 		}
 		return 0.0;	//Findes der en bedre l�sning?
@@ -96,15 +93,15 @@ public class DAO {
 	}
 	
 	
-	public void setBatchNetto(int batchID, double batchNetto) {
+	public void setBatchNetto(int productBatchID, double netto) {
 		for(int i = 0; i < batches.size(); i++) {
-			if (batchID == batches.get(i).getBatchID()) {
-				batches.get(i).setBatchNetto(batchNetto);
+			if (productBatchID == batches.get(i).getProductBatchID()) {
+				batches.get(i).setNetto(netto);
 			}
 		}
 	}
 	
-	
+/*	
 	public void setBatchBrutto(int batchID, double negativeBatchBrutto) {
 		for(int i = 0; i < batches.size(); i++) {
 			if (batchID == batches.get(i).getBatchID()) {
@@ -112,5 +109,5 @@ public class DAO {
 			}
 		}
 	}
-	
+	*/
 }

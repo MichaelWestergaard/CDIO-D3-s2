@@ -53,6 +53,13 @@ public class ProductBatchComponentDTO {
 		return tara;
 	}
 	
-	
+	public void setTara(double tara) {
+	this.tara = tara;	
+	}
+
+	public void setNetto(double netto) {
+		// TODO Auto-generated method stub
+		this.tara = tara;
+	}
 	
 }
