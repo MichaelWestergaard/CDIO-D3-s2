@@ -16,7 +16,11 @@ public class SocketController implements Runnable {
 	Socket socket;
 	static String readLine = null;
 	MySQLController mySQLController;
-	int currentBatchID;
+	int operatorID;
+	int productBatchID;
+	int ingredientBatchID;
+	double tara;
+	double netto;
 
 	public SocketController() throws ClassNotFoundException {
 		mySQLController = new MySQLController();
