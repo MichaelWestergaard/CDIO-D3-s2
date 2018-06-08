@@ -131,10 +131,13 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
 				boolean ingredientInRecept = false;
+				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
 				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
-					if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
-						ingredientInRecept = true;
-					}
+					if(receptComponent.getReceptID() == receptID) {
+						if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
+							ingredientInRecept = true;
+						}
+					}	
 				}
 				
 				if(ingredientInRecept) {	
