@@ -121,9 +121,7 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-			sendMessage("RM20 8 \"Indtast råvarebatch ID:\" \"\" \"&3\"");
-
+			sendMessage("RM20 8 \"Indtast raavarebatch ID:\" \"\" \"&3\"");
 			boolean ingredientBatchConfirmed = false;
 			while(!ingredientBatchConfirmed) {
 				String inputString = reader.readLine();
@@ -135,7 +133,7 @@ public class SocketController implements Runnable {
 					ingredientBatchID = ingredientBatch.getIngBatchID();
 					ingredientBatchConfirmed = true;
 				} else {
-					sendMessage("RM20 8 \"Råvarebatch ID'et findes ikke\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Raavarebatch ID'et findes ikke\" \"\" \"&3\"");
 				}
 			}			
 		} catch (IOException e) {
@@ -149,9 +147,7 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-			sendMessage("RM20 8 \"Afvej råvaren:\" \"\" \"&3\"");
-
+			sendMessage("RM20 8 \"Afvej raavaren:\" \"\" \"&3\"");
 			boolean nettoConfirmed = false;
 			while(!nettoConfirmed) {
 				String inputString = reader.readLine();
@@ -168,6 +164,7 @@ public class SocketController implements Runnable {
 
 					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
 						nettoConfirmed = true;
+						mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
 						sendMessage("T");
 						sleep();
 						System.out.println("tara success");		
@@ -175,7 +172,7 @@ public class SocketController implements Runnable {
 						sendMessage("RM20 8 \"Tolerance overholdes ikke\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \" Prøv igen!\" \"\" \"&3\"");
+					sendMessage("RM20 8 \" Proev igen!\" \"\" \"&3\"");
 				}
 			}
 		} catch (IOException e) {
