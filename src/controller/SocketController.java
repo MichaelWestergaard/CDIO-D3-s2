@@ -75,6 +75,7 @@ public class SocketController implements Runnable {
 
 	public double getLoadFromString(String loadString) {
 		char[] loadChar = loadString.toCharArray();
+		System.out.println(loadChar.length);
 		double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
 //		String[] loadArr = loadString.split(" ");
 //		double loadValue = Double.parseDouble(loadArr[2]);
@@ -134,8 +135,10 @@ public class SocketController implements Runnable {
 				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
 				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
 					if(receptComponent.getReceptID() == receptID) {
-						if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
-							ingredientInRecept = true;
+						if(ingredientBatch != null) {
+							if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
+								ingredientInRecept = true;
+							}
 						}
 					}	
 				}
@@ -144,7 +147,7 @@ public class SocketController implements Runnable {
 					ingredientBatchID = ingredientBatch.getIngBatchID();
 					ingredientBatchConfirmed = true;
 				} else {
-					sendMessage("RM20 8 \"Raavarebatch ID'et findes ikke\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
 				}
 			}			
 		} catch (IOException e) {
@@ -314,6 +317,7 @@ public class SocketController implements Runnable {
 		taraProcedure();
 		ingredientBatchProcedure();
 		nettoProcedure();
+		sleep();
 	}
 
 }

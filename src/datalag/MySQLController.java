@@ -340,13 +340,13 @@ public class MySQLController {
 	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
 		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
 			
-			String query = "Call opretPbkomponent(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
+			String query = "Call afvejning(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, productBatchID);
 			preparedStatement.setInt(2, raavareBatchID);
-			preparedStatement.setInt(3, operatorID);
+			preparedStatement.setDouble(3, tara);
 			preparedStatement.setDouble(4, netto);
-			preparedStatement.setDouble(5, tara);
+			preparedStatement.setInt(5, operatorID);
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
