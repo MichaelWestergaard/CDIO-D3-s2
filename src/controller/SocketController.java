@@ -195,8 +195,7 @@ public class SocketController implements Runnable {
 						nettoConfirmed = true;
 						mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
 						sendMessage("T");
-						sleep();
-						System.out.println("tara success");		
+						sleep();	
 					} else {
 						sendMessage("RM20 8 \"Tolerance overholdes ikke\" \"\" \"&3\"");
 					}
@@ -215,7 +214,7 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			sendMessage("RM20 8 \"" + "Inds�t batchID" + "\" \"\" \"&3\"");
+			sendMessage("RM20 8 \"" + "Indsaet batchID" + "\" \"\" \"&3\"");
 
 			boolean batchConfirmed = false;
 			while(!batchConfirmed) {
@@ -225,7 +224,7 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
 				if(	productBatch != null) {					
-					sendMessage("RM20 8 \"" + "Bekr�ft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
 
 					productBatchID = input;
 
@@ -254,7 +253,7 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			sendMessage("RM20 8 \"" + "Er vægten ubelastet?" + "\" \"\" \"&3\"");
+			sendMessage("RM20 8 \"" + "Er vaegten ubelastet?" + "\" \"\" \"&3\"");
 
 			boolean unloadConfirmed = false;
 			while(!unloadConfirmed) {
@@ -267,7 +266,7 @@ public class SocketController implements Runnable {
 					sendMessage("T");
 
 				} else {
-					sendMessage("RM20 8 \"Fjern vægten og bekræft" + "U?" + "\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Fjern vaegten og bekraeft" + "U?" + "\" \"\" \"&3\"");
 				}
 			}
 
@@ -326,13 +325,12 @@ public class SocketController implements Runnable {
 	}
 
 
-	public void taraProcedure() { //hej
-		try { 
-			System.out.println("Slet denne kommentar");
+	public void taraProcedure() {
+		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-			String msg = "Placere tara.";
+			String msg = "Placer tara";
 			sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
 
 
@@ -348,10 +346,9 @@ public class SocketController implements Runnable {
 
 					sleep();
 					tara = getLoadFromString(readLine);
-					System.out.println("tara successful");
 
 				} else {
-					msg = "Proev igen og godkend.";
+					msg = "Proev igen og godkend";
 					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
 				}
 			}
