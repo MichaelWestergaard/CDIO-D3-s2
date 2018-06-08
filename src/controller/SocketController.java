@@ -165,11 +165,10 @@ public class SocketController implements Runnable {
 					List<Integer> availableIngredientBatches = new ArrayList<Integer>();
 					String availableIngredientBatchesText = "";
 					boolean alreadyWeighed = false;
-					boolean nothingLeft = false;
 					int nothingLeftCount = 0;
 					
 					List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
-					for (Iterator iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
+					for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
 						Integer ingredientBatchID = (Integer) iterator.next();
 						
 						if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
