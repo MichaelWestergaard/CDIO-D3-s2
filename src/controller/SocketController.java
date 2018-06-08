@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import datalag.MySQLController;
 import datalag.UserDTO;
+import datalag.IngBatchDTO;
 
 public class SocketController implements Runnable {
 	Socket socket;
@@ -60,6 +61,14 @@ public class SocketController implements Runnable {
 		}
 	}
 	
+	public double getLoad() {
+		sendMessage("S");
+		sleep();		
+		char[] readChar = readLine.toCharArray();
+		double loadValue = Double.parseDouble(new StringBuilder().append(readChar[8]).append(readChar[9]).append(readChar[10]).append(readChar[11]).append(readChar[12]).toString());
+		return loadValue;
+	}
+	
 	public void loginProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -75,11 +84,6 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				UserDTO user = mySQLController.getUser(input);
 				if(user != null) {
-					sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
-					
-					inputString = reader.readLine();
-					inputArr = inputString.split(" ");
-
 					if(inputArr[1].equals("A")) {
 						operatorID = user.getUserID();
 						userConfirmed = true;
@@ -96,6 +100,76 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
+	
+	public void ingredientBatchProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			
+			sendMessage("RM20 8 \"Indtast råvarebatch ID:\" \"\" \"&3\"");
+			
+			boolean ingredientBatchConfirmed = false;
+			while(!ingredientBatchConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+				IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
+				if(ingredientBatch != null) {	
+					ingredientBatchID = ingredientBatch.getIngBatchID();
+					ingredientBatchConfirmed = true;
+				} else {
+					sendMessage("RM20 8 \"Råvarebatch ID'et findes ikke\" \"\" \"&3\"");
+				}
+			}			
+		} catch (IOException e) {
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+		} catch (SQLException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		}
+	}
+	
+	public void nettoProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			
+			sendMessage("RM20 8 \"Afvej råvaren:\" \"\" \"&3\"");
+	
+			boolean nettoConfirmed = false;
+			while(!nettoConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+
+				if(inputArr[1].equals("A")) {
+					netto = getLoad();
+					
+					int ingredientID = (mySQLController.getIngBatch(ingredientBatchID)).getIngredientID();
+					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
+					double nomNetto = (mySQLController.getReceptComponent(receptID, ingredientID)).getNomNetto();
+					double tolerance = (mySQLController.getReceptComponent(receptID, ingredientID)).getTolerance();
+					
+					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
+						nettoConfirmed = true;
+						sendMessage("T");
+						sleep();
+						System.out.println("tara success");		
+					} else {
+						sendMessage("RM20 8 \"Tolerance overholdes ikke\" \"\" \"&3\"");
+					}
+				} else {
+					sendMessage("RM20 8 \" Prøv igen!\" \"\" \"&3\"");
+				}
+			}
+		} catch (IOException e) {
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+		} catch (SQLException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		}		
+	}
+	
+	
 	
 	public void sendMessage(String msg) {
 		try {
