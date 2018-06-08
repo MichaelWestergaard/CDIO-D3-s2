@@ -34,7 +34,7 @@ public class SocketController implements Runnable {
 
 	public void init() {
 		try {
-			socket = new Socket("169.254.2.2", 8000);
+			socket = new Socket("169.254.2.3", 8000);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -55,7 +55,7 @@ public class SocketController implements Runnable {
 		}
 
 	}
-	
+
 	public void sleep() {
 		try {
 			TimeUnit.SECONDS.sleep(1);
@@ -63,7 +63,7 @@ public class SocketController implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public double getLoad() {
 		sendMessage("S");
 		sleep();		
@@ -72,21 +72,21 @@ public class SocketController implements Runnable {
 		return loadValue;
 	}
 
-		public double getLoadFromString(String loadString) {
-//			char[] loadChar = loadString.toCharArray();
-//			double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
-			String[] loadArr = loadString.split(" ");
-			double loadValue = Double.parseDouble(loadArr[2]);
-			return loadValue;
-		}
-	
+	public double getLoadFromString(String loadString) {
+		//			char[] loadChar = loadString.toCharArray();
+		//			double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
+		String[] loadArr = loadString.split(" ");
+		double loadValue = Double.parseDouble(loadArr[2]);
+		return loadValue;
+	}
+
 	public void loginProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			
+
 			sendMessage("RM20 8 \"Indtast dit ID:\" \"\" \"&3\"");
-			
+
 			boolean userConfirmed = false;
 			while(!userConfirmed) {
 				String inputString = reader.readLine();
@@ -95,6 +95,11 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				UserDTO user = mySQLController.getUser(input);
 				if(user != null) {
+					sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
+
+					inputString = reader.readLine();
+					inputArr = inputString.split(" ");
+
 					if(inputArr[1].equals("A")) {
 						operatorID = user.getUserID();
 						userConfirmed = true;
@@ -111,14 +116,14 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
-	
+
 	public void ingredientBatchProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			
+
 			sendMessage("RM20 8 \"Indtast råvarebatch ID:\" \"\" \"&3\"");
-			
+
 			boolean ingredientBatchConfirmed = false;
 			while(!ingredientBatchConfirmed) {
 				String inputString = reader.readLine();
@@ -139,14 +144,14 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
-	
+
 	public void nettoProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			
+
 			sendMessage("RM20 8 \"Afvej råvaren:\" \"\" \"&3\"");
-	
+
 			boolean nettoConfirmed = false;
 			while(!nettoConfirmed) {
 				String inputString = reader.readLine();
@@ -155,12 +160,12 @@ public class SocketController implements Runnable {
 
 				if(inputArr[1].equals("A")) {
 					netto = getLoad();
-					
+
 					int ingredientID = (mySQLController.getIngBatch(ingredientBatchID)).getIngredientID();
 					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
 					double nomNetto = (mySQLController.getReceptComponent(receptID, ingredientID)).getNomNetto();
 					double tolerance = (mySQLController.getReceptComponent(receptID, ingredientID)).getTolerance();
-					
+
 					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
 						nettoConfirmed = true;
 						sendMessage("T");
@@ -185,7 +190,7 @@ public class SocketController implements Runnable {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			sendMessage("RM20 8 \"" + "Inds�t batchID" + "\" \"\" \"&3\"");
-			
+
 			boolean batchConfirmed = false;
 			while(!batchConfirmed) {
 				String inputString = reader.readLine();
@@ -197,7 +202,7 @@ public class SocketController implements Runnable {
 					sendMessage("RM20 8 \"" + "Bekr�ft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
 
 					productBatchID = input;
-					
+
 					inputString = reader.readLine();
 					inputArr = inputString.split(" ");
 
@@ -211,14 +216,14 @@ public class SocketController implements Runnable {
 
 				}
 			}
-			
+
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}	catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
-	
+
 	public void unloadProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -234,7 +239,7 @@ public class SocketController implements Runnable {
 				if(inputArr[1].equals("A")) {
 					unloadConfirmed = true;
 					sendMessage("T");
-					
+
 				} else {
 					sendMessage("RM20 8 \"Fjern vægten og bekræft" + "U?" + "\" \"\" \"&3\"");
 				}
@@ -245,7 +250,7 @@ public class SocketController implements Runnable {
 		}
 	}
 
-	
+
 	public void sendMessage(String msg) {
 		try {
 			OutputStream os = socket.getOutputStream();
@@ -257,7 +262,7 @@ public class SocketController implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	public void taraProcedure() { //hej
 		try { 
@@ -267,7 +272,7 @@ public class SocketController implements Runnable {
 
 			String msg = "Placere tara.";
 			sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
-			
+
 
 			boolean taraConfirmed = false;
 			while(!taraConfirmed) {
@@ -278,11 +283,11 @@ public class SocketController implements Runnable {
 				if(inputArr[1].equals("A")) {
 					taraConfirmed = true;
 					sendMessage("T");
-				
+
 					sleep();
 					tara = getLoadFromString(readLine);
 					System.out.println("tara successful");
-					
+
 				} else {
 					msg = "Proev igen og godkend.";
 					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
@@ -300,5 +305,5 @@ public class SocketController implements Runnable {
 		unloadProcedure();
 
 	}
-	
+
 }
