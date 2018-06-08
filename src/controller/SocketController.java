@@ -295,6 +295,8 @@ public class SocketController implements Runnable {
 
 	public void completeProcedure() {
 		loginProcedure();
+		batchProcedure();
+		unloadProcedure();
 
 	}
 	
