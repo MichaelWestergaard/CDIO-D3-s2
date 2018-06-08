@@ -163,6 +163,7 @@ public class SocketController implements Runnable {
 					
 					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
 						nettoConfirmed = true;
+						mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
 						sendMessage("T");
 						sleep();
 						System.out.println("tara success");		
