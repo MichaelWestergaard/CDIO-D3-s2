@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
@@ -301,7 +302,6 @@ public class MySQLController {
 		}
 	}
 	
-
 	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
 		ResultSet results = null;
@@ -355,7 +355,6 @@ public class MySQLController {
 		}
 	}
 
-	
 	public List<IngBatchDTO> getIngBatches() throws SQLException {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
 		ResultSet results = null;
@@ -486,4 +485,23 @@ public class MySQLController {
 			return false;	
 		}
 	}
+
+	public List<Integer> getProductBatchesByIngredient(int ingredientID) throws SQLException {
+		List<Integer> productBatches = new ArrayList<Integer>();
+		ResultSet results = null;
+
+		String query = "SELECT rb_id FROM raavarebatch WHERE raavare_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		results = preparedStatement.executeQuery();
+		
+		while(results.next()) {
+			productBatches.add(results.getInt("rb_id"));
+		}
+		
+		preparedStatement.close();
+		return productBatches;
+	
+	}
+	
 }

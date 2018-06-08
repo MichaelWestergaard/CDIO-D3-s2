@@ -198,4 +198,15 @@ import javax.ws.rs.FormParam;
 			}
 		
 		}
-}
+		
+		@GET
+		@Path("getProductBatchesByIngredient")
+		public String getProductBatchesByIngredient(@QueryParam("ingredientID") int ingredientID) {
+			try {
+				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatchesByIngredient(ingredientID)));
+			} catch (SQLException e) {
+				return createResponse("error", e.getErrorCode(), e.getMessage());
+			}
+		}
+		
+	}

@@ -149,7 +149,7 @@
 				if(data.response_status == "success"){
 					var response = JSON.parse(data.response_message);
 					
-					var mywindow = window.open('', 'PRINT', 'height=1,width=1');
+					var mywindow = window.open('', 'PRINT', 'height=500,width=500');
 					
 					mywindow.document.write('<style type="text/css">.report-content {margin: 0 5px;}.report-content .top-info table td, .report-content .recept-components table td {padding-right: 15px;}.recept-components {margin-top: 20px;}.recept-components table {margin-bottom: 20px;}.ingredientTable td {padding-right: 45px !important;}.recept-components table.bordered {border-top: 1px dashed #898989;}.recept-components .info-table th, .recept-components .info-table td {text-align: left;width: 13%;}</style>');
 				    
@@ -172,7 +172,38 @@
 								
 								for(var i = 0; i < responseReceptComponent.length; i++){
 									if(responseReceptComponent[i].receptID == response.receptID){
-										var firstElement = '<table class="ingredientTable"><tr><td>Råvare nr.</td><td>'+responseReceptComponent[i].ingredientID+'</td></tr><tr><td>Råvare Navn</td><td>'+responseReceptComponent[i].ingredientName+'</td></tr></table><table class="bordered info-table"><thead><tr><th>Del</th><th>Mængde</th><th>Tolerance</th><th>Tara</th><th>Netto(kg)</th><th>Batch</th><th>Opr.</th><th>Terminal</th></tr></thead><tbody><tr><td>1</td><td>'+responseReceptComponent[i].nomNetto+'</td><td>&plusmn;'+responseReceptComponent[i].tolerance+'%</td>';
+										var availableProductBatches = "";
+										var productBatchesCount = 0;
+										
+										$.ajax({
+											type: 'GET',
+											url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatchesByIngredient',
+											data: {
+												ingredientID: responseReceptComponent[i].ingredientID
+											},
+											dataType: 'json',
+											async: false,
+											success: function(productBatchResponse){
+												if(productBatchResponse.response_status == "success"){
+													productBatches = JSON.parse(productBatchResponse.response_message);
+													for(var k = 0; k < productBatches.length; k++){
+														availableProductBatches += productBatches[k].toString();
+														if(k+1 != productBatches.length){
+															availableProductBatches += ", ";
+														}
+													}
+													productBatchesCount = productBatches.length;
+												}
+											}
+										});
+										
+										if(productBatchesCount == 1){
+											var ingredientBatchText = "Råvarebatch ID:";
+										} else {
+											var ingredientBatchText = "Råvarebatch ID'er:";
+										}
+										
+										var firstElement = '<table class="ingredientTable"><tr><td>Råvare nr.</td><td>'+responseReceptComponent[i].ingredientID+'</td></tr><tr><td>Råvare Navn</td><td>'+responseReceptComponent[i].ingredientName+'</td><tr><td>' + ingredientBatchText + '</td><td>' + availableProductBatches + '</td></tr></table><table class="bordered info-table"><thead><tr><th>Del</th><th>Mængde</th><th>Tolerance</th><th>Tara</th><th>Netto(kg)</th><th>Batch</th><th>Opr.</th><th>Terminal</th></tr></thead><tbody><tr><td>1</td><td>'+responseReceptComponent[i].nomNetto+'</td><td>&plusmn;'+responseReceptComponent[i].tolerance+'%</td>';
 										$.ajax({
 											type: 'GET',
 											url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngBatchList',
