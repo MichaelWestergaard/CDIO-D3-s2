@@ -12,7 +12,9 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import datalag.MySQLController;
+import datalag.ProductBatchDTO;
 import datalag.UserDTO;
+import datalag.ReceptDTO;
 
 public class SocketController implements Runnable {
 	Socket socket;
@@ -96,6 +98,50 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
+	
+
+	public void batchProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			sendMessage("RM20 8 \"" + "Indsæt batchID" + "\" \"\" \"&3\"");
+			
+			boolean batchConfirmed = false;
+			while(!batchConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+				ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
+				if(	productBatch != null) {					
+					sendMessage("RM20 8 \"" + "Bekræft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+
+					productBatchID = input;
+					
+					inputString = reader.readLine();
+					inputArr = inputString.split(" ");
+
+					if(inputArr[1].equals("A")) {
+						batchConfirmed = true;
+					} else {
+						sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+					}
+				} else {
+					sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
+
+				}
+			}
+			
+		} catch (IOException e) {
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+		}	catch (SQLException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		}
+	}
+	
+	
+	
+	
 	
 	public void sendMessage(String msg) {
 		try {
