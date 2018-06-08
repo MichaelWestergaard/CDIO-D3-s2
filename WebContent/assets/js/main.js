@@ -198,9 +198,9 @@
 										});
 										
 										if(productBatchesCount == 1){
-											var ingredientBatchText = "Råvarebatch ID:";
+											var ingredientBatchText = "Mulig Råvarebatch ID:";
 										} else {
-											var ingredientBatchText = "Råvarebatch ID'er:";
+											var ingredientBatchText = "Mulige Råvarebatch ID'er:";
 										}
 										
 										var firstElement = '<table class="ingredientTable"><tr><td>Råvare nr.</td><td>'+responseReceptComponent[i].ingredientID+'</td></tr><tr><td>Råvare Navn</td><td>'+responseReceptComponent[i].ingredientName+'</td><tr><td>' + ingredientBatchText + '</td><td>' + availableProductBatches + '</td></tr></table><table class="bordered info-table"><thead><tr><th>Del</th><th>Mængde</th><th>Tolerance</th><th>Tara</th><th>Netto(kg)</th><th>Batch</th><th>Opr.</th><th>Terminal</th></tr></thead><tbody><tr><td>1</td><td>'+responseReceptComponent[i].nomNetto+'</td><td>&plusmn;'+responseReceptComponent[i].tolerance+'%</td>';
