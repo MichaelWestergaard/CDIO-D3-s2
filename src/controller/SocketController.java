@@ -9,6 +9,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import datalag.MySQLController;
@@ -133,6 +136,102 @@ public class SocketController implements Runnable {
 		}
 	}
 
+	public void ingredientProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			
+			sendMessage("RM20 8 \"Indtast Raavare ID:\" \"\" \"&3\"");
+			boolean ingredientConfirmed = false;
+			
+			while(!ingredientConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+				ReceptComponentDTO recept = null;
+				int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
+				List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
+				
+				boolean ingredientInRecept = false;
+				for (ReceptComponentDTO receptComponentDTO : receptComponents) {
+					if(receptComponentDTO.getIngredientID() == ingredientID) {
+						recept = receptComponentDTO;
+						ingredientInRecept = true;
+					}
+				}
+				
+				if(ingredientInRecept) {
+					//Find mulige RB id'er
+					List<Integer> availableIngredientBatches = new ArrayList<Integer>();
+					String availableIngredientBatchesText = "";
+					boolean alreadyWeighed = false;
+					boolean nothingLeft = false;
+					int nothingLeftCount = 0;
+					
+					List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
+					for (Iterator iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
+						Integer ingredientBatchID = (Integer) iterator.next();
+						
+						if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+							//Tjek om råvaren er blevet afvejet før
+							if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
+								availableIngredientBatches.add(ingredientBatchID);
+								availableIngredientBatchesText += Integer.toString(ingredientBatchID);
+								if(iterator.hasNext()) {
+									availableIngredientBatchesText += ",";
+								}
+							} else {
+								//råvaren/råvarebatchen er blevet afvejet
+								alreadyWeighed = true;
+								//TODO: break måske..
+							}
+						} else {
+							//Ikke nok mængde
+							nothingLeftCount++;
+						}
+					}
+					
+					if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
+						sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
+						//TODO: Hvad skal der så ske?
+					} else {
+						if(!alreadyWeighed) {
+							sendMessage("RM20 8 \"Indtast RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+							inputString = reader.readLine();
+							inputArr = inputString.split(" ");
+							sleep();
+							int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+							if(availableIngredientBatches.contains(input)) {
+								if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+									this.ingredientBatchID = ingredientBatchID;
+									ingredientConfirmed = true;
+								} else {
+									sendMessage("RM20 8 \"Ikke nok maengde, proev igen\" \"\" \"&3\"");
+								}
+							} else {
+								sendMessage("RM20 8 \"Forkert RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+							}
+						} else {
+							sendMessage("RM20 8 \"Raavare er afvejet!\" \"\" \"&3\"");
+							ingredientConfirmed = false;
+						}
+					}
+				} else {
+					sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
+					ingredientConfirmed = false;
+				}
+				
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void ingredientBatchProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -278,7 +377,6 @@ public class SocketController implements Runnable {
 		}
 	}
 
-
 	public void sendMessage(String msg) {
 		try {
 			OutputStream os = socket.getOutputStream();
@@ -327,7 +425,6 @@ public class SocketController implements Runnable {
 		}
 	}
 
-
 	public void taraProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -366,7 +463,7 @@ public class SocketController implements Runnable {
 		batchProcedure();
 		unloadProcedure();
 		taraProcedure();
-		ingredientBatchProcedure();
+		ingredientProcedure();
 		nettoProcedure();
 		sleep();
 	}

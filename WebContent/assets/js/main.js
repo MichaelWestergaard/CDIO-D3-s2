@@ -177,7 +177,7 @@
 										
 										$.ajax({
 											type: 'GET',
-											url: 'http://localhost:8080/CDIO-D3-s2/rest/Product/getProductBatchesByIngredient',
+											url: 'http://localhost:8080/CDIO-D3-s2/rest/ingredient/getIngredientBatchesByIngredient',
 											data: {
 												ingredientID: responseReceptComponent[i].ingredientID
 											},
