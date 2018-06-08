@@ -73,10 +73,10 @@ public class SocketController implements Runnable {
 	}
 
 	public double getLoadFromString(String loadString) {
-		//			char[] loadChar = loadString.toCharArray();
-		//			double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
-		String[] loadArr = loadString.split(" ");
-		double loadValue = Double.parseDouble(loadArr[2]);
+		char[] loadChar = loadString.toCharArray();
+		double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
+//		String[] loadArr = loadString.split(" ");
+//		double loadValue = Double.parseDouble(loadArr[2]);
 		return loadValue;
 	}
 
@@ -300,7 +300,9 @@ public class SocketController implements Runnable {
 		loginProcedure();
 		batchProcedure();
 		unloadProcedure();
-
+		taraProcedure();
+		ingredientBatchProcedure();
+		nettoProcedure();
 	}
 
 }
