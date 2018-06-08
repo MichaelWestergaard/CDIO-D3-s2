@@ -161,7 +161,8 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			sendMessage("RM20 8 \"Afvej raavaren:\" \"\" \"&3\"");
+			String ingredientName = mySQLController.getIngredient(mySQLController.getIngBatch(ingredientBatchID).getIngredientID()).getIngredientName();
+			sendMessage("RM20 8 \"Afvej " + ingredientName + ":\" \"\" \"&3\"");
 			boolean nettoConfirmed = false;
 			while(!nettoConfirmed) {
 				String inputString = reader.readLine();
