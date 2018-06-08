@@ -260,12 +260,13 @@ public class SocketController implements Runnable {
 	}
 	
 
-	public void taraProcedure() {
-		try {
+	public void taraProcedure() { //hej
+		try { 
+			System.out.println("Slet denne kommentar");
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-			String msg = "Place tara.";
+			String msg = "Placere tara.";
 			sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
 			
 
@@ -281,10 +282,10 @@ public class SocketController implements Runnable {
 				
 					sleep();
 					tara = getLoadFromString(readLine);
-					System.out.println("tara success");
+					System.out.println("tara successful");
 					
 				} else {
-					msg = "Try again and confirm.";
+					msg = "Proev igen og godkend.";
 					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
 				}
 			}
@@ -296,6 +297,8 @@ public class SocketController implements Runnable {
 
 	public void completeProcedure() {
 		loginProcedure();
+		batchProcedure();
+		unloadProcedure();
 
 	}
 	
