@@ -32,7 +32,7 @@ public class SocketController implements Runnable {
 
 	public void init() {
 		try {
-			socket = new Socket("169.254.2.3", 8000);
+			socket = new Socket("169.254.2.2", 8000);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -62,6 +62,15 @@ public class SocketController implements Runnable {
 		}
 	}
 	
+
+		public double getLoadFromString(String loadString) {
+//			char[] loadChar = loadString.toCharArray();
+//			double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
+			String[] loadArr = loadString.split(" ");
+			double loadValue = Double.parseDouble(loadArr[2]);
+			return loadValue;
+		}
+	
 	public void loginProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -89,7 +98,7 @@ public class SocketController implements Runnable {
 						sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \"Forkert ID! Prøv igen\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Forkert ID! Proev igen\" \"\" \"&3\"");
 				}
 			}			
 		} catch (IOException e) {
@@ -153,6 +162,46 @@ public class SocketController implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+
+	public void taraProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+			String msg = "Place tara.";
+			sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+			
+
+			boolean taraConfirmed = false;
+			while(!taraConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+
+				if(inputArr[1].equals("A")) {
+					taraConfirmed = true;
+					sendMessage("T");
+				
+					sleep();
+					tara = getLoadFromString(readLine);
+					System.out.println("tara success");
+					
+				} else {
+					msg = "Try again and confirm.";
+					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+				}
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
+
+	public void completeProcedure() {
+		loginProcedure();
+
 	}
 	
 }
