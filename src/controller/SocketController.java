@@ -223,22 +223,25 @@ public class SocketController implements Runnable {
 				sleep();
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
-				if(	productBatch != null) {					
-					sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
-
-					productBatchID = input;
-
-					inputString = reader.readLine();
-					inputArr = inputString.split(" ");
-
-					if(inputArr[1].equals("A")) {
-						batchConfirmed = true;
+				if(	productBatch != null) {
+					if(productBatch.getStatus() != 2) {
+						sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+	
+						productBatchID = input;
+	
+						inputString = reader.readLine();
+						inputArr = inputString.split(" ");
+	
+						if(inputArr[1].equals("A")) {
+							batchConfirmed = true;
+						} else {
+							sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+						}
 					} else {
-						sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+						sendMessage("RM20 8 \"" + "Produktionen er afsluttet!" + "\" \"\" \"&3\"");
 					}
 				} else {
 					sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
-
 				}
 			}
 
