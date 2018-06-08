@@ -46,4 +46,21 @@ public class SocketController implements Runnable {
 
 	}
 	
+	public void loginProcedure() {
+		
+	}
+	
+	public void sendMessage(String msg) {
+		try {
+			OutputStream os = socket.getOutputStream();
+			PrintWriter pw = new PrintWriter(os);
+			pw.println(msg);
+			pw.flush();	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
