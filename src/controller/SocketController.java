@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import datalag.MySQLController;
 import datalag.ProductBatchDTO;
+import datalag.ReceptComponentDTO;
 import datalag.UserDTO;
 import datalag.IngBatchDTO;
 import datalag.ReceptDTO;
@@ -129,7 +130,14 @@ public class SocketController implements Runnable {
 				sleep();
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
-				if(ingredientBatch != null) {	
+				boolean ingredientInRecept = false;
+				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+					if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
+						ingredientInRecept = true;
+					}
+				}
+				
+				if(ingredientInRecept) {	
 					ingredientBatchID = ingredientBatch.getIngBatchID();
 					ingredientBatchConfirmed = true;
 				} else {
