@@ -11,7 +11,10 @@
 		$(".content-container").load("createRecept.html");
 	});
 	$('#createReceptComponent').on('click', function(){
-		$(".content-container").load("createReceptComponent.html");
+		var receptID = $("#receptID").val();
+		$(".content-container").load("createReceptComponent.html", function(){
+			$("input[name=receptID]").val(receptID);
+		});
 	});
 	
 	$('#createIngredient').on('click', function(){
