@@ -17,6 +17,7 @@ import datalag.UserDTO;
 import datalag.IngBatchDTO;
 import datalag.ReceptDTO;
 
+
 public class SocketController implements Runnable {
 	Socket socket;
 	static String readLine = null;
@@ -217,6 +218,33 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
 	}
+	
+	public void unloadProcedure() {
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			sendMessage("RM20 8 \"" + "Er vægten ubelastet?" + "\" \"\" \"&3\"");
+
+			boolean unloadConfirmed = false;
+			while(!unloadConfirmed) {
+				String inputString = reader.readLine();
+				String[] inputArr = inputString.split(" ");
+				sleep();
+
+				if(inputArr[1].equals("A")) {
+					unloadConfirmed = true;
+					sendMessage("T");
+					
+				} else {
+					sendMessage("RM20 8 \"Fjern vægten og bekræft" + "U?" + "\" \"\" \"&3\"");
+				}
+			}
+
+		} catch (IOException e) {
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+		}
+	}
+
 	
 	public void sendMessage(String msg) {
 		try {
