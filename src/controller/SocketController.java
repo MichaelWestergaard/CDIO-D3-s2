@@ -281,7 +281,43 @@ public class SocketController implements Runnable {
 		try {
 			OutputStream os = socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(os);
-			pw.println(msg);
+			
+			//Tjek om beskeden ikke har for mange tegn
+			String[] msgArray = msg.split(" ");
+			String returnMsg = "";
+			
+			if(msgArray[0].equals("RM20") && msgArray[1].equals("8")) {
+				String realMsg = msg.substring(msg.indexOf("8")+3, msg.indexOf("\" \"\" \"&3\""));
+				char[] chars = realMsg.toCharArray();
+				
+				int alphaCount = 0, specialCount = 0;
+				
+				for (char c : chars) {
+					if(Character.isAlphabetic(c)) {
+						alphaCount++;
+						if(alphaCount < 20) {
+							returnMsg += c;
+						} else {
+							if(specialCount+2 < 8) {
+								returnMsg += "..";
+								break;
+							}
+						}
+					} else if(!Character.isDigit(c) && !Character.isLetter(c)) {
+						specialCount++;
+						if(specialCount < 8) {
+							returnMsg += c;
+						} else {
+							if(specialCount+2 < 8) {
+								returnMsg += "..";
+								break;
+							}
+						}
+					}
+				}
+			}
+			
+			pw.println(returnMsg);
 			pw.flush();	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
