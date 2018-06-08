@@ -144,7 +144,7 @@ public class SocketController implements Runnable {
 					ingredientBatchID = ingredientBatch.getIngBatchID();
 					ingredientBatchConfirmed = true;
 				} else {
-					sendMessage("RM20 8 \"Raavarebatch ID'et findes ikke\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
 				}
 			}			
 		} catch (IOException e) {
@@ -158,7 +158,8 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			sendMessage("RM20 8 \"Afvej raavaren:\" \"\" \"&3\"");
+			String ingredientName = mySQLController.getIngredient(mySQLController.getIngBatch(ingredientBatchID).getIngredientID()).getIngredientName();
+			sendMessage("RM20 8 \"Afvej " + ingredientName + ":\" \"\" \"&3\"");
 			boolean nettoConfirmed = false;
 			while(!nettoConfirmed) {
 				String inputString = reader.readLine();
