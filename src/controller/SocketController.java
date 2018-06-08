@@ -259,8 +259,9 @@ public class SocketController implements Runnable {
 	}
 	
 
-	public void taraProcedure() {
-		try {
+	public void taraProcedure() { //hej
+		try { 
+			System.out.println("Slet denne kommentar");
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
