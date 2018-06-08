@@ -97,16 +97,30 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				UserDTO user = mySQLController.getUser(input);
 				if(user != null) {
-					sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
-
-					inputString = reader.readLine();
-					inputArr = inputString.split(" ");
-
-					if(inputArr[1].equals("A")) {
-						operatorID = user.getUserID();
-						userConfirmed = true;
+					
+					boolean allowed = false;
+					//Tjek om brugeren har rollen "Laborant"
+					for (String role : user.getRole()) {
+						if(role.equals("Laborant") && !allowed) {
+							allowed = true;
+						}
+					}
+					
+					if(allowed) {
+					
+						sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
+	
+						inputString = reader.readLine();
+						inputArr = inputString.split(" ");
+	
+						if(inputArr[1].equals("A")) {
+							operatorID = user.getUserID();
+							userConfirmed = true;
+						} else {
+							sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
+						}
 					} else {
-						sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
+						sendMessage("RM20 8 \"Kun laboranter tilladt!:\" \"\" \"&3\"");
 					}
 				} else {
 					sendMessage("RM20 8 \"Forkert ID! Proev igen\" \"\" \"&3\"");
