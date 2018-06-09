@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import datalag.MySQLController;
+import datalag.ProductBatchComponentDTO;
 import datalag.ProductBatchDTO;
 import datalag.ReceptComponentDTO;
 import datalag.UserDTO;
@@ -463,13 +464,45 @@ public class SocketController implements Runnable {
 	}
 
 	public void completeProcedure() {
-		loginProcedure();
-		batchProcedure();
-		unloadProcedure();
-		taraProcedure();
-		ingredientProcedure();
-		nettoProcedure();
-		sleep();
+		try {
+			//Antal råvare der skal afvejes
+			int numberOfReceptComponents = 0;
+			int receptID = (mySQLController.getProductBatch(productBatchID)).getProductBatchID();
+			for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+				if(receptComponent.getReceptID() == receptID) {
+					numberOfReceptComponents++;
+				}
+			}
+			
+			//Antal råvare der allerede er afvejet
+			int numberOfPBComponents = 0;
+			for(ProductBatchComponentDTO productBatchComponent : mySQLController.getProductBatchComponents()) {
+				if(productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
+					numberOfPBComponents++;
+				}
+			}
+			
+			loginProcedure();
+			batchProcedure();
+			for(int i = 0; i < numberOfReceptComponents - numberOfPBComponents; i++) {
+				unloadProcedure();
+				taraProcedure();
+				ingredientProcedure();
+				nettoProcedure();				
+			}
+			//Sæt status til afsluttet og slutdato til nu (afslutProduktion procedure)
+
+			
+			//Afvejningen er afsluttet besked?
+			
+			
+			sleep();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 }
