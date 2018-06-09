@@ -490,18 +490,38 @@ public class SocketController implements Runnable {
 				ingredientProcedure();
 				nettoProcedure();				
 			}
-			//Sæt status til afsluttet og slutdato til nu (afslutProduktion procedure)
+			
+			//Afsluttet afvejning besked
+			if(mySQLController.finishProductBatch(productBatchID)) {
+				InputStream is = socket.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-			
-			//Afvejningen er afsluttet besked?
-			
-			
+				String msg = "Afvejning afsluttet";
+				sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+
+				boolean finishConfirmed = false;
+				while(!finishConfirmed) {
+					String inputString = reader.readLine();
+					String[] inputArr = inputString.split(" ");
+					sleep();
+
+					if(inputArr[1].equals("A")) {
+						finishConfirmed = true;
+						sleep();
+					} else {
+						msg = "Tryk OK";
+						sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+					}
+				}
+					
+			}
+
 			sleep();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (IOException e) {
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}
-		
 		
 	}
 
