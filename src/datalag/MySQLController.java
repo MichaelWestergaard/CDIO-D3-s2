@@ -23,7 +23,7 @@ public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
 //	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&zeroDateTimeBehavior=convertToNull";
-//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull";
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";//&zeroDateTimeBehavior=convertToNull
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
@@ -503,6 +503,23 @@ public class MySQLController {
 		}
 	}
 
+	public boolean updateAmount(int raavarebatchID, double weighedAmount) throws SQLException {
+		if(getIngBatch(raavarebatchID) == null) {
+			return false;
+		}
+		if(getIngBatch(raavarebatchID).getAmount() < weighedAmount) {
+			return false;
+		}
+		
+		String query = "call opdaterMaengde(?, ?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, raavarebatchID);
+		preparedStatement.setDouble(2, weighedAmount);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
 	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException {
 		List<Integer> productBatches = new ArrayList<Integer>();
 		ResultSet results = null;

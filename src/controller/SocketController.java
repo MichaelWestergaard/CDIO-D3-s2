@@ -286,14 +286,19 @@ public class SocketController implements Runnable {
 
 					int ingredientID = (mySQLController.getIngBatch(ingredientBatchID)).getIngredientID();
 					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-					double nomNetto = (mySQLController.getReceptComponent(receptID, ingredientID)).getNomNetto();
-					double tolerance = (mySQLController.getReceptComponent(receptID, ingredientID)).getTolerance();
+					ReceptComponentDTO receptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
+					double nomNetto = receptComponent.getNomNetto();
+					double tolerance = receptComponent.getTolerance();
 
 					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
 						nettoConfirmed = true;
-						mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
-						sendMessage("T");
-						sleep();	
+						if(mySQLController.updateAmount(ingredientBatchID, netto)) {
+							mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
+							sendMessage("T");
+							sleep();	
+						} else {
+							sendMessage("RM20 8 \"Mere afvejet end i PB'en\" \"\" \"&3\"");
+						}
 					} else {
 						sendMessage("RM20 8 \"Tolerance overholdes ikke\" \"\" \"&3\"");
 					}
