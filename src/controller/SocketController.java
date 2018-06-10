@@ -73,20 +73,20 @@ public class SocketController implements Runnable {
 		sendMessage("S");
 		sleep();		
 		char[] readChar = readLine.toCharArray();
-		double loadValue = Double.parseDouble(new StringBuilder().append(readChar[8]).append(readChar[9]).append(readChar[10]).append(readChar[11]).append(readChar[12]).toString());
+		double loadValue = Double.parseDouble(new StringBuilder().append(readChar[8]).append(readChar[9]).append(readChar[10]).append(readChar[11]).append(readChar[12]).append(readChar[13]).toString());
 		return loadValue;
 	}
 
 	public double getLoadFromString(String loadString) {
 		char[] loadChar = loadString.toCharArray();
 		System.out.println(loadChar.length);
-		double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
-//		String[] loadArr = loadString.split(" ");
-//		double loadValue = Double.parseDouble(loadArr[2]);
+		double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).append(loadChar[13]).toString());
+		//		String[] loadArr = loadString.split(" ");
+		//		double loadValue = Double.parseDouble(loadArr[2]);
 		return loadValue;
 	}
 
-	public void loginProcedure() {
+	public boolean loginProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -98,131 +98,158 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-				UserDTO user = mySQLController.getUser(input);
-				if(user != null) {
-					
-					boolean allowed = false;
-					//Tjek om brugeren har rollen "Laborant"
-					for (String role : user.getRole()) {
-						if(role.equals("Laborant") && !allowed) {
-							allowed = true;
+				if(inputArr.length >= 3) {
+					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+					UserDTO user = mySQLController.getUser(input);
+					if(user != null) {
+	
+						boolean allowed = false;
+						//Tjek om brugeren har rollen "Laborant"
+						for (String role : user.getRole()) {
+							if(role.equals("Laborant") && !allowed) {
+								allowed = true;
+							}
 						}
-					}
-					
-					if(allowed) {
-					
-						sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
 	
-						inputString = reader.readLine();
-						inputArr = inputString.split(" ");
+						if(allowed) {
+							sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
 	
-						if(inputArr[1].equals("A")) {
-							operatorID = user.getUserID();
-							userConfirmed = true;
+							inputString = reader.readLine();
+							inputArr = inputString.split(" ");
+	
+							if(inputArr[1].equals("A")) {
+								operatorID = user.getUserID();
+								userConfirmed = true;
+								return true;
+							} else {
+								sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
+							}
 						} else {
-							sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
+							sendMessage("RM20 8 \"Kun laboranter tilladt!:\" \"\" \"&3\"");
 						}
 					} else {
-						sendMessage("RM20 8 \"Kun laboranter tilladt!:\" \"\" \"&3\"");
+						sendMessage("RM20 8 \"Forkert ID! Proev igen\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \"Forkert ID! Proev igen\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Indtast ID igen:\" \"\" \"&3\"");
 				}
 			}			
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+		} catch (NumberFormatException e) {
+			sendMessage("RM20 8 \"Indtast dit ID:\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
+		return false;
 	}
 
-	public void ingredientProcedure() {
+	public boolean ingredientProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			
+
 			sendMessage("RM20 8 \"Indtast Raavare ID:\" \"\" \"&3\"");
 			boolean ingredientConfirmed = false;
-			
+
 			while(!ingredientConfirmed) {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				ReceptComponentDTO recept = null;
-				int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
-				List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
-				
-				boolean ingredientInRecept = false;
-				for (ReceptComponentDTO receptComponentDTO : receptComponents) {
-					if(receptComponentDTO.getIngredientID() == ingredientID) {
-						recept = receptComponentDTO;
-						ingredientInRecept = true;
-					}
-				}
-				
-				if(ingredientInRecept) {
-					//Find mulige RB id'er
-					List<Integer> availableIngredientBatches = new ArrayList<Integer>();
-					String availableIngredientBatchesText = "";
-					boolean alreadyWeighed = false;
-					int nothingLeftCount = 0;
-					
-					List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
-					for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
-						Integer ingredientBatchID = (Integer) iterator.next();
-						
-						if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
-							//Tjek om råvaren er blevet afvejet før
-							if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
-								availableIngredientBatches.add(ingredientBatchID);
-								availableIngredientBatchesText += Integer.toString(ingredientBatchID);
-								if(iterator.hasNext()) {
-									availableIngredientBatchesText += ",";
-								}
-							} else {
-								//råvaren/råvarebatchen er blevet afvejet
-								alreadyWeighed = true;
-								//TODO: break måske..
+				if(!inputArr[2].replace("\"", "").equals("")) {
+					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+						return false;
+					} else if(inputArr[1].equals("A")) {
+						ReceptComponentDTO recept = null;
+						int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
+						List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
+		
+						boolean ingredientInRecept = false;
+						for (ReceptComponentDTO receptComponentDTO : receptComponents) {
+							if(receptComponentDTO.getIngredientID() == ingredientID) {
+								recept = receptComponentDTO;
+								ingredientInRecept = true;
 							}
-						} else {
-							//Ikke nok mængde
-							nothingLeftCount++;
 						}
-					}
-					
-					if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
-						sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
-						//TODO: Hvad skal der så ske?
-					} else {
-						if(!alreadyWeighed) {
-							sendMessage("RM20 8 \"Indtast RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
-							inputString = reader.readLine();
-							inputArr = inputString.split(" ");
-							sleep();
-							int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-							if(availableIngredientBatches.contains(input)) {
+		
+						if(ingredientInRecept) {
+							//Find mulige RB id'er
+							List<Integer> availableIngredientBatches = new ArrayList<Integer>();
+							String availableIngredientBatchesText = "";
+							boolean alreadyWeighed = false;
+							int nothingLeftCount = 0;
+		
+							List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
+							for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
+								Integer ingredientBatchID = (Integer) iterator.next();
+		
 								if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
-									this.ingredientBatchID = ingredientBatchID;
-									ingredientConfirmed = true;
+									//Tjek om råvaren er blevet afvejet før
+									if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
+										availableIngredientBatches.add(ingredientBatchID);
+										availableIngredientBatchesText += Integer.toString(ingredientBatchID);
+										if(iterator.hasNext()) {
+											availableIngredientBatchesText += ",";
+										}
+									} else {
+										//råvaren/råvarebatchen er blevet afvejet
+										alreadyWeighed = true;
+										//TODO: break måske..
+									}
 								} else {
-									sendMessage("RM20 8 \"Ikke nok maengde, proev igen\" \"\" \"&3\"");
+									//Ikke nok mængde
+									nothingLeftCount++;
 								}
+							}
+		
+							if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
+								sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
+								//TODO: Hvad skal der så ske?
 							} else {
-								sendMessage("RM20 8 \"Forkert RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+								if(!alreadyWeighed) {
+									sendMessage("RM20 8 \"Indtast RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+									inputString = reader.readLine();
+									inputArr = inputString.split(" ");
+									sleep();
+									if(!inputArr[2].replace("\"", "").equals("")) {
+										if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+											return false;
+										} else if(inputArr[1].equals("A")) {
+											int ingredientBatchID = Integer.parseInt(inputArr[2].replace("\"", ""));
+											if(availableIngredientBatches.contains(ingredientBatchID)) {
+												if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+													this.ingredientBatchID = ingredientBatchID;
+													ingredientConfirmed = true;
+													return true;
+												} else {
+													sendMessage("RM20 8 \"Ikke nok maengde, proev igen\" \"\" \"&3\"");
+												}
+											} else {
+												sendMessage("RM20 8 \"Forkert RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+											}
+										} else {
+											sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+										}
+									} else {
+										sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+									}
+								} else {
+									sendMessage("RM20 8 \"Raavare er afvejet!\" \"\" \"&3\"");
+									ingredientConfirmed = false;
+								}
 							}
 						} else {
-							sendMessage("RM20 8 \"Raavare er afvejet!\" \"\" \"&3\"");
+							sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
 							ingredientConfirmed = false;
 						}
+					} else {
+						sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
-					ingredientConfirmed = false;
+					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
 				}
-				
 			}
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -230,9 +257,10 @@ public class SocketController implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return false;
 	}
-	
-	public void ingredientBatchProcedure() {
+
+	public boolean ingredientBatchProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -242,35 +270,47 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-				IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
-				boolean ingredientInRecept = false;
-				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
-					if(receptComponent.getReceptID() == receptID) {
-						if(ingredientBatch != null) {
-							if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
-								ingredientInRecept = true;
-							}
+				if(!inputArr[2].replace("\"", "").equals("")) {
+					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+						return false;
+					} else if(inputArr[1].equals("A")) {
+						int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+						IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
+						boolean ingredientInRecept = false;
+						int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
+						for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+							if(receptComponent.getReceptID() == receptID) {
+								if(ingredientBatch != null) {
+									if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
+										ingredientInRecept = true;
+									}
+								}
+							}	
 						}
-					}	
-				}
-				
-				if(ingredientInRecept) {	
-					ingredientBatchID = ingredientBatch.getIngBatchID();
-					ingredientBatchConfirmed = true;
+						
+						if(ingredientInRecept) {	
+							ingredientBatchID = ingredientBatch.getIngBatchID();
+							ingredientBatchConfirmed = true;
+							return true;
+						} else {
+							sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
+						}
+					} else {
+						sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+					}
 				} else {
-					sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
-				}
+					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+				}	
 			}			
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
+		return false;
 	}
 
-	public void nettoProcedure() {
+	public boolean nettoProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -281,8 +321,27 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-
+				boolean continueProcedure = false;
+				
 				if(inputArr[1].equals("A")) {
+					if(inputArr.length == 2) {
+						continueProcedure = true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
+							}
+						} else {
+							continueProcedure = true;
+						}
+					} else {
+						sendMessage("RM20 8 \"" + "Afvejningsfejl" + "\" \"\" \"&3\"");
+					}
+				} else {
+					sendMessage("RM20 8 \"" + "Afvejningsfejl" + "\" \"\" \"&3\"");
+				}
+				
+				if(continueProcedure) {
 					netto = getLoad();
 
 					int ingredientID = (mySQLController.getIngBatch(ingredientBatchID)).getIngredientID();
@@ -290,31 +349,38 @@ public class SocketController implements Runnable {
 					ReceptComponentDTO receptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
 					double nomNetto = receptComponent.getNomNetto();
 					double tolerance = receptComponent.getTolerance();
-
-					if(netto >= nomNetto - nomNetto*tolerance && netto <= nomNetto + nomNetto*tolerance) {
+					System.out.println("Netto: " + netto);
+					System.out.println("Min: " + (nomNetto - (nomNetto*tolerance)/100));
+					System.out.println("Max: " + (nomNetto + (nomNetto*tolerance)/100));
+					if(netto >= (nomNetto - (nomNetto*tolerance)/100) && netto <= (nomNetto + (nomNetto*tolerance)/100)) {
 						nettoConfirmed = true;
 						if(mySQLController.updateAmount(ingredientBatchID, netto)) {
 							mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
+							System.out.println("Done");
 							sendMessage("T");
-							sleep();	
+							sleep();
+							return true;
 						} else {
 							sendMessage("RM20 8 \"Mere afvejet end i PB'en\" \"\" \"&3\"");
 						}
 					} else {
-						sendMessage("RM20 8 \"Tolerance overholdes ikke\" \"\" \"&3\"");
+						System.out.println("fejl");
+						//TODO Fix tekst
+						sendMessage("RM20 8 \"Fejl i afvejning\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \" Proev igen!\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
 				}
 			}
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
-		}		
+		}
+		return false;
 	}
 
-	public void batchProcedure() {
+	public boolean batchProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -325,38 +391,61 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-				ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
-				if(	productBatch != null) {
-					if(productBatch.getStatus() != 2) {
-						sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
-	
-						productBatchID = input;
-	
-						inputString = reader.readLine();
-						inputArr = inputString.split(" ");
-	
-						if(inputArr[1].equals("A")) {
-							batchConfirmed = true;
+				if(!inputArr[2].replace("\"", "").equals("")) {
+					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+						return false;
+					} else if(inputArr[1].equals("A")) {
+						int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+						ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
+						if(	productBatch != null) {
+							if(productBatch.getStatus() != 2) {
+								sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+		
+								productBatchID = input;
+		
+								inputString = reader.readLine();
+								inputArr = inputString.split(" ");
+								if(inputArr[1].equals("A")) {
+									if(inputArr.length == 2) {
+										batchConfirmed = true;
+										return true;
+									} else if(inputArr.length == 3) {
+										if(!inputArr[2].replace("\"", "").equals("")) {
+											if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+												return false;
+											}
+										} else {
+											batchConfirmed = true;
+											return true;
+										}
+									} else {
+										sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+									}
+								} else {
+									sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+								}
+							} else {
+								sendMessage("RM20 8 \"" + "Afsluttet, proev igen!" + "\" \"\" \"&3\"");
+							}
 						} else {
-							sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+							sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
 						}
 					} else {
-						sendMessage("RM20 8 \"" + "Produktionen er afsluttet!" + "\" \"\" \"&3\"");
+						sendMessage("RM20 8 \"Proev igen\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Proev igen\" \"\" \"&3\"");
 				}
 			}
-
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
-		}	catch (SQLException e) {
+		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		}
+		return false;
 	}
 
-	public void unloadProcedure() {
+	public boolean unloadProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -365,38 +454,53 @@ public class SocketController implements Runnable {
 			boolean unloadConfirmed = false;
 			while(!unloadConfirmed) {
 				String inputString = reader.readLine();
+				System.out.println(inputString);
 				String[] inputArr = inputString.split(" ");
 				sleep();
-
+				
 				if(inputArr[1].equals("A")) {
-					unloadConfirmed = true;
-					sendMessage("T");
-
+					if(inputArr.length == 2) {
+						unloadConfirmed = true;
+						sendMessage("T");
+						return true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
+							}
+						} else {
+							unloadConfirmed = true;
+							sendMessage("T");
+							return true;
+						}
+					} else {
+						sendMessage("RM20 8 \"Fjern vaegten og bekraeft?\" \"\" \"&3\"");
+					}
 				} else {
-					sendMessage("RM20 8 \"Fjern vaegten og bekraeft" + "U?" + "\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"Fjern vaegten og bekraeft?\" \"\" \"&3\"");
 				}
 			}
 
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}
+		return false;
 	}
 
 	public void sendMessage(String msg) {
 		try {
 			OutputStream os = socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(os);
-			
+
 			//Tjek om beskeden ikke har for mange tegn
 			String[] msgArray = msg.split(" ");
 			String returnMsg = "";
-			
 			if(msgArray[0].equals("RM20") && msgArray[1].equals("8")) {
 				String realMsg = msg.substring(msg.indexOf("8")+3, msg.indexOf("\" \"\" \"&3\""));
 				char[] chars = realMsg.toCharArray();
-				
+
 				int alphaCount = 0, specialCount = 0;
-				
+
 				for (char c : chars) {
 					if(Character.isAlphabetic(c)) {
 						alphaCount++;
@@ -420,17 +524,21 @@ public class SocketController implements Runnable {
 						}
 					}
 				}
+				returnMsg = "RM20 8 \""+returnMsg+"\" \"\" \"&3\"";
+				pw.println(returnMsg);
+				pw.flush();	
+			} else {		
+				pw.println(msg);
+				pw.flush();	
 			}
-			
-			pw.println(returnMsg);
-			pw.flush();	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void taraProcedure() {
+	
+	public boolean taraProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
@@ -444,14 +552,32 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-
+				
 				if(inputArr[1].equals("A")) {
-					taraConfirmed = true;
-					sendMessage("T");
+					if(inputArr.length == 2) {
+						taraConfirmed = true;
+						sendMessage("T");
 
-					sleep();
-					tara = getLoadFromString(readLine);
+						sleep();
+						tara = getLoadFromString(readLine);
+						return true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
+							}
+						} else {
+							taraConfirmed = true;
+							sendMessage("T");
 
+							sleep();
+							tara = getLoadFromString(readLine);
+							return true;
+						}
+					} else {
+						msg = "Proev igen og godkend";
+						sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+					}
 				} else {
 					msg = "Proev igen og godkend";
 					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
@@ -460,69 +586,88 @@ public class SocketController implements Runnable {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
+		return false;
 	}
 
 	public void completeProcedure() {
-		try {
-			//Antal råvare der skal afvejes
-			int numberOfReceptComponents = 0;
-			int receptID = (mySQLController.getProductBatch(productBatchID)).getProductBatchID();
-			for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
-				if(receptComponent.getReceptID() == receptID) {
-					numberOfReceptComponents++;
+		
+		outerloop:
+		while(true) {
+			try {
+
+				if(!loginProcedure()) {
+					break outerloop;
 				}
-			}
-			
-			//Antal råvare der allerede er afvejet
-			int numberOfPBComponents = 0;
-			for(ProductBatchComponentDTO productBatchComponent : mySQLController.getProductBatchComponents()) {
-				if(productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
-					numberOfPBComponents++;
+				if(!batchProcedure()) {
+					break outerloop;
 				}
-			}
-			
-			loginProcedure();
-			batchProcedure();
-			for(int i = 0; i < numberOfReceptComponents - numberOfPBComponents; i++) {
-				unloadProcedure();
-				taraProcedure();
-				ingredientProcedure();
-				nettoProcedure();				
-			}
-			
-			//Afsluttet afvejning besked
-			if(mySQLController.finishProductBatch(productBatchID)) {
-				InputStream is = socket.getInputStream();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
-				String msg = "Afvejning afsluttet";
-				sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
-
-				boolean finishConfirmed = false;
-				while(!finishConfirmed) {
-					String inputString = reader.readLine();
-					String[] inputArr = inputString.split(" ");
-					sleep();
-
-					if(inputArr[1].equals("A")) {
-						finishConfirmed = true;
-						sleep();
-					} else {
-						msg = "Tryk OK";
-						sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+				//Antal råvare der skal afvejes
+				int numberOfReceptComponents = 0;
+				int receptID = (mySQLController.getProductBatch(productBatchID)).getProductBatchID();
+				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+					if(receptComponent.getReceptID() == receptID) {
+						numberOfReceptComponents++;
 					}
 				}
-					
+
+				//Antal råvare der allerede er afvejet
+				int numberOfPBComponents = 0;
+				for(ProductBatchComponentDTO productBatchComponent : mySQLController.getProductBatchComponents()) {
+					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
+						numberOfPBComponents++;
+					}
+				}
+
+				for(int i = 0; i < numberOfReceptComponents - numberOfPBComponents; i++) {
+					if(!unloadProcedure()) {
+						break outerloop;
+					}
+					if(!taraProcedure()) {
+						break outerloop;
+					}
+					if(!ingredientProcedure()) {
+						break outerloop;
+					}
+					if(!nettoProcedure()) {
+						break outerloop;
+					}
+				}
+
+				//Afsluttet afvejning besked
+				if(mySQLController.finishProductBatch(productBatchID)) {
+					InputStream is = socket.getInputStream();
+					BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+					String msg = "Afvejning afsluttet";
+					sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+
+					boolean finishConfirmed = false;
+					while(!finishConfirmed) {
+						String inputString = reader.readLine();
+						String[] inputArr = inputString.split(" ");
+						sleep();
+
+						if(inputArr[1].equals("A")) {
+							finishConfirmed = true;
+							sleep();
+						} else {
+							msg = "Tryk OK";
+							sendMessage("RM20 8 \"" + msg + "\" \"\" \"&3\"");
+						}
+					}
+
+				}
+
+				sleep();
+			} catch (SQLException e) {
+				sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+			} catch (IOException e) {
+				sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 			}
 
-			sleep();
-		} catch (SQLException e) {
-			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
-		} catch (IOException e) {
-			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}
-		
 	}
 
 }
