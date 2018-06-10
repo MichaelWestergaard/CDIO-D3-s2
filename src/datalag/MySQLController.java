@@ -466,6 +466,16 @@ public class MySQLController {
 		}
 	}
 
+	
+	public boolean finishProductBatch(int pbID) throws SQLException {
+		String query = "call afslutProduktion(?)";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, pbID);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
 	public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
 		IngBatchDTO ingBatch = null;
 		ResultSet results = null;
