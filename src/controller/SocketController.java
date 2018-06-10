@@ -156,94 +156,124 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				if(!inputArr[2].replace("\"", "").equals("")) {
-					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
-						return false;
-					} else if(inputArr[1].equals("A")) {
-						ReceptComponentDTO recept = null;
-						int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
-						List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
-		
-						boolean ingredientInRecept = false;
-						for (ReceptComponentDTO receptComponentDTO : receptComponents) {
-							if(receptComponentDTO.getIngredientID() == ingredientID) {
-								recept = receptComponentDTO;
-								ingredientInRecept = true;
-							}
-						}
-		
-						if(ingredientInRecept) {
-							//Find mulige RB id'er
-							List<Integer> availableIngredientBatches = new ArrayList<Integer>();
-							String availableIngredientBatchesText = "";
-							boolean alreadyWeighed = false;
-							int nothingLeftCount = 0;
-		
-							List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
-							for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
-								Integer ingredientBatchID = (Integer) iterator.next();
-		
-								if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
-									//Tjek om råvaren er blevet afvejet før
-									if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
-										availableIngredientBatches.add(ingredientBatchID);
-										availableIngredientBatchesText += "" + ingredientBatchID;
-										if(iterator.hasNext()) {
-											availableIngredientBatchesText += ",";
-										}
-									} else {
-										//råvaren/råvarebatchen er blevet afvejet
-										alreadyWeighed = true;
-										//TODO: break måske..
-									}
-								} else {
-									//Ikke nok mængde
-									nothingLeftCount++;
-								}
-							}
-							
-							if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
-								sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
-								//TODO: Hvad skal der så ske?
-							} else {
-								if(!alreadyWeighed) {
-									sendMessage("RM20 8 \"Indtast RB ID (" + availableIngredientBatchesText.toString() + ")\" \"\" \"&3\"");
-									inputString = reader.readLine();
-									inputArr = inputString.split(" ");
-									sleep();
-									if(!inputArr[2].replace("\"", "").equals("")) {
-										if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
-											return false;
-										} else if(inputArr[1].equals("A")) {
-											int ingredientBatchID = Integer.parseInt(inputArr[2].replace("\"", ""));
-											if(availableIngredientBatches.contains(ingredientBatchID)) {
-												if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
-													this.ingredientBatchID = ingredientBatchID;
-													ingredientConfirmed = true;
-													return true;
-												} else {
-													sendMessage("RM20 8 \"Ikke nok maengde, proev igen\" \"\" \"&3\"");
-												}
-											} else {
-												sendMessage("RM20 8 \"Forkert RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
-											}
-										} else {
-											sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
-										}
-									} else {
-										sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
-									}
-								} else {
-									sendMessage("RM20 8 \"Raavare er afvejet!\" \"\" \"&3\"");
-									ingredientConfirmed = false;
-								}
+				
+				boolean continueProcedure = false;
+				
+				if(inputArr[1].equals("A")) {
+					if(inputArr.length == 2) {
+						continueProcedure = true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
 							}
 						} else {
-							sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
-							ingredientConfirmed = false;
+							continueProcedure = true;
 						}
 					} else {
-						sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+						continueProcedure = false;
+					}
+				} else {
+					continueProcedure = false;
+				}
+				
+				if(continueProcedure) {
+					ReceptComponentDTO recept = null;
+					int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
+					List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
+	
+					boolean ingredientInRecept = false;
+					for (ReceptComponentDTO receptComponentDTO : receptComponents) {
+						if(receptComponentDTO.getIngredientID() == ingredientID) {
+							recept = receptComponentDTO;
+							ingredientInRecept = true;
+						}
+					}
+	
+					if(ingredientInRecept) {
+						//Find mulige RB id'er
+						List<Integer> availableIngredientBatches = new ArrayList<Integer>();
+						String availableIngredientBatchesText = "";
+						boolean alreadyWeighed = false;
+						int nothingLeftCount = 0;
+	
+						List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
+						for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
+							Integer ingredientBatchID = (Integer) iterator.next();
+	
+							if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+								//Tjek om råvaren er blevet afvejet før
+								if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
+									availableIngredientBatches.add(ingredientBatchID);
+									availableIngredientBatchesText += "" + ingredientBatchID;
+									if(iterator.hasNext()) {
+										availableIngredientBatchesText += ",";
+									}
+								} else {
+									//råvaren/råvarebatchen er blevet afvejet
+									alreadyWeighed = true;
+									//TODO: break måske..
+								}
+							} else {
+								//Ikke nok mængde
+								nothingLeftCount++;
+							}
+						}
+						
+						if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
+							sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
+							//TODO: Hvad skal der så ske?
+						} else {
+							if(!alreadyWeighed) {
+								sendMessage("RM20 8 \"Indtast RB ID (" + availableIngredientBatchesText.toString() + ")\" \"\" \"&3\"");
+								inputString = reader.readLine();
+								inputArr = inputString.split(" ");
+								sleep();
+								
+								boolean inputOK = false;
+								
+								if(inputArr[1].equals("A")) {
+									if(inputArr.length == 2) {
+										inputOK = true;
+									} else if(inputArr.length == 3) {
+										if(!inputArr[2].replace("\"", "").equals("")) {
+											if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+												return false;
+											}
+										} else {
+											inputOK = true;
+										}
+									} else {
+										inputOK = false;
+									}
+								} else {
+									inputOK = false;
+								}
+								
+								if(inputOK) {
+									int ingredientBatchID = Integer.parseInt(inputArr[2].replace("\"", ""));
+									if(availableIngredientBatches.contains(ingredientBatchID)) {
+										if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+											this.ingredientBatchID = ingredientBatchID;
+											ingredientConfirmed = true;
+											return true;
+										} else {
+											sendMessage("RM20 8 \"Ikke nok maengde, proev igen\" \"\" \"&3\"");
+										}
+									} else {
+										sendMessage("RM20 8 \"Forkert RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+									}
+								} else {
+									sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+								}
+							} else {
+								sendMessage("RM20 8 \"Raavare er afvejet!\" \"\" \"&3\"");
+								ingredientConfirmed = false;
+							}
+						}
+					} else {
+						sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
+						ingredientConfirmed = false;
 					}
 				} else {
 					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
@@ -270,37 +300,51 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				if(!inputArr[2].replace("\"", "").equals("")) {
-					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
-						return false;
-					} else if(inputArr[1].equals("A")) {
-						int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-						IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
-						boolean ingredientInRecept = false;
-						int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-						for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
-							if(receptComponent.getReceptID() == receptID) {
-								if(ingredientBatch != null) {
-									if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
-										ingredientInRecept = true;
-									}
-								}
-							}	
-						}
-						
-						if(ingredientInRecept) {	
-							ingredientBatchID = ingredientBatch.getIngBatchID();
-							ingredientBatchConfirmed = true;
-							return true;
+				boolean continueProcedure = false;
+				
+				if(inputArr[1].equals("A")) {
+					if(inputArr.length == 2) {
+						continueProcedure = true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
+							}
 						} else {
-							sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
+							continueProcedure = true;
 						}
 					} else {
-						sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
+						continueProcedure = false;
+					}
+				} else {
+					continueProcedure = false;
+				}
+				
+				if(continueProcedure) {
+					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+					IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
+					boolean ingredientInRecept = false;
+					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
+					for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+						if(receptComponent.getReceptID() == receptID) {
+							if(ingredientBatch != null) {
+								if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
+									ingredientInRecept = true;
+								}
+							}
+						}	
+					}
+					
+					if(ingredientInRecept) {
+						ingredientBatchID = ingredientBatch.getIngBatchID();
+						ingredientBatchConfirmed = true;
+						return true;
+					} else {
+						sendMessage("RM20 8 \"ID'et findes ikke\" \"\" \"&3\"");
 					}
 				} else {
 					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
-				}	
+				}
 			}			
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
@@ -391,50 +435,63 @@ public class SocketController implements Runnable {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
 				sleep();
-				if(!inputArr[2].replace("\"", "").equals("")) {
-					if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
-						return false;
-					} else if(inputArr[1].equals("A")) {
-						int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-						ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
-						if(	productBatch != null) {
-							if(productBatch.getStatus() != 2) {
-								sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
-		
-								productBatchID = input;
-		
-								inputString = reader.readLine();
-								inputArr = inputString.split(" ");
-								if(inputArr[1].equals("A")) {
-									if(inputArr.length == 2) {
-										batchConfirmed = true;
-										return true;
-									} else if(inputArr.length == 3) {
-										if(!inputArr[2].replace("\"", "").equals("")) {
-											if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
-												return false;
-											}
-										} else {
-											batchConfirmed = true;
-											return true;
+				boolean inputOK = false;
+				if(inputArr[1].equals("A")) {
+					if(inputArr.length == 2) {
+						inputOK = true;
+					} else if(inputArr.length == 3) {
+						if(!inputArr[2].replace("\"", "").equals("")) {
+							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+								return false;
+							}
+						} else {
+							inputOK = true;
+						}
+					} else {
+						inputOK = false;
+					}
+				} else {
+					inputOK = false;
+				}
+				
+				if(inputOK) {
+					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
+					ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
+					if(	productBatch != null) {
+						if(productBatch.getStatus() != 2) {
+							sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+	
+							productBatchID = input;
+	
+							inputString = reader.readLine();
+							inputArr = inputString.split(" ");
+							if(inputArr[1].equals("A")) {
+								if(inputArr.length == 2) {
+									batchConfirmed = true;
+									return true;
+								} else if(inputArr.length == 3) {
+									if(!inputArr[2].replace("\"", "").equals("")) {
+										if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
+											return false;
 										}
 									} else {
-										sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
+										batchConfirmed = true;
+										return true;
 									}
 								} else {
 									sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
 								}
 							} else {
-								sendMessage("RM20 8 \"" + "Afsluttet, proev igen!" + "\" \"\" \"&3\"");
+								sendMessage("RM20 8 \"" + "Preov nyt batchID" + "\" \"\" \"&3\"");
 							}
 						} else {
-							sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
+							sendMessage("RM20 8 \"" + "Afsluttet, proev igen!" + "\" \"\" \"&3\"");
 						}
 					} else {
-						sendMessage("RM20 8 \"Proev igen\" \"\" \"&3\"");
+						sendMessage("RM20 8 \"" + "Ikke fundet! proev igen" + "\" \"\" \"&3\"");
 					}
 				} else {
-					sendMessage("RM20 8 \"Proev igen\" \"\" \"&3\"");
+					sendMessage("RM20 8 \"" + "Proev igen" + "\" \"\" \"&3\"");
 				}
 			}
 		} catch (IOException e) {
