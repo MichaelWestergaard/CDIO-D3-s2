@@ -187,7 +187,7 @@ public class SocketController implements Runnable {
 									//Tjek om råvaren er blevet afvejet før
 									if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
 										availableIngredientBatches.add(ingredientBatchID);
-										availableIngredientBatchesText += Integer.toString(ingredientBatchID);
+										availableIngredientBatchesText += "" + ingredientBatchID;
 										if(iterator.hasNext()) {
 											availableIngredientBatchesText += ",";
 										}
@@ -201,13 +201,13 @@ public class SocketController implements Runnable {
 									nothingLeftCount++;
 								}
 							}
-		
+							
 							if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
 								sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
 								//TODO: Hvad skal der så ske?
 							} else {
 								if(!alreadyWeighed) {
-									sendMessage("RM20 8 \"Indtast RB ID ("+availableIngredientBatchesText+")\" \"\" \"&3\"");
+									sendMessage("RM20 8 \"Indtast RB ID (" + availableIngredientBatchesText.toString() + ")\" \"\" \"&3\"");
 									inputString = reader.readLine();
 									inputArr = inputString.split(" ");
 									sleep();
@@ -502,29 +502,39 @@ public class SocketController implements Runnable {
 				int alphaCount = 0, specialCount = 0;
 
 				for (char c : chars) {
-					if(Character.isAlphabetic(c)) {
-						alphaCount++;
-						if(alphaCount < 20) {
-							returnMsg += c;
-						} else {
-							if(specialCount+2 < 8) {
-								returnMsg += "..";
-								break;
+					if(alphaCount+specialCount < 22) {
+						if(Character.isAlphabetic(c) || Character.isDigit(c) || c == ',') {
+							if(alphaCount < 20) {
+								returnMsg += c;
+								alphaCount++;
+							} else {
+								if(specialCount+2 < 8) {
+									returnMsg += "..";
+									break;
+								}
+							}
+						} else if(!Character.isDigit(c) && !Character.isLetter(c)) {
+							if(specialCount < 8) {
+								returnMsg += c;
+								specialCount++;
+							} else {
+								if(specialCount+2 < 8) {
+									returnMsg += "..";
+									break;
+								}
 							}
 						}
-					} else if(!Character.isDigit(c) && !Character.isLetter(c)) {
-						specialCount++;
-						if(specialCount < 8) {
-							returnMsg += c;
-						} else {
-							if(specialCount+2 < 8) {
-								returnMsg += "..";
-								break;
-							}
+					} else {
+						if(specialCount+2 < 8) {
+							returnMsg += "..";
 						}
+						break;
 					}
 				}
-				returnMsg = "RM20 8 \""+returnMsg+"\" \"\" \"&3\"";
+				System.out.println(returnMsg);
+				returnMsg = "RM20 8 \"" + returnMsg + "\" \"\" \"&3\"";
+
+				System.out.println(returnMsg);
 				pw.println(returnMsg);
 				pw.flush();	
 			} else {		
@@ -605,7 +615,7 @@ public class SocketController implements Runnable {
 
 				//Antal råvare der skal afvejes
 				int numberOfReceptComponents = 0;
-				int receptID = (mySQLController.getProductBatch(productBatchID)).getProductBatchID();
+				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
 				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
 					if(receptComponent.getReceptID() == receptID) {
 						numberOfReceptComponents++;
@@ -619,6 +629,8 @@ public class SocketController implements Runnable {
 						numberOfPBComponents++;
 					}
 				}
+				
+				System.out.println(numberOfReceptComponents - numberOfPBComponents);
 
 				for(int i = 0; i < numberOfReceptComponents - numberOfPBComponents; i++) {
 					if(!unloadProcedure()) {

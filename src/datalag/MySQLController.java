@@ -269,15 +269,15 @@ public class MySQLController {
 		ResultSet results = null;
 
 		String query = "SELECT * FROM recept_komponent where recept_id = ?";
-		statement = (Statement) getConnection().createStatement();
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, receptID);
-		results = statement.executeQuery(query);
+		results = preparedStatement.executeQuery();
 
 		while(results.next()) {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			receptComponents.add(receptComponent);
 		}
-		statement.close();
+		preparedStatement.close();
 		return receptComponents;
 	}
 
