@@ -34,17 +34,10 @@ $.ajax({
 			var receptID = $('input[name=receptID]').val();
 			var receptName = $('input[name=receptName]').val();
 			
-			var rCount = 0;
-			
 			for(var i = 0; i < response.length; i++){
 				if(response[i].receptID == receptID){
 					$(".user-table tbody").append('<tr id="' + receptID + response[i].ingredientID + '"><td>' + receptID + '</td><td>' + receptName + '</td><td>' + response[i].ingredientID + '</td><td>' + response[i].nomNetto + '</td><td>' + response[i].tolerance + '</td></tr>');
-					rCount++;
 				}
-			}
-			
-			if(rCount == 0){
-				showStatusMessage("Der blev ikke fundet nogle komponenter for denne recept", "error");
 			}
 		}	
 	}

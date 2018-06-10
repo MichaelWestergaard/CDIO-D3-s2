@@ -2,6 +2,29 @@
 	$('#homeBtn').click(function(e) {
 		e.preventDefault();
 		$(".content-container").load($(this).attr("href"));
+		if($(this).attr("href") == "ReceptComponentList.html"){
+			var formData = $('form').serializeArray();
+ 		   	console.log(formData);
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
+				dataType: 'json',
+				success: function(data){
+					if(data.response_status == "success"){
+						response = JSON.parse(data.response_message);
+						
+						var receptID = formData[1].value;
+						var receptName = formData[0].value;
+						
+						for(var i = 0; i < response.length; i++){
+							if(response[i].receptID == receptID){
+								$(".user-table tbody").append('<tr id="' + receptID + response[i].ingredientID + '"><td>' + receptID + '</td><td>' + receptName + '</td><td>' + response[i].ingredientID + '</td><td>' + response[i].nomNetto + '</td><td>' + response[i].tolerance + '</td></tr>');
+							}
+						}
+					}	
+				}
+			});
+	   }
     });
 	
 	$('#createBtn').on('click', function(){
@@ -12,8 +35,10 @@
 	});
 	$('#createReceptComponent').on('click', function(){
 		var receptID = $("#receptID").val();
+		var receptName = $("#receptName").val();
 		$(".content-container").load("createReceptComponent.html", function(){
 			$("input[name=receptID]").val(receptID);
+			$("input[name=receptName]").val(receptName);
 		});
 	});
 	
@@ -45,13 +70,35 @@
            success: function(data){
         	   data = JSON.parse(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
-        	   console.log(data);
         	   if(data.response_status == "success"){
         		   if($(form).attr('action') == "rest/Product/createProductBatch"){
             		   var productBatchID = $('input[name=productBatchID]').val();
             		   generateReport(productBatchID);
             	   }
+        		   var formData = $('form').serializeArray();
+        		   console.log(formData);
             	   $('.content-container').load($(form).attr('id'));
+            	   if($(form).attr('action') == "rest/recept/createReceptComponent"){
+            			$.ajax({
+            				type: 'GET',
+            				url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
+            				dataType: 'json',
+            				success: function(data){
+            					if(data.response_status == "success"){
+            						response = JSON.parse(data.response_message);
+            						
+            						var receptID = formData[1].value;
+            						var receptName = formData[0].value;
+            						
+            						for(var i = 0; i < response.length; i++){
+            							if(response[i].receptID == receptID){
+            								$(".user-table tbody").append('<tr id="' + receptID + response[i].ingredientID + '"><td>' + receptID + '</td><td>' + receptName + '</td><td>' + response[i].ingredientID + '</td><td>' + response[i].nomNetto + '</td><td>' + response[i].tolerance + '</td></tr>');
+            							}
+            						}
+            					}	
+            				}
+            			});
+            	   }
         	   }
            },
 			error: function(response, ajaxOptions, thrownError) {
