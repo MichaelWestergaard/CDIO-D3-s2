@@ -74,17 +74,13 @@ public class IngredientService extends ResponseHandler {
 	
 	@POST
 	@Path("editIngredient")
-	public String editIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier) {
+	public String editIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName) {
 		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
 			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
 		}
 		
-		if(supplier.length() < 2 || supplier.length() > 20) {
-			return createResponse("error", 0, "Leverandørnavnet skal være mellem 2 - 20 tegn");
-		}
-		
 		try {
-			if(mySQLController.editIngredient(ingredientID, ingredientName, supplier)) {
+			if(mySQLController.editIngredient(ingredientID, ingredientName)) {
 				return createResponse("success", 1, "Råvaren blev opdateret");
 			} else {
 				return createResponse("error", 0, "Råvaren kunne ikke opdateres");
@@ -109,16 +105,12 @@ public class IngredientService extends ResponseHandler {
 	//Tilføj en Råvare
 	@POST
 	@Path("createIngredient")
-	public String createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
+	public String createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @Context ServletContext context) throws IOException  {
 		try {
 			//Validering af data
 			if(ingredientID >= 1 && ingredientID <= 99999999) {
 				if(ingredientName.length() >= 2 && ingredientName.length() <= 20) {
-					if(supplier.length() >= 2 && supplier.length() <= 20) {
-						//All good
-					} else {
-						return createResponse("error", 0, "Leverandøren skal være 2-20 tegn!");
-					}
+					
 				} else {
 					return createResponse("error", 0, "Råvare navnet skal være 2-20 tegn!");
 				}
@@ -126,7 +118,7 @@ public class IngredientService extends ResponseHandler {
 				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
 			}
 			
-			if(mySQLController.createIngredient(ingredientID, ingredientName, supplier)) {
+			if(mySQLController.createIngredient(ingredientID, ingredientName)) {
 				IngredientDTO createdIngredient = mySQLController.getIngredient(ingredientID);
 			
 				if(createdIngredient != null) {
@@ -141,21 +133,25 @@ public class IngredientService extends ResponseHandler {
 	
 	@POST
 	@Path("createIngredientBatch")
-	public String createIngBatch(@FormParam("ingredientBatchID") int ingredientBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @Context ServletContext context) throws IOException  {
+	public String createIngBatch(@FormParam("ingredientBatchID") int ingredientBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
 		try {
 			//Validering af data
 			if(ingredientBatchID >= 1 && ingredientBatchID <= 99999999) {
 				if(ingredientID >= 1 && ingredientID <= 99999999) {
-					//All good
+					if(supplier.length() < 2 || supplier.length() > 20) {
+						return createResponse("error", 0, "Leverandørnavnet skal være mellem 2 - 20 tegn");
+					}
 				} else {
 					return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
 				}
 			} else {
 				return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
 			}
+			
+			
 			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingredientBatchID) == null) {
 				
-				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount)) {
+				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount, supplier)) {
 					IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingredientBatchID);
 					
 					if(createdIngBatch != null) {

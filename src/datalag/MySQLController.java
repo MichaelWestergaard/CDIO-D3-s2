@@ -21,38 +21,38 @@ import com.mysql.jdbc.Statement;
 
 public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+	//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&zeroDateTimeBehavior=convertToNull";
-//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";//&zeroDateTimeBehavior=convertToNull
+	//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";//&zeroDateTimeBehavior=convertToNull
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
-	
+
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
-		
+
 	public MySQLController() throws ClassNotFoundException {
 		Class.forName(DRIVER_CLASS);
 	}
-	
+
 	private Connection startConnection() throws SQLException {
 		Connection connection = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
 		return connection;
 	}
-	
+
 	public Connection getConnection() throws SQLException {
 		return startConnection();
 	}
-		
+
 	public UserDTO getUser(int userID) throws SQLException {
 
 		UserDTO user = null;
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM admin WHERE opr_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, userID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(",")); 
 			user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), results.getString("initialer"), roles, results.getInt("status"));
@@ -63,15 +63,15 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
-	
+
 	public List<UserDTO> getUsers() throws SQLException {
 		List<UserDTO> users = new ArrayList<UserDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM admin";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			List<String> roles = Arrays.asList(results.getString("Roller").split(","));
 			UserDTO user = new UserDTO(results.getInt("opr_id"), results.getString("brugernavn"), results.getString("opr_fornavn"), results.getString("opr_efternavn"), results.getString("cpr"), results.getString("Password"), results.getString("initialer"), roles, results.getInt("status"));
@@ -80,11 +80,11 @@ public class MySQLController {
 		statement.close();
 		return users;
 	}
-	
+
 	public boolean createUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String initial, List<String> role, int active) throws SQLException {
 		if(getUser(userID) == null) {
 			UserDTO user = new UserDTO(userID, userName, firstName, lastName, cpr, password, initial, role, active);
-			
+
 			String query = "call opretBruger(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, user.getUserID());
@@ -103,7 +103,7 @@ public class MySQLController {
 			return false;
 		}		
 	}
-	
+
 	public boolean updateUser(int userID, String userName, String firstName, String lastName, String cpr, String password, String initial, String role, int active) throws SQLException {
 		String query = "call opdaterBruger(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
@@ -120,7 +120,7 @@ public class MySQLController {
 		preparedStatement.close();
 		return true;
 	}
-	
+
 	public boolean changeStatus(int userID, int status) throws SQLException {
 		String query = "call opdaterStatus(?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
@@ -130,7 +130,7 @@ public class MySQLController {
 		preparedStatement.close();
 		return true;
 	}
-	
+
 	//Mangler storedProcedure 'nulstilkode', og eventuelt også en ændring i viewet.
 	public boolean resetPassword(int userID, String password) throws SQLException {
 		String query = "call nulstilKode(?, ?)";
@@ -141,34 +141,33 @@ public class MySQLController {
 		preparedStatement.close();
 		return true;
 	}
-	
+
 	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from raavare WHERE raavare_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingredientID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
-			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"), results.getString("leverandoer"));
+			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
 			preparedStatement.close();
 			return ingredient;
 		}
 		preparedStatement.close();
 		return null;
 	}
-	
-	public boolean createIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+
+	public boolean createIngredient(int ingredientID, String ingredientName) throws SQLException {
 		if(getIngredient(ingredientID) == null) {
-			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName, supplier);
-			
-			String query = "Call opretRaavare(?, ?, ?)";
+			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
+
+			String query = "Call opretRaavare(?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, ingredient.getIngredientID());
 			preparedStatement.setString(2, ingredient.getIngredientName());
-			preparedStatement.setString(3, ingredient.getSupplier());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -176,88 +175,87 @@ public class MySQLController {
 			return false;
 		}
 	}
-	
-	public boolean editIngredient(int ingredientID, String ingredientName, String supplier) throws SQLException {
+
+	public boolean editIngredient(int ingredientID, String ingredientName) throws SQLException {
 		String query = "call redigerRaavare(?, ?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingredientID);
 		preparedStatement.setString(2, ingredientName);
-		preparedStatement.setString(3, supplier);
 		preparedStatement.execute();
 		preparedStatement.close();
 		return true;
 	}
-	
+
 	public List<ProductBatchDTO> getProductBatches() throws SQLException {
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM produktbatch";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			String endDate = "";
 			String startDate = "";
-			
+
 			if(results.getTimestamp("slutdato") != null) {
 				endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("slutdato"));
 			}
-			
+
 			if(results.getTimestamp("startdato") != null) {
 				startDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("startdato"));
 			}
-			
+
 			ProductBatchDTO productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), startDate, endDate);
 			productBatches.add(productBatch);
 		}
 		statement.close();
 		return productBatches;
-	
+
 	}
-	
+
 	public List<ReceptDTO> getRecepter() throws SQLException {
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM recept";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			ReceptDTO recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
 			recepter.add(recept);
 		}
 		statement.close();
 		return recepter;
-	
+
 	}
-	
+
 	public List<IngredientDTO> getIngredients() throws SQLException {
 		List<IngredientDTO> ingredients = new ArrayList<IngredientDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM raavare";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
-			IngredientDTO ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"), results.getString("leverandoer"));
+			IngredientDTO ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
 			ingredients.add(ingredient);
 		}
 		statement.close();
 		return ingredients;
-	
+
 	}
-			
+
 	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM recept_komponent";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			receptComponents.add(receptComponent);
@@ -265,16 +263,16 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
-	
+
 	public List<ReceptComponentDTO> getReceptComponents(int receptID) throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM recept_komponent where recept_id = ?";
 		statement = (Statement) getConnection().createStatement();
 		preparedStatement.setInt(1, receptID);
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			ReceptComponentDTO receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			receptComponents.add(receptComponent);
@@ -282,17 +280,17 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
-	
+
 	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from recept_komponent WHERE recept_id = ? and raavare_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, receptID );
 		preparedStatement.setInt(2, ingredientID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
 			receptComponent = new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 			preparedStatement.close();
@@ -301,10 +299,10 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
-	
+
 	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getReceptComponent(receptID, ingredientID) == null)  {
-			
+
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, receptID);
@@ -318,15 +316,15 @@ public class MySQLController {
 			return false;			
 		}
 	}
-	
+
 	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
 		ResultSet results = null;
-		
+
 		String query = "SELECT * FROM produkt_batch_komponent";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			productBatchComponents.add(productBatchComponent);
@@ -338,13 +336,13 @@ public class MySQLController {
 	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
 		ProductBatchComponentDTO productBatchComponent = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from produkt_batch_komponent WHERE pb_id = ? and rb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID );
 		preparedStatement.setInt(2, raavareBatchID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
 			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			preparedStatement.close();
@@ -353,10 +351,10 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
-	
+
 	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
 		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
-			
+
 			String query = "Call afvejning(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, productBatchID);
@@ -379,26 +377,26 @@ public class MySQLController {
 		String query = "SELECT * FROM raavare_batch";
 		statement = (Statement) getConnection().createStatement();
 		results = statement.executeQuery(query);
-		
+
 		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"));
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
 			ingBatches.add(ingBatch);
 		}
 		statement.close();
 		return ingBatches;
 
-	
+
 	}
-	
+
 	public ReceptDTO getRecept(int receptID) throws SQLException {
 		ReceptDTO recept = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from recept WHERE recept_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, receptID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
 			recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
 			preparedStatement.close();
@@ -407,11 +405,11 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
-	
+
 	public boolean createRecept(int receptID, String receptName) throws SQLException {
 		if(getRecept(receptID) == null) {
 			ReceptDTO recept = new ReceptDTO(receptID, receptName);
-			
+
 			String query = "Call opretRecept(?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, recept.getReceptID());
@@ -423,28 +421,28 @@ public class MySQLController {
 			return false;	
 		}
 	}
-	
+
 	public ProductBatchDTO getProductBatch(int productBatchID) throws SQLException {
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from produktbatch WHERE pb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, productBatchID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
 			String endDate = "";
 			String startDate = "";
-			
+
 			if(results.getTimestamp("slutdato") != null) {
 				endDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("slutdato"));
 			}
-			
+
 			if(results.getTimestamp("startdato") != null) {
 				startDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(results.getTimestamp("startdato"));
 			}
-			
+
 			productBatch = new ProductBatchDTO(results.getInt("pb_id"), results.getInt("status"), results.getInt("recept_id"), startDate, endDate);
 			preparedStatement.close();
 			return productBatch;
@@ -452,7 +450,7 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
-	
+
 	public boolean createProductBatch(int productBatchID, int status, int receptID) throws SQLException {
 		if(getProductBatch(productBatchID) == null) {
 			String query = "Call opretProduktBatch(?, ?, ?)";
@@ -467,34 +465,35 @@ public class MySQLController {
 			return false;	
 		}
 	}
-	
+
 	public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
 		IngBatchDTO ingBatch = null;
 		ResultSet results = null;
-		
+
 		String query = "Select * from raavare_batch WHERE rb_id = ?";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingBatchID);
 		results = preparedStatement.executeQuery();
-		
+
 		if(results.next()) {
-			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"));
+			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
 			preparedStatement.close();
 			return ingBatch;
 		}
 		preparedStatement.close();
 		return null;
 	}
-	
-	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount) throws SQLException {
+
+	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String leverandoer) throws SQLException {
 		if(getIngBatch(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "");
-			
-			String query = "Call opretRaavarebatch(?, ?, ?)";
+			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, leverandoer, "");
+
+			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());
 			preparedStatement.setDouble(3, ingBatch.getAmount());
+			preparedStatement.setString(4, ingBatch.getLeverandoer());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;
@@ -510,7 +509,7 @@ public class MySQLController {
 		if(getIngBatch(raavarebatchID).getAmount() < weighedAmount) {
 			return false;
 		}
-		
+
 		String query = "call opdaterMaengde(?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, raavarebatchID);
@@ -519,7 +518,7 @@ public class MySQLController {
 		preparedStatement.close();
 		return true;
 	}
-	
+
 	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException {
 		List<Integer> productBatches = new ArrayList<Integer>();
 		ResultSet results = null;
@@ -528,14 +527,29 @@ public class MySQLController {
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingredientID);
 		results = preparedStatement.executeQuery();
-		
+
 		while(results.next()) {
 			productBatches.add(results.getInt("rb_id"));
 		}
-		
+
 		preparedStatement.close();
 		return productBatches;
-	
+
 	}
-	
+
+	public ProductBatchDTO endProductBatch(int productBatchID) throws SQLException{
+		ProductBatchDTO productBatch = null;
+		ResultSet results = null;
+
+		if(getProductBatch(productBatchID) != null) {
+			if(productBatch.getStatus() == 2) {
+				String query = "call afslutProduktion(?)";
+				preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+				preparedStatement.setInt(1, productBatchID);
+				results = preparedStatement.executeQuery();
+				//Hvordan indtaster jeg datoen?
+			}
+		}
+		return productBatch;
+	}
 }
