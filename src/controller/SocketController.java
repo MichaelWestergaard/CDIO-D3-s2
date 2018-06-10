@@ -81,8 +81,8 @@ public class SocketController implements Runnable {
 		char[] loadChar = loadString.toCharArray();
 		System.out.println(loadChar.length);
 		double loadValue = Double.parseDouble(new StringBuilder().append(loadChar[9]).append(loadChar[10]).append(loadChar[11]).append(loadChar[12]).toString());
-//		String[] loadArr = loadString.split(" ");
-//		double loadValue = Double.parseDouble(loadArr[2]);
+		//		String[] loadArr = loadString.split(" ");
+		//		double loadValue = Double.parseDouble(loadArr[2]);
 		return loadValue;
 	}
 
@@ -101,7 +101,7 @@ public class SocketController implements Runnable {
 				int input = Integer.parseInt(inputArr[2].replace("\"", ""));
 				UserDTO user = mySQLController.getUser(input);
 				if(user != null) {
-					
+
 					boolean allowed = false;
 					//Tjek om brugeren har rollen "Laborant"
 					for (String role : user.getRole()) {
@@ -109,14 +109,14 @@ public class SocketController implements Runnable {
 							allowed = true;
 						}
 					}
-					
+
 					if(allowed) {
-					
+
 						sendMessage("RM20 8 \"Er du " + user.getInitial() + "?\" \"\" \"&3\"");
-	
+
 						inputString = reader.readLine();
 						inputArr = inputString.split(" ");
-	
+
 						if(inputArr[1].equals("A")) {
 							operatorID = user.getUserID();
 							userConfirmed = true;
@@ -141,10 +141,10 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			
+
 			sendMessage("RM20 8 \"Indtast Raavare ID:\" \"\" \"&3\"");
 			boolean ingredientConfirmed = false;
-			
+
 			while(!ingredientConfirmed) {
 				String inputString = reader.readLine();
 				String[] inputArr = inputString.split(" ");
@@ -152,7 +152,7 @@ public class SocketController implements Runnable {
 				ReceptComponentDTO recept = null;
 				int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
 				List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
-				
+
 				boolean ingredientInRecept = false;
 				for (ReceptComponentDTO receptComponentDTO : receptComponents) {
 					if(receptComponentDTO.getIngredientID() == ingredientID) {
@@ -160,18 +160,18 @@ public class SocketController implements Runnable {
 						ingredientInRecept = true;
 					}
 				}
-				
+
 				if(ingredientInRecept) {
 					//Find mulige RB id'er
 					List<Integer> availableIngredientBatches = new ArrayList<Integer>();
 					String availableIngredientBatchesText = "";
 					boolean alreadyWeighed = false;
 					int nothingLeftCount = 0;
-					
+
 					List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
 					for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
 						Integer ingredientBatchID = (Integer) iterator.next();
-						
+
 						if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
 							//Tjek om råvaren er blevet afvejet før
 							if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
@@ -190,7 +190,7 @@ public class SocketController implements Runnable {
 							nothingLeftCount++;
 						}
 					}
-					
+
 					if(nothingLeftCount == ingredientBatchesByIngredient.size()) {
 						sendMessage("RM20 8 \"Ikke nok på lager!\" \"\" \"&3\"");
 						//TODO: Hvad skal der så ske?
@@ -220,9 +220,9 @@ public class SocketController implements Runnable {
 					sendMessage("RM20 8 \"Forkert raavareID, proev igen.\" \"\" \"&3\"");
 					ingredientConfirmed = false;
 				}
-				
+
 			}
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -231,7 +231,7 @@ public class SocketController implements Runnable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void ingredientBatchProcedure() {
 		try {
 			InputStream is = socket.getInputStream();
@@ -255,7 +255,7 @@ public class SocketController implements Runnable {
 						}
 					}	
 				}
-				
+
 				if(ingredientInRecept) {	
 					ingredientBatchID = ingredientBatch.getIngBatchID();
 					ingredientBatchConfirmed = true;
@@ -330,12 +330,12 @@ public class SocketController implements Runnable {
 				if(	productBatch != null) {
 					if(productBatch.getStatus() != 2) {
 						sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
-	
+
 						productBatchID = input;
-	
+
 						inputString = reader.readLine();
 						inputArr = inputString.split(" ");
-	
+
 						if(inputArr[1].equals("A")) {
 							batchConfirmed = true;
 						} else {
@@ -386,17 +386,17 @@ public class SocketController implements Runnable {
 		try {
 			OutputStream os = socket.getOutputStream();
 			PrintWriter pw = new PrintWriter(os);
-			
+
 			//Tjek om beskeden ikke har for mange tegn
 			String[] msgArray = msg.split(" ");
 			String returnMsg = "";
-			
+
 			if(msgArray[0].equals("RM20") && msgArray[1].equals("8")) {
 				String realMsg = msg.substring(msg.indexOf("8")+3, msg.indexOf("\" \"\" \"&3\""));
 				char[] chars = realMsg.toCharArray();
-				
+
 				int alphaCount = 0, specialCount = 0;
-				
+
 				for (char c : chars) {
 					if(Character.isAlphabetic(c)) {
 						alphaCount++;
@@ -421,7 +421,7 @@ public class SocketController implements Runnable {
 					}
 				}
 			}
-			
+
 			pw.println(returnMsg);
 			pw.flush();	
 		} catch (IOException e) {
@@ -473,7 +473,7 @@ public class SocketController implements Runnable {
 					numberOfReceptComponents++;
 				}
 			}
-			
+
 			//Antal råvare der allerede er afvejet
 			int numberOfPBComponents = 0;
 			for(ProductBatchComponentDTO productBatchComponent : mySQLController.getProductBatchComponents()) {
@@ -481,7 +481,7 @@ public class SocketController implements Runnable {
 					numberOfPBComponents++;
 				}
 			}
-			
+
 			loginProcedure();
 			batchProcedure();
 			for(int i = 0; i < numberOfReceptComponents - numberOfPBComponents; i++) {
@@ -489,20 +489,37 @@ public class SocketController implements Runnable {
 				taraProcedure();
 				ingredientProcedure();
 				nettoProcedure();				
+				endProductBatch();
 			}
 			//Sæt status til afsluttet og slutdato til nu (afslutProduktion procedure)
 
-			
+
 			//Afvejningen er afsluttet besked?
-			
-			
+
+
 			sleep();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-	}
 
+
+	}
+	// husk at lave denne her
+	private void endProductBatch() {
+		// TODO Auto-generated method stub
+		try {
+			InputStream is = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			sendMessage("Produktionen er sluttet");
+			mySQLController.endProductBatch(productBatchID);
+		
+	} catch (SQLException e) {
+		// TODO Auto-generated catch blocks
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	}
 }
