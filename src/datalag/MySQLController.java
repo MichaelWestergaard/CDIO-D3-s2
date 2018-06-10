@@ -21,9 +21,9 @@ import com.mysql.jdbc.Statement;
 
 public class MySQLController {
 	private static final String DRIVER_CLASS = "com.mysql.jdbc.Driver";
-	//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+//	private static final String DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
 	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&zeroDateTimeBehavior=convertToNull";
-	//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";//&zeroDateTimeBehavior=convertToNull
+//	private static final String URL = "jdbc:mysql://mysql25.unoeuro.com/michaelwestergaard_dk_db?useSSL=false&serverTimezone=UTC";//&zeroDateTimeBehavior=convertToNull
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 
@@ -496,7 +496,7 @@ public class MySQLController {
 
 	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String supplier) throws SQLException {
 		if(getIngBatch(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, supplier, "");
+			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "", supplier);
 
 			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
