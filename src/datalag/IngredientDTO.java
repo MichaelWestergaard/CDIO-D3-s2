@@ -32,7 +32,6 @@ public class IngredientDTO {
 	}
 
 	
-	
 	@Override
 	public String toString() {
 		return "[ingredientID=" + ingredientID + ", ingredientName=" + ingredientName + "]";

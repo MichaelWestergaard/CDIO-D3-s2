@@ -177,7 +177,7 @@ public class MySQLController {
 	}
 
 	public boolean editIngredient(int ingredientID, String ingredientName) throws SQLException {
-		String query = "call redigerRaavare(?, ?, ?)";
+		String query = "call redigerRaavare(?, ?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, ingredientID);
 		preparedStatement.setString(2, ingredientName);
@@ -484,16 +484,16 @@ public class MySQLController {
 		return null;
 	}
 
-	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String leverandoer) throws SQLException {
+	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String supplier) throws SQLException {
 		if(getIngBatch(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, leverandoer, "");
+			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, supplier, "");
 
 			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());
 			preparedStatement.setDouble(3, ingBatch.getAmount());
-			preparedStatement.setString(4, ingBatch.getLeverandoer());
+			preparedStatement.setString(4, ingBatch.getSupplier());
 			preparedStatement.execute();
 			preparedStatement.close();
 			return true;

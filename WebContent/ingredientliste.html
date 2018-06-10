@@ -5,7 +5,6 @@
 			<tr>
 				<th>RåvareID</th>
 				<th>Råvarenavn</th>
-				<th>Leverandør</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -32,7 +31,6 @@ function editIngredient(ingredientID){
 				var response = JSON.parse(data.response_message);
 				$("input[name=ingredientID]").val(response.ingredientID);
 				$("input[name=ingredientName]").val(response.ingredientName);
-				$("input[name=supplier]").val(response.supplier);
 			} else {
 				showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 			}
@@ -47,7 +45,7 @@ $.ajax({
 	dataType: 'json',
 	success: function(data){
 		for(var i = 0; i < data.length; i++){
-			$(".user-table tbody").append('<tr id="' + data[i].ingredientID + '"><td>' + data[i].ingredientID + '</td><td>' + data[i].ingredientName + '</td><td> ' + data[i].supplier + ' </td><td><button class="tableBtn" onclick="editIngredient(' + data[i].ingredientID + ')">Rediger</button></td></tr>');
+			$(".user-table tbody").append('<tr id="' + data[i].ingredientID + '"><td>' + data[i].ingredientID + '</td><td>' + data[i].ingredientName + '</td><td><button class="tableBtn" onclick="editIngredient(' + data[i].ingredientID + ')">Rediger</button></td></tr>');
 		}
 					
 	}	

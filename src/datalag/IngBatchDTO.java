@@ -6,14 +6,14 @@ public class IngBatchDTO {
 	int ingredientID;
 	double amount;
 	String ingredientName;
-	String leverandoer;
+	String supplier;
 	
-	public IngBatchDTO(int ingBatchID, int ingredientID, double amount, String ingredientName, String leverandoer) {
+	public IngBatchDTO(int ingBatchID, int ingredientID, double amount, String ingredientName, String supplier) {
 		this.ingBatchID = ingBatchID;
 		this.ingredientID = ingredientID;
 		this.amount = amount;
 		this.ingredientName = ingredientName;
-		this.leverandoer = leverandoer;
+		this.supplier = supplier;
 	}
 
 	public int getIngBatchID() {
@@ -32,7 +32,7 @@ public class IngBatchDTO {
 		return ingredientName;
 	}
 		
-	public String getLeverandoer() {
-		return leverandoer;
+	public String getSupplier() {
+		return supplier;
 	}
 }
