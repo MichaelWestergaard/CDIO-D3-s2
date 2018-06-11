@@ -248,7 +248,7 @@ public class MySQLController {
 //
 //	}
 
-/*	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
+	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
@@ -263,7 +263,7 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
-	*/
+	
 
 /*	public List<ReceptComponentDTO> getReceptComponents(int receptID) throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
@@ -303,7 +303,7 @@ public class MySQLController {
 	}
 	*/
 
-	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
+/*	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getReceptComponent(receptID, ingredientID) == null)  {
 
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
@@ -319,6 +319,7 @@ public class MySQLController {
 			return false;			
 		}
 	}
+	*/
 
 	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
@@ -373,23 +374,23 @@ public class MySQLController {
 		}
 	}
 
-	public List<IngBatchDTO> getIngBatches() throws SQLException {
-		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
-		ResultSet results = null;
-
-		String query = "SELECT * FROM raavare_batch";
-		statement = (Statement) getConnection().createStatement();
-		results = statement.executeQuery(query);
-
-		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
-			ingBatches.add(ingBatch);
-		}
-		statement.close();
-		return ingBatches;
-
-
-	}
+//	public List<IngBatchDTO> getIngBatches() throws SQLException {
+//		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
+//		ResultSet results = null;
+//
+//		String query = "SELECT * FROM raavare_batch";
+//		statement = (Statement) getConnection().createStatement();
+//		results = statement.executeQuery(query);
+//
+//		while(results.next()) {
+//			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
+//			ingBatches.add(ingBatch);
+//		}
+//		statement.close();
+//		return ingBatches;
+//
+//
+//	}
 
 	/*public ReceptDTO getRecept(int receptID) throws SQLException {
 		ReceptDTO recept = null;
@@ -480,41 +481,41 @@ public class MySQLController {
 		return true;
 	}
 	
-	public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
-		IngBatchDTO ingBatch = null;
-		ResultSet results = null;
-
-		String query = "Select * from raavare_batch WHERE rb_id = ?";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, ingBatchID);
-		results = preparedStatement.executeQuery();
-
-		if(results.next()) {
-			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
-			preparedStatement.close();
-			return ingBatch;
-		}
-		preparedStatement.close();
-		return null;
-	}
-
-	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String supplier) throws SQLException {
-		if(getIngBatch(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "", supplier);
-
-			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
-			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, ingBatch.getIngBatchID());
-			preparedStatement.setInt(2, ingBatch.getIngredientID());
-			preparedStatement.setDouble(3, ingBatch.getAmount());
-			preparedStatement.setString(4, ingBatch.getSupplier());
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} else {
-			return false;	
-		}
-	}
+//	public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
+//		IngBatchDTO ingBatch = null;
+//		ResultSet results = null;
+//
+//		String query = "Select * from raavare_batch WHERE rb_id = ?";
+//		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//		preparedStatement.setInt(1, ingBatchID);
+//		results = preparedStatement.executeQuery();
+//
+//		if(results.next()) {
+//			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
+//			preparedStatement.close();
+//			return ingBatch;
+//		}
+//		preparedStatement.close();
+//		return null;
+//	}
+//
+//	public boolean createIngBatch(int ingBatchID, int ingredientID, double amount, String supplier) throws SQLException {
+//		if(getIngBatch(ingBatchID) == null) {
+//			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "", supplier);
+//
+//			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
+//			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//			preparedStatement.setInt(1, ingBatch.getIngBatchID());
+//			preparedStatement.setInt(2, ingBatch.getIngredientID());
+//			preparedStatement.setDouble(3, ingBatch.getAmount());
+//			preparedStatement.setString(4, ingBatch.getSupplier());
+//			preparedStatement.execute();
+//			preparedStatement.close();
+//			return true;
+//		} else {
+//			return false;	
+//		}
+//	}
 
 	public boolean updateAmount(int raavarebatchID, double weighedAmount) throws SQLException {
 		if(getIngBatch(raavarebatchID) == null) {
