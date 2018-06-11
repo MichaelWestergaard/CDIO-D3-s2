@@ -69,13 +69,27 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	}
 
 	@Override
-	public IngredientDTO update(IngredientDTO element) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean update(int ingredientID, String[] parameters) {
+		String query = "call redigerRaavare(?, ?)";
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = MySQLConnector.getInstance().getStatement(query);
+			preparedStatement.setInt(1, ingredientID);
+			preparedStatement.setString(2, parameters[0]);
+			preparedStatement.execute();
+			preparedStatement.close();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 
 	@Override
-	public IngredientDTO delele(String id) {
+	public IngredientDTO delete(int ingredientID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

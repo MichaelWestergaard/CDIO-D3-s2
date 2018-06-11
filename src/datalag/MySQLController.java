@@ -175,16 +175,16 @@ public class MySQLController {
 //			return false;
 //		}
 //	}
-
-	public boolean editIngredient(int ingredientID, String ingredientName) throws SQLException {
-		String query = "call redigerRaavare(?, ?)";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, ingredientID);
-		preparedStatement.setString(2, ingredientName);
-		preparedStatement.execute();
-		preparedStatement.close();
-		return true;
-	}
+//
+//	public boolean editIngredient(int ingredientID, String ingredientName) throws SQLException {
+//		String query = "call redigerRaavare(?, ?)";
+//		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//		preparedStatement.setInt(1, ingredientID);
+//		preparedStatement.setString(2, ingredientName);
+//		preparedStatement.execute();
+//		preparedStatement.close();
+//		return true;
+//	}
 
 	public List<ProductBatchDTO> getProductBatches() throws SQLException {
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
