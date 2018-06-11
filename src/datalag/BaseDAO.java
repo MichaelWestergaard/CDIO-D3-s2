@@ -13,7 +13,6 @@ public interface BaseDAO<T> {
 	T read(String id);
 	T update(T element);
 	T delele(String id);
-	IngredientDTO read(int id);
 	
 	
 //	public class NotImplementedException extends Exception {
