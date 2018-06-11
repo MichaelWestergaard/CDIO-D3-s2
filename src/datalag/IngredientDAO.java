@@ -8,11 +8,8 @@ import java.util.List;
 
 import com.mysql.jdbc.Statement;
 
-import datalag.IngredientDTO;
 
 public class IngredientDAO implements BaseDAO<IngredientDTO> {
-
-	
 	
 	@Override
 	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {

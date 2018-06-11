@@ -41,18 +41,14 @@ public class MySQLConnector {
 	}
 	
 	boolean execute(PreparedStatement statement) throws SQLException {
-		if(statement.execute()) {
-			statement.close();
-			return true;
-		} else {
-			statement.close();
-			return false;
-		}
+		statement.execute();
+		statement.close();
+		return true;
 	}
 	
-	ResultSet doQuery(PreparedStatement statement) {
-		return null;
-		//TODO
+	ResultSet doQuery(PreparedStatement statement) throws SQLException {
+		ResultSet result = statement.executeQuery();
+		return result;
 	}
 	
 	void doUpdate(Statement stmnt) {
