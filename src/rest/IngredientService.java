@@ -162,8 +162,17 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngBatch")
 	public String getIngBatch(@QueryParam("ingBatchID") int ingBatchID) {
+		try {
+			return ingredientController.getIngBatch(ingBatchID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-	
+		return null;		
 	}
 	
 	@GET

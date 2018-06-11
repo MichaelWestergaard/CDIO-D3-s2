@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import com.google.gson.Gson;
 
+import datalag.IngBatchDAO;
 import datalag.IngredientDAO;
 import datalag.IngredientDTO;
 import datalag.ResponseHandler;
@@ -18,6 +19,7 @@ public class IngredientController extends ResponseHandler{
 //	}
 	
 	private IngredientDAO ingDAO = new IngredientDAO();
+	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
 	
 	public String getIngredient(int ingredientID) throws ClassNotFoundException, SQLException {
 		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
@@ -57,11 +59,7 @@ public class IngredientController extends ResponseHandler{
 		}
 	}
 
-	public String getIngBatch(int ingBatchID) {
-		try {
-			return createResponse("success", 1, new Gson().toJson(ingBatchDAO..getIngBatch(ingBatchID)));
-		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
-		}
+	public String getIngBatch(int ingBatchID) throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.read(ingBatchID)));
 	}
 }
