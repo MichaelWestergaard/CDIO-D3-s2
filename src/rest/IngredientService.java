@@ -12,6 +12,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
 
+import controller.IngredientController;
 import datalag.MySQLController;
 import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
@@ -27,7 +28,7 @@ import javax.ws.rs.FormParam;
 
 @Path("ingredient")
 public class IngredientService extends ResponseHandler {
-
+	//private IngredientController ctrl = new IngredientController();  //nyt
 	private MySQLController mySQLController;
 	
 	public IngredientService() {
