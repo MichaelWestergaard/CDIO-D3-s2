@@ -10,9 +10,33 @@ import datalag.ReceptDTO;
 public abstract class receptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
-	public boolean create(int ID, String[] parameters) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean create(int receptID, String[] parameters) throws SQLException {
+		
+		if(read(receptID) == null) {
+			ReceptDTO recept = new ReceptDTO(receptID, parameters[0]);
+
+			String query = "Call opretRecept(?, ?)";
+			PreparedStatement preparedStatement = null;
+			
+			try {
+				preparedStatement = MySQLConnector.getInstance().getStatement(query);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+			preparedStatement.setInt(1, recept.getReceptID());
+			preparedStatement.setString(2, recept.getReceptName());
+			preparedStatement.execute();
+			preparedStatement.close();
+			return true;
+		} else {
+			return false;	
+		}
 	}
 
 	@Override
