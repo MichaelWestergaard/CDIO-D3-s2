@@ -1,8 +1,6 @@
 package rest;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -22,7 +20,7 @@ public class UserService {
 
 	@POST
 	@Path("login")
-	public String login(@FormParam("username") String username) {		
+	public String login(@FormParam("username") String username) {	
 		return userController.login(username);
 	}
 	
@@ -61,4 +59,5 @@ public class UserService {
 	public String resetPassword(@FormParam("userID") int userID, @FormParam("password") String password) {
 		return userController.resetPassword(userID, password);
 	}
-}
+	
+}				
