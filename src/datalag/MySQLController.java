@@ -248,7 +248,7 @@ public class MySQLController {
 //
 //	}
 
-/*	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
+	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
@@ -263,7 +263,7 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
-	*/
+	
 
 /*	public List<ReceptComponentDTO> getReceptComponents(int receptID) throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
@@ -303,7 +303,7 @@ public class MySQLController {
 	}
 	*/
 
-	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
+/*	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getReceptComponent(receptID, ingredientID) == null)  {
 
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
@@ -319,6 +319,7 @@ public class MySQLController {
 			return false;			
 		}
 	}
+	*/
 
 	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
