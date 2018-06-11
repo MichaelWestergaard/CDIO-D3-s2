@@ -373,23 +373,23 @@ public class MySQLController {
 		}
 	}
 
-	public List<IngBatchDTO> getIngBatches() throws SQLException {
-		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
-		ResultSet results = null;
-
-		String query = "SELECT * FROM raavare_batch";
-		statement = (Statement) getConnection().createStatement();
-		results = statement.executeQuery(query);
-
-		while(results.next()) {
-			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
-			ingBatches.add(ingBatch);
-		}
-		statement.close();
-		return ingBatches;
-
-
-	}
+//	public List<IngBatchDTO> getIngBatches() throws SQLException {
+//		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
+//		ResultSet results = null;
+//
+//		String query = "SELECT * FROM raavare_batch";
+//		statement = (Statement) getConnection().createStatement();
+//		results = statement.executeQuery(query);
+//
+//		while(results.next()) {
+//			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
+//			ingBatches.add(ingBatch);
+//		}
+//		statement.close();
+//		return ingBatches;
+//
+//
+//	}
 
 	/*public ReceptDTO getRecept(int receptID) throws SQLException {
 		ReceptDTO recept = null;
