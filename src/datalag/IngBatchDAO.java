@@ -86,6 +86,23 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 		return ingBatches;
 	}
 
+	public boolean updateAmount(int ingBatchID, double weighedAmount) throws SQLException, ClassNotFoundException {
+		if(read(ingBatchID) == null) {
+			return false;
+		}
+		if(read(ingBatchID).getAmount() < weighedAmount) {
+			return false;
+		}
+
+		String query = "call opdaterMaengde(?, ?)";
+		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		preparedStatement.setInt(1, ingBatchID);
+		preparedStatement.setDouble(2, weighedAmount);
+		preparedStatement.execute();
+		preparedStatement.close();
+		return true;
+	}
+	
 	@Override
 	public boolean update(IngBatchDTO ingBatch) throws SQLException {
 		// TODO Auto-generated method stub
