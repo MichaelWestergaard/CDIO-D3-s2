@@ -17,6 +17,7 @@ import datalag.MySQLController;
 import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
 import datalag.IngredientDTO;
+import datalag.IngBatchDAO;
 import datalag.IngBatchDTO;
 import datalag.IngredientDAO;
 
@@ -32,6 +33,7 @@ public class IngredientService extends ResponseHandler {
 	//private IngredientController ctrl = new IngredientController();  //nyt
 	private MySQLController mySQLController;
 	private IngredientDAO ingDAO = new IngredientDAO();
+	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
 	
 	public IngredientService() {
 		try {
@@ -62,12 +64,6 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngredient")
 	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
-		String returnMsg = "";
-		
-		IngredientDTO ingredient = ingDAO.read(ingredientID);
-		String json = new Gson().toJson(ingredient);
-		returnMsg = json;
-		
 		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
 	}
 	

@@ -3,6 +3,7 @@ package datalag;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import datalag.IngredientDTO;
 
@@ -90,9 +91,14 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	}
 
 	@Override
+	public List<IngredientDTO> list() throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public IngredientDTO delete(int ingredientID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }
