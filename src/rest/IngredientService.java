@@ -31,7 +31,7 @@ import javax.ws.rs.FormParam;
 @Path("ingredient")
 public class IngredientService extends ResponseHandler {
 	//private IngredientController ctrl = new IngredientController();  //nyt
-	private MySQLController mySQLController;
+	private IngredientController ingredientController;
 	private IngredientDAO ingDAO = new IngredientDAO();
 	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
 	
@@ -103,28 +103,15 @@ public class IngredientService extends ResponseHandler {
 	@Path("createIngredient")
 	public String createIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName, @Context ServletContext context) throws IOException  {
 		try {
-			//Validering af data
-			if(ingredientID >= 1 && ingredientID <= 99999999) {
-				if(ingredientName.length() >= 2 && ingredientName.length() <= 20) {
-					
-				} else {
-					return createResponse("error", 0, "Råvare navnet skal være 2-20 tegn!");
-				}
-			} else {
-				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
-			}
-			
-			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-			
-			if(ingDAO.create(ingredient)) {			
-				if(ingDAO.read(ingredientID) != null) {
-					return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
-				}
-			}
+			return ingredientController.createIngredient(ingredientID, ingredientName);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return createResponse("error", 0, "Kunne ikke oprette Råvare");
+		return null;
 	}
 	
 	@POST
