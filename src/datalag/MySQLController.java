@@ -214,7 +214,7 @@ public class MySQLController {
 
 	}
 
-	public List<ReceptDTO> getRecepter() throws SQLException {
+	/*public List<ReceptDTO> getRecepter() throws SQLException {
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
 		ResultSet results = null;
 
@@ -230,7 +230,7 @@ public class MySQLController {
 		return recepter;
 
 	}
-
+*/
 //	public List<IngredientDTO> getIngredients() throws SQLException {
 //		List<IngredientDTO> ingredients = new ArrayList<IngredientDTO>();
 //		ResultSet results = null;
@@ -248,7 +248,7 @@ public class MySQLController {
 //
 //	}
 
-	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
+/*	public List<ReceptComponentDTO> getReceptComponents() throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
@@ -263,8 +263,9 @@ public class MySQLController {
 		statement.close();
 		return receptComponents;
 	}
+	*/
 
-	public List<ReceptComponentDTO> getReceptComponents(int receptID) throws SQLException {
+/*	public List<ReceptComponentDTO> getReceptComponents(int receptID) throws SQLException {
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
@@ -280,8 +281,9 @@ public class MySQLController {
 		preparedStatement.close();
 		return receptComponents;
 	}
+	*/
 
-	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
+/*	public ReceptComponentDTO getReceptComponent(int receptID, int ingredientID) throws SQLException {
 		ReceptComponentDTO receptComponent = null;
 		ResultSet results = null;
 
@@ -299,6 +301,7 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
+	*/
 
 	public boolean createReceptComponent(int receptID, int ingredientID, double nomNetto, double tolerance) throws SQLException {
 		if(getReceptComponent(receptID, ingredientID) == null)  {
