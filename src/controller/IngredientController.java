@@ -43,4 +43,17 @@ public class IngredientController extends ResponseHandler{
 		return createResponse("error", 0, "Kunne ikke oprette Råvare");
 	}
 
+	public String editIngredient(int ingredientID, String ingredientName) throws ClassNotFoundException, SQLException {
+		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
+			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
+		}
+		
+		IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
+		
+		if(ingDAO.update(ingredient)) {
+			return createResponse("success", 1, "Råvaren blev opdateret");
+		} else {
+			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
+		}
+	}
 }

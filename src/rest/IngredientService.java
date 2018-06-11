@@ -83,18 +83,17 @@ public class IngredientService extends ResponseHandler {
 	@POST
 	@Path("editIngredient")
 	public String editIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName) {
-		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
-			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
+		try {
+			return ingredientController.editIngredient(ingredientID, ingredientName);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-		
-		if(ingDAO.update(ingredient)) {
-			return createResponse("success", 1, "Råvaren blev opdateret");
-		} else {
-			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
-		}
-			
+		return null;			
 	}
 		
 	//Råvarebatchliste
