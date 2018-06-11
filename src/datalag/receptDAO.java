@@ -14,10 +14,9 @@ import datalag.ReceptDTO;
 public abstract class receptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
-	public boolean create(int receptID, String[] parameters) throws SQLException {
+	public boolean create(ReceptDTO recept) throws SQLException, ClassNotFoundException {
 		
-		if(read(receptID) == null) {
-			ReceptDTO recept = new ReceptDTO(receptID, parameters[0]);
+		if(read(recept.getReceptID()) == null) {
 
 			String query = "Call opretRecept(?, ?)";
 			PreparedStatement preparedStatement = null;
