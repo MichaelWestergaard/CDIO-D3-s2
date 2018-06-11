@@ -10,10 +10,10 @@ import com.mysql.jdbc.Statement;
 
 public interface BaseDAO<T> {
 		
-	boolean create(T object) throws SQLException;
-	T read(int ID);
-	boolean update(T object) throws SQLException;
-	List<T> list() throws SQLException;
+	boolean create(T object) throws SQLException, ClassNotFoundException;
+	T read(int ID) throws SQLException, ClassNotFoundException;
+	boolean update(T object) throws SQLException, ClassNotFoundException;
+	List<T> list() throws SQLException, ClassNotFoundException;
 	T delete(int ID);
 	
 	
