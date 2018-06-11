@@ -186,7 +186,7 @@ public class MySQLController {
 		return true;
 	}*/
 
-	public List<ProductBatchDTO> getProductBatches() throws SQLException {
+	/*public List<ProductBatchDTO> getProductBatches() throws SQLException {
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
 		ResultSet results = null;
 
@@ -212,7 +212,7 @@ public class MySQLController {
 		statement.close();
 		return productBatches;
 
-	}
+	}*/
 
 	/*public List<ReceptDTO> getRecepter() throws SQLException {
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
@@ -427,7 +427,7 @@ public class MySQLController {
 		}
 	}*/
 
-	public ProductBatchDTO getProductBatch(int productBatchID) throws SQLException {
+	/*public ProductBatchDTO getProductBatch(int productBatchID) throws SQLException {
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
 
@@ -454,9 +454,9 @@ public class MySQLController {
 		}
 		preparedStatement.close();
 		return null;
-	}
+	}*/
 
-	public boolean createProductBatch(int productBatchID, int status, int receptID) throws SQLException {
+	/*public boolean createProductBatch(int productBatchID, int status, int receptID) throws SQLException {
 		if(getProductBatch(productBatchID) == null) {
 			String query = "Call opretProduktBatch(?, ?, ?)";
 			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
@@ -469,17 +469,17 @@ public class MySQLController {
 		} else {
 			return false;	
 		}
-	}
+	}*/
 
 	
-	public boolean finishProductBatch(int pbID) throws SQLException {
+	/*public boolean finishProductBatch(int pbID) throws SQLException {
 		String query = "call afslutProduktion(?)";
 		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 		preparedStatement.setInt(1, pbID);
 		preparedStatement.execute();
 		preparedStatement.close();
 		return true;
-	}
+	}*/
 	
 	/*public IngBatchDTO getIngBatch(int ingBatchID) throws SQLException {
 		IngBatchDTO ingBatch = null;
