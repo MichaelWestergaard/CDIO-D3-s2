@@ -97,10 +97,15 @@ public class IngredientService extends ResponseHandler {
 	@Path("getIngBatchList")
 	public String getIngBatchList() {
 		try {
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatches()));
+			ingredientController.getIngBatchList();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
+		
+		return null;
 	}	
 
 	//Tilføj en Råvare

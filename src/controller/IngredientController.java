@@ -94,4 +94,8 @@ public class IngredientController extends ResponseHandler{
 		
 		return returnMsg;
 	}
+
+	public String getIngBatchList() throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.list()));
+	}
 }
