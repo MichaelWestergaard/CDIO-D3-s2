@@ -11,7 +11,7 @@ public interface BaseDAO<T> {
 		
 	boolean create(int ID, String[] parameters) throws SQLException;
 	T read(int ID);
-	T update(T element);
+	T update(int ID, String[] parameters);
 	T delele(String id);
 	
 	
