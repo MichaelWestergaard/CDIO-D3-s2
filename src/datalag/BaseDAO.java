@@ -12,7 +12,7 @@ public interface BaseDAO<T> {
 	boolean create(int ID, String[] parameters) throws SQLException;
 	T read(int ID);
 	boolean update(int ID, String[] parameters) throws SQLException;
-	T delele(String id);
+	T delete(int ID);
 	
 	
 //	public class NotImplementedException extends Exception {
