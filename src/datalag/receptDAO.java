@@ -3,6 +3,10 @@ package datalag;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mysql.jdbc.Statement;
 
 import datalag.ReceptDTO;
 
@@ -70,6 +74,23 @@ public abstract class receptDAO implements BaseDAO<ReceptDTO> {
 		return null;
 	}
 
+	@Override
+	public List<ReceptDTO> list() throws SQLException, ClassNotFoundException {
+	List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
+	ResultSet results = null;
+
+	String query = "SELECT * FROM recept";
+	PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+	results = preparedStatement.executeQuery(query);
+
+	while(results.next()) {
+		ReceptDTO recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
+		recepter.add(recept);
+	}
+	preparedStatement.close();
+	return recepter;
+
+}
 
 	
 }
