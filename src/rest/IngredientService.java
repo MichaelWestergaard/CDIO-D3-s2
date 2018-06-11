@@ -19,7 +19,6 @@ import datalag.ResponseHandler;
 import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
 import datalag.IngredientDAO;
-import datalag.IngBatchDAO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,8 +31,7 @@ import javax.ws.rs.FormParam;
 public class IngredientService extends ResponseHandler {
 	//private IngredientController ctrl = new IngredientController();  //nyt
 	private MySQLController mySQLController;
-	private IngredientDAO dao = new IngredientDAO();
-	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
+	private IngredientDAO ingDAO = new IngredientDAO();
 	
 	public IngredientService() {
 		try {
@@ -66,15 +64,11 @@ public class IngredientService extends ResponseHandler {
 	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
 		String returnMsg = "";
 		
-		try {
-			IngredientDTO ingredient = mySQLController.getIngredient(ingredientID);
-			String json = new Gson().toJson(ingredient);
-			returnMsg = json;
-			
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngredient(ingredientID)));
-		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
-		}
+		IngredientDTO ingredient = ingDAO.read(ingredientID);
+		String json = new Gson().toJson(ingredient);
+		returnMsg = json;
+		
+		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
 	}
 	
 	@POST
@@ -84,14 +78,12 @@ public class IngredientService extends ResponseHandler {
 			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
 		}
 		
-		try {
-			if(mySQLController.editIngredient(ingredientID, ingredientName)) {
-				return createResponse("success", 1, "Råvaren blev opdateret");
-			} else {
-				return createResponse("error", 0, "Råvaren kunne ikke opdateres");
-			}
-		} catch (SQLException e){
-			return createResponse("error", e.getErrorCode(), e.getMessage());
+		String[] parameters = {ingredientName};
+		
+		if(ingDAO.update(ingredientID, parameters)) {
+			return createResponse("success", 1, "Råvaren blev opdateret");
+		} else {
+			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
 		}
 			
 	}
@@ -125,11 +117,10 @@ public class IngredientService extends ResponseHandler {
 			
 			String[] parameters = {ingredientName};
 			
-			if(dao.create(ingredientID, parameters)) {
-				IngredientDTO createdIngredient = dao.read(ingredientID);
+			if(ingDAO.create(ingredientID, parameters)) {
 			
-				if(createdIngredient != null) {
-					return createResponse("success", 1, "Råvaren \"" + createdIngredient.getIngredientName() + "\" blev oprettet");
+				if(ingDAO.read(ingredientID) != null) {
+					return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
 				}
 			}
 		} catch (SQLException e) {
