@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import com.google.gson.Gson;
 
 import datalag.IngBatchDAO;
+import datalag.IngBatchDTO;
 import datalag.IngredientDAO;
 import datalag.IngredientDTO;
 import datalag.ResponseHandler;
@@ -31,9 +32,7 @@ public class IngredientController extends ResponseHandler{
 				IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
 				
 				if(ingDAO.create(ingredient)) {			
-					if(ingDAO.read(ingredientID) != null) {
-						return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
-					}
+					return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
 				}
 			} else {
 				return createResponse("error", 0, "Råvare navnet skal være 2-20 tegn!");
@@ -61,5 +60,27 @@ public class IngredientController extends ResponseHandler{
 
 	public String getIngBatch(int ingBatchID) throws ClassNotFoundException, SQLException {
 		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.read(ingBatchID)));
+	}
+	
+	public String createIngBatch(int ingBatchID, int ingredientID, double amount, String supplier) throws ClassNotFoundException, SQLException {
+		if(ingBatchID >= 1 && ingBatchID <= 99999999) {
+			if(ingredientID >= 1 && ingredientID <= 99999999) {
+				if(supplier.length() < 2 || supplier.length() > 20) {
+					return createResponse("error", 0, "Leverandørnavnet skal være mellem 2 - 20 tegn");
+				} else {
+					IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "", supplier);
+					
+					if(ingBatchDAO.create(ingBatch)) {
+						return createResponse("success", 1, "Råvarebatchen med råvaren \"" + ingDAO.read(ingredientID).getIngredientName() + "\" blev oprettet");
+					}
+				}
+			} else {
+				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
+			}
+		} else {
+			return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
+		}
+		
+		return createResponse("error", 0, String.valueOf(amount));
 	}
 }

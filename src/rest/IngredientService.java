@@ -127,35 +127,16 @@ public class IngredientService extends ResponseHandler {
 	@Path("createIngredientBatch")
 	public String createIngBatch(@FormParam("ingredientBatchID") int ingredientBatchID, @FormParam("ingredientID") int ingredientID, @FormParam("amount") double amount, @FormParam("supplier") String supplier, @Context ServletContext context) throws IOException  {
 		try {
-			//Validering af data
-			if(ingredientBatchID >= 1 && ingredientBatchID <= 99999999) {
-				if(ingredientID >= 1 && ingredientID <= 99999999) {
-					if(supplier.length() < 2 || supplier.length() > 20) {
-						return createResponse("error", 0, "Leverandørnavnet skal være mellem 2 - 20 tegn");
-					}
-				} else {
-					return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
-				}
-			} else {
-				return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
-			}
-			
-			String[] parameters = {Integer.toString(ingredientID), String.valueOf(amount), supplier};
-			
-			if(ingBatchDAO.create(ingredientID) != null && ingBatchDAO.getIngBatch(ingredientBatchID) == null) {
-				
-				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount, supplier)) {
-					IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingredientBatchID);
-					
-					if(createdIngBatch != null) {
-						return createResponse("success", 1, "Råvarebatchen med råvaren \"" + mySQLController.getIngredient(createdIngBatch.getIngredientID()).getIngredientName() + "\" blev oprettet");
-					}
-				}
-			}
+			ingredientController.createIngBatch(ingredientBatchID, ingredientID, amount, supplier);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return createResponse("error", 0, String.valueOf(amount));
+		
+		return null;
 	}
 	
 	
