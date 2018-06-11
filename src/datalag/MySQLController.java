@@ -388,7 +388,7 @@ public class MySQLController {
 
 	}
 
-	public ReceptDTO getRecept(int receptID) throws SQLException {
+	/*public ReceptDTO getRecept(int receptID) throws SQLException {
 		ReceptDTO recept = null;
 		ResultSet results = null;
 
@@ -405,8 +405,9 @@ public class MySQLController {
 		preparedStatement.close();
 		return null;
 	}
+	*/
 
-	public boolean createRecept(int receptID, String receptName) throws SQLException {
+	/*public boolean createRecept(int receptID, String receptName) throws SQLException {
 		if(getRecept(receptID) == null) {
 			ReceptDTO recept = new ReceptDTO(receptID, receptName);
 
@@ -421,7 +422,7 @@ public class MySQLController {
 			return false;	
 		}
 	}
-
+*/
 	public ProductBatchDTO getProductBatch(int productBatchID) throws SQLException {
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
