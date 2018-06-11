@@ -11,14 +11,23 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	
 	
 	@Override
-	public boolean create(IngredientDTO element) throws SQLException  {
+	public boolean create(int ingredientID, String[] parameters) throws SQLException  {
 			
 		
-		if(IngredientDAO.read(getIngredientID(element.ingredientID)) == null) {
-				IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
+		if(read(ingredientID) == null) {
+				IngredientDTO ingredient = new IngredientDTO(ingredientID, parameters[0]);
 								
 				String query = "Call opretRaavare(?, ?)";
-				PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+				PreparedStatement preparedStatement = null;
+				try {
+					preparedStatement = MySQLConnector.getInstance().getStatement(query);
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 //				preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 				preparedStatement.setInt(1, ingredient.getIngredientID());
 				preparedStatement.setString(2, ingredient.getIngredientName());
@@ -31,22 +40,32 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 		}
 
 	@Override
-	public IngredientDTO read(int id)  {
+	public IngredientDTO read(int ingredientID)  {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;
 
 		String query = "Select * from raavare WHERE raavare_id = ?";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery();
-
-		if(results.next()) {
-			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = MySQLConnector.getInstance().getStatement(query);
+			preparedStatement.setInt(1, ingredientID);
+			results = preparedStatement.executeQuery();
+			
+			if(results.next()) {
+				ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
+				preparedStatement.close();
+				return ingredient;
+			}
 			preparedStatement.close();
-			return ingredient;
+			return null;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		preparedStatement.close();
-		return null;
+		return null;		
 	}
 
 	@Override
