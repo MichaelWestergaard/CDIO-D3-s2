@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.google.gson.Gson;
 
@@ -82,5 +83,15 @@ public class IngredientController extends ResponseHandler{
 		}
 		
 		return createResponse("error", 0, String.valueOf(amount));
+	}
+
+	public String getIngredientList() throws ClassNotFoundException, SQLException {
+		String returnMsg = "";
+		
+		List<IngredientDTO> ingredients = ingDAO.list();
+		String json = new Gson().toJson(ingredients);
+		returnMsg = json;
+		
+		return returnMsg;
 	}
 }

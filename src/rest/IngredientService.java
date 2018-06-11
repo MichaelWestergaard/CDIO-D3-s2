@@ -47,21 +47,17 @@ public class IngredientService extends ResponseHandler {
 	//Råvareliste
 	@GET
 	@Path("getIngredientList")
-	public String getIngredientList() {
-		String returnMsg = "";
-		
+	public String getIngredientList() {		
 		try {
-			List<IngredientDTO> ingredients = ingDAO.list();
-			String json = new Gson().toJson(ingredients);
-			returnMsg = json;
-		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
+			return ingredientController.getIngredientList();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (SQLException e) {
+			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 		
-		return returnMsg;
+		return null;
 	}
 	
 	@GET
