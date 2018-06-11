@@ -40,6 +40,16 @@ public class MySQLConnector {
 		//TODO 
 	}
 	
+	boolean execute(PreparedStatement statement) throws SQLException {
+		if(statement.execute()) {
+			statement.close();
+			return true;
+		} else {
+			statement.close();
+			return false;
+		}
+	}
+	
 	ResultSet doQuery(PreparedStatement statement) {
 		return null;
 		//TODO
