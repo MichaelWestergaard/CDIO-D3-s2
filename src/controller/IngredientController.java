@@ -2,6 +2,8 @@ package controller;
 
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
+
 import datalag.IngredientDAO;
 import datalag.IngredientDTO;
 import datalag.ResponseHandler;
@@ -16,6 +18,10 @@ public class IngredientController extends ResponseHandler{
 //	}
 	
 	private IngredientDAO ingDAO = new IngredientDAO();
+	
+	public String getIngredient(int ingredientID) throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
+	}
 	
 	public String createIngredient(int ingredientID, String ingredientName) throws ClassNotFoundException, SQLException {
 		if(ingredientID >= 1 && ingredientID <= 99999999) {

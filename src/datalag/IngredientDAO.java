@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.mysql.jdbc.Statement;
 
-import datalag.IngredientDTO;
 
 public class IngredientDAO implements BaseDAO<IngredientDTO> {
 

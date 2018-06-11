@@ -67,7 +67,17 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngredient")
 	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
-		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));		
+		try {
+			return ingredientController.getIngredient(ingredientID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;	
 	}
 	
 	@POST
