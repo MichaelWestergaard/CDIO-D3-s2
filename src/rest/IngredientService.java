@@ -67,24 +67,33 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngredient")
 	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
-		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));		
+		try {
+			return ingredientController.getIngredient(ingredientID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;	
 	}
 	
 	@POST
 	@Path("editIngredient")
 	public String editIngredient(@FormParam("ingredientID") int ingredientID, @FormParam("ingredientName") String ingredientName) {
-		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
-			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
+		try {
+			return ingredientController.editIngredient(ingredientID, ingredientName);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
-		IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-		
-		if(ingDAO.update(ingredient)) {
-			return createResponse("success", 1, "Råvaren blev opdateret");
-		} else {
-			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
-		}
-			
+		return null;			
 	}
 		
 	//Råvarebatchliste
@@ -154,11 +163,16 @@ public class IngredientService extends ResponseHandler {
 	@Path("getIngBatch")
 	public String getIngBatch(@QueryParam("ingBatchID") int ingBatchID) {
 		try {
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatch(ingBatchID)));
+			return ingredientController.getIngBatch(ingBatchID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	
+		
+		return null;		
 	}
 	
 	@GET

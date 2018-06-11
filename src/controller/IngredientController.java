@@ -2,6 +2,9 @@ package controller;
 
 import java.sql.SQLException;
 
+import com.google.gson.Gson;
+
+import datalag.IngBatchDAO;
 import datalag.IngredientDAO;
 import datalag.IngredientDTO;
 import datalag.ResponseHandler;
@@ -16,6 +19,11 @@ public class IngredientController extends ResponseHandler{
 //	}
 	
 	private IngredientDAO ingDAO = new IngredientDAO();
+	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
+	
+	public String getIngredient(int ingredientID) throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
+	}
 	
 	public String createIngredient(int ingredientID, String ingredientName) throws ClassNotFoundException, SQLException {
 		if(ingredientID >= 1 && ingredientID <= 99999999) {
@@ -37,4 +45,21 @@ public class IngredientController extends ResponseHandler{
 		return createResponse("error", 0, "Kunne ikke oprette Råvare");
 	}
 
+	public String editIngredient(int ingredientID, String ingredientName) throws ClassNotFoundException, SQLException {
+		if(ingredientName.length() < 2 || ingredientName.length() > 20) {
+			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
+		}
+		
+		IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
+		
+		if(ingDAO.update(ingredient)) {
+			return createResponse("success", 1, "Råvaren blev opdateret");
+		} else {
+			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
+		}
+	}
+
+	public String getIngBatch(int ingBatchID) throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.read(ingBatchID)));
+	}
 }
