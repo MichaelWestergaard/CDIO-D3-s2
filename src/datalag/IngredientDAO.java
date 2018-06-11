@@ -14,26 +14,22 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	
 	
 	@Override
-	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {
-			
-		
-		if(read(ingredient.getIngredientID()) == null) {
-								
-				String query = "Call opretRaavare(?, ?)";
-				MySQLConnector connector = MySQLConnector.getInstance();
-				PreparedStatement preparedStatement = connector.getStatement(query);
-				preparedStatement.setInt(1, ingredient.getIngredientID());
-				preparedStatement.setString(2, ingredient.getIngredientName());
-				if(connector.execute(preparedStatement)) {
-					return true;
-				} else {
-					return false;
-				}
-				
+	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {		
+		if(read(ingredient.getIngredientID()) == null) {								
+			String query = "Call opretRaavare(?, ?)";
+			MySQLConnector connector = MySQLConnector.getInstance();
+			PreparedStatement preparedStatement = connector.getStatement(query);
+			preparedStatement.setInt(1, ingredient.getIngredientID());
+			preparedStatement.setString(2, ingredient.getIngredientName());
+			if(connector.execute(preparedStatement)) {
+				return true;
 			} else {
 				return false;
-			}
+			}			
+		} else {
+			return false;
 		}
+	}
 
 	@Override
 	public IngredientDTO read(int ingredientID) throws ClassNotFoundException, SQLException  {

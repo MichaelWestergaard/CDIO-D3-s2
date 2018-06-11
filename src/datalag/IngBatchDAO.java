@@ -9,29 +9,20 @@ import datalag.IngBatchDTO;
 public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 
 	@Override
-	public boolean create(int ingBatchID, String[] parameters) throws SQLException {
-		
-		
-		if(read(ingBatchID) == null) {
-			IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, Integer.parseInt(parameters[0]), Double.parseDouble (parameters[1]), "", parameters[2]);
-
+	public boolean create(IngBatchDTO ingBatch) throws SQLException, ClassNotFoundException {		
+		if(read(ingBatch.getIngBatchID()) == null) {
 			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
-			PreparedStatement preparedStatement = null;
-			
-			
-			try {
-				preparedStatement = MySQLConnector.getInstance().getStatement(query);
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			MySQLConnector connector = MySQLConnector.getInstance();
+			PreparedStatement preparedStatement = connector.getStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());
 			preparedStatement.setDouble(3, ingBatch.getAmount());
 			preparedStatement.setString(4, ingBatch.getSupplier());
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
+			if(connector.execute(preparedStatement)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;	
 		}

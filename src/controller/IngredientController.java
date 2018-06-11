@@ -56,4 +56,12 @@ public class IngredientController extends ResponseHandler{
 			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
 		}
 	}
+
+	public String getIngBatch(int ingBatchID) {
+		try {
+			return createResponse("success", 1, new Gson().toJson(ingBatchDAO..getIngBatch(ingBatchID)));
+		} catch (SQLException e) {
+			return createResponse("error", e.getErrorCode(), e.getMessage());
+		}
+	}
 }

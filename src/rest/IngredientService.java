@@ -162,11 +162,7 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngBatch")
 	public String getIngBatch(@QueryParam("ingBatchID") int ingBatchID) {
-		try {
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngBatch(ingBatchID)));
-		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
-		}
+		
 	
 	}
 	
