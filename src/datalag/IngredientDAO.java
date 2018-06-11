@@ -1,8 +1,10 @@
 package datalag;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.mysql.jdbc.PreparedStatement;
+import datalag.IngredientDTO;
 
 public class IngredientDAO implements BaseDAO<IngredientDTO> {
 
@@ -10,12 +12,14 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	
 	@Override
 	public boolean create(IngredientDTO element) throws SQLException  {
-			if(getIngredient(ingredientID) == null) {
+			
+		
+		if(IngredientDAO.read(getIngredientID(element.ingredientID)) == null) {
 				IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-
-				
+								
 				String query = "Call opretRaavare(?, ?)";
-				preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+				PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+//				preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
 				preparedStatement.setInt(1, ingredient.getIngredientID());
 				preparedStatement.setString(2, ingredient.getIngredientName());
 				preparedStatement.execute();
@@ -27,8 +31,21 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 		}
 
 	@Override
-	public IngredientDTO read(String id)  {
-		// TODO Auto-generated method stub
+	public IngredientDTO read(int id)  {
+		IngredientDTO ingredient = null;
+		ResultSet results = null;
+
+		String query = "Select * from raavare WHERE raavare_id = ?";
+		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		results = preparedStatement.executeQuery();
+
+		if(results.next()) {
+			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
+			preparedStatement.close();
+			return ingredient;
+		}
+		preparedStatement.close();
 		return null;
 	}
 

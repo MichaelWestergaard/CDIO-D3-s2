@@ -35,7 +35,8 @@ public class MySQLConnector {
 		return connection;
 	}
 
-	PreparedStatement getStatement(){
+	public PreparedStatement getStatement(String sql) throws SQLException{
+		return connection.prepareStatement(sql);
 		//TODO 
 	}
 	
