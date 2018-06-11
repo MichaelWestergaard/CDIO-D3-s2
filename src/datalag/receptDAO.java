@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import datalag.ReceptDTO;
 
 
-public class receptDAO implements BaseDAO<ReceptDTO> {
+public abstract class receptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
 	public boolean create(int ID, String[] parameters) throws SQLException {
@@ -46,17 +46,6 @@ public class receptDAO implements BaseDAO<ReceptDTO> {
 		return null;
 	}
 
-	@Override
-	public ReceptDTO update(ReceptDTO element) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ReceptDTO delele(String id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	
 }

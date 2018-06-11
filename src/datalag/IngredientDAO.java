@@ -68,14 +68,15 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 		return null;		
 	}
 
+
 	@Override
-	public IngredientDTO update(IngredientDTO element) {
+	public boolean update(int ID, String[] parameters) throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
-	public IngredientDTO delele(String id) {
+	public IngredientDTO delete(int ID) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -19,6 +19,7 @@ import datalag.ResponseHandler;
 import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
 import datalag.IngredientDAO;
+import datalag.IngBatchDAO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,6 +33,7 @@ public class IngredientService extends ResponseHandler {
 	//private IngredientController ctrl = new IngredientController();  //nyt
 	private MySQLController mySQLController;
 	private IngredientDAO dao = new IngredientDAO();
+	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
 	
 	public IngredientService() {
 		try {
@@ -153,8 +155,9 @@ public class IngredientService extends ResponseHandler {
 				return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
 			}
 			
+			String[] parameters = {Integer.toString(ingredientID), String.valueOf(amount), supplier};
 			
-			if(mySQLController.getIngredient(ingredientID) != null && mySQLController.getIngBatch(ingredientBatchID) == null) {
+			if(ingBatchDAO.create(ingredientID) != null && ingBatchDAO.getIngBatch(ingredientBatchID) == null) {
 				
 				if(mySQLController.createIngBatch(ingredientBatchID, ingredientID, amount, supplier)) {
 					IngBatchDTO createdIngBatch = mySQLController.getIngBatch(ingredientBatchID);

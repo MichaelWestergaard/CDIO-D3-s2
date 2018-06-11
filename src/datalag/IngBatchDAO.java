@@ -66,16 +66,15 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 		return null;		
 	}
 
-	
 
 	@Override
-	public IngBatchDTO update(IngBatchDTO element) {
+	public boolean update(int ID, String[] parameters) throws SQLException {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
-	public IngBatchDTO delele(String id) {
+	public IngBatchDTO delete(int ID) {
 		// TODO Auto-generated method stub
 		return null;
 	}
