@@ -3,7 +3,10 @@ package datalag;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.mysql.jdbc.Statement;
 
 import datalag.IngredientDTO;
 
@@ -12,88 +15,80 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	
 	
 	@Override
-	public boolean create(int ingredientID, String[] parameters) throws SQLException  {
+	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {
 			
 		
-		if(read(ingredientID) == null) {
-				IngredientDTO ingredient = new IngredientDTO(ingredientID, parameters[0]);
+		if(read(ingredient.getIngredientID()) == null) {
 								
 				String query = "Call opretRaavare(?, ?)";
-				PreparedStatement preparedStatement = null;
-				try {
-					preparedStatement = MySQLConnector.getInstance().getStatement(query);
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-//				preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+				MySQLConnector connector = MySQLConnector.getInstance();
+				PreparedStatement preparedStatement = connector.getStatement(query);
 				preparedStatement.setInt(1, ingredient.getIngredientID());
 				preparedStatement.setString(2, ingredient.getIngredientName());
-				preparedStatement.execute();
-				preparedStatement.close();
-				return true;
+				if(connector.execute(preparedStatement)) {
+					return true;
+				} else {
+					return false;
+				}
+				
 			} else {
 				return false;
 			}
 		}
 
 	@Override
-	public IngredientDTO read(int ingredientID)  {
+	public IngredientDTO read(int ingredientID) throws ClassNotFoundException, SQLException  {
 		IngredientDTO ingredient = null;
 		ResultSet results = null;
 
 		String query = "Select * from raavare WHERE raavare_id = ?";
-		PreparedStatement preparedStatement = null;
-		try {
-			preparedStatement = MySQLConnector.getInstance().getStatement(query);
-			preparedStatement.setInt(1, ingredientID);
-			results = preparedStatement.executeQuery();
-			
-			if(results.next()) {
-				ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
-				preparedStatement.close();
-				return ingredient;
-			}
+		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		results = preparedStatement.executeQuery();
+		
+		if(results.next()) {
+			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
 			preparedStatement.close();
-			return null;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return ingredient;
 		}
+		preparedStatement.close();
 		return null;		
 	}
 
 
 	@Override
-	public boolean update(int ingredientID, String[] parameters) {
-		String query = "call redigerRaavare(?, ?)";
-		PreparedStatement preparedStatement = null;
-		try {
-			preparedStatement = MySQLConnector.getInstance().getStatement(query);
-			preparedStatement.setInt(1, ingredientID);
-			preparedStatement.setString(2, parameters[0]);
-			preparedStatement.execute();
-			preparedStatement.close();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public boolean update(IngredientDTO ingredient) throws SQLException, ClassNotFoundException {
+		if(read(ingredient.getIngredientID()) != null) {
+			String query = "call redigerRaavare(?, ?)";
+			MySQLConnector connector = MySQLConnector.getInstance();
+			PreparedStatement preparedStatement = connector.getStatement(query);
+			preparedStatement.setInt(1, ingredient.getIngredientID());
+			preparedStatement.setString(2, ingredient.getIngredientName());
+			if(connector.execute(preparedStatement)) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	@Override
-	public List<IngredientDTO> list() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	public List<IngredientDTO> list() throws SQLException, ClassNotFoundException {
+		List<IngredientDTO> ingredients = new ArrayList<IngredientDTO>();
+		ResultSet results = null;
+
+		String query = "SELECT * FROM raavare";
+		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		results = preparedStatement.executeQuery(query);
+
+		while(results.next()) {
+			IngredientDTO ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
+			ingredients.add(ingredient);
+		}
+		preparedStatement.close();
+		return ingredients;
 	}
 	
 	@Override

@@ -51,11 +51,14 @@ public class IngredientService extends ResponseHandler {
 		String returnMsg = "";
 		
 		try {
-			List<IngredientDTO> ingredients = mySQLController.getIngredients();
+			List<IngredientDTO> ingredients = ingDAO.list();
 			String json = new Gson().toJson(ingredients);
 			returnMsg = json;
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return returnMsg;
@@ -64,7 +67,7 @@ public class IngredientService extends ResponseHandler {
 	@GET
 	@Path("getIngredient")
 	public String getIngredient(@QueryParam("ingredientID") int ingredientID) {
-		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));
+		return createResponse("success", 1, new Gson().toJson(ingDAO.read(ingredientID)));		
 	}
 	
 	@POST
@@ -74,9 +77,9 @@ public class IngredientService extends ResponseHandler {
 			return createResponse("error", 0, "Råvarenavnet skal være mellem 2 - 20 tegn");
 		}
 		
-		String[] parameters = {ingredientName};
+		IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
 		
-		if(ingDAO.update(ingredientID, parameters)) {
+		if(ingDAO.update(ingredient)) {
 			return createResponse("success", 1, "Råvaren blev opdateret");
 		} else {
 			return createResponse("error", 0, "Råvaren kunne ikke opdateres");
@@ -111,10 +114,9 @@ public class IngredientService extends ResponseHandler {
 				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
 			}
 			
-			String[] parameters = {ingredientName};
+			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
 			
-			if(ingDAO.create(ingredientID, parameters)) {
-			
+			if(ingDAO.create(ingredient)) {			
 				if(ingDAO.read(ingredientID) != null) {
 					return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
 				}
