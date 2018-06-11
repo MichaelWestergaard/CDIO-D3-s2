@@ -12,13 +12,6 @@ import datalag.IngredientDTO;
 import datalag.ResponseHandler;
 
 public class IngredientController extends ResponseHandler{
-//	IngredientDAO ingr = MySQLController.getIngredientDAO();
-//	
-//	IngredientDTO saveIngredient(IngredientDTO dto) {
-//		//Do some validation??
-//		ValidationCOntroller??
-//		ingr.save(dto);
-//	}
 	
 	private IngredientDAO ingDAO = new IngredientDAO();
 	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
