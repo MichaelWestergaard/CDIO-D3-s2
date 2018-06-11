@@ -68,6 +68,7 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 		return null;		
 	}
 
+
 	@Override
 	public boolean update(int ingredientID, String[] parameters) {
 		String query = "call redigerRaavare(?, ?)";
