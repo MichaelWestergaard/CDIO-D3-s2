@@ -16,7 +16,7 @@ import controller.IngredientController;
 import datalag.MySQLController;
 import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
-import datalag.IngredientDTO;
+//import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
 import datalag.IngredientDAO;
 
@@ -118,10 +118,9 @@ public class IngredientService extends ResponseHandler {
 			String[] parameters = {ingredientName};
 			
 			if(ingDAO.create(ingredientID, parameters)) {
-				IngredientDTO createdIngredient = ingDAO.read(ingredientID);
 			
-				if(createdIngredient != null) {
-					return createResponse("success", 1, "Råvaren \"" + createdIngredient.getIngredientName() + "\" blev oprettet");
+				if(ingDAO.read(ingredientID) != null) {
+					return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
 				}
 			}
 		} catch (SQLException e) {
