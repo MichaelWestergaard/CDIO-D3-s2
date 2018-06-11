@@ -18,6 +18,7 @@ import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
 import datalag.IngredientDTO;
 import datalag.IngBatchDTO;
+import datalag.IngredientDAO;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,6 +31,7 @@ import javax.ws.rs.FormParam;
 public class IngredientService extends ResponseHandler {
 	//private IngredientController ctrl = new IngredientController();  //nyt
 	private MySQLController mySQLController;
+	private IngredientDAO dao = new IngredientDAO();
 	
 	public IngredientService() {
 		try {
@@ -119,8 +121,10 @@ public class IngredientService extends ResponseHandler {
 				return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
 			}
 			
-			if(mySQLController.createIngredient(ingredientID, ingredientName)) {
-				IngredientDTO createdIngredient = mySQLController.getIngredient(ingredientID);
+			String[] parameters = {ingredientName};
+			
+			if(dao.create(ingredientID, parameters)) {
+				IngredientDTO createdIngredient = dao.read(ingredientID);
 			
 				if(createdIngredient != null) {
 					return createResponse("success", 1, "Råvaren \"" + createdIngredient.getIngredientName() + "\" blev oprettet");

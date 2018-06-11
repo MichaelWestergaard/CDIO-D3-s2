@@ -142,39 +142,39 @@ public class MySQLController {
 		return true;
 	}
 
-	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
-		IngredientDTO ingredient = null;
-		ResultSet results = null;
-
-		String query = "Select * from raavare WHERE raavare_id = ?";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery();
-
-		if(results.next()) {
-			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
-			preparedStatement.close();
-			return ingredient;
-		}
-		preparedStatement.close();
-		return null;
-	}
-
-	public boolean createIngredient(int ingredientID, String ingredientName) throws SQLException {
-		if(getIngredient(ingredientID) == null) {
-			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-
-			String query = "Call opretRaavare(?, ?)";
-			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-			preparedStatement.setInt(1, ingredient.getIngredientID());
-			preparedStatement.setString(2, ingredient.getIngredientName());
-			preparedStatement.execute();
-			preparedStatement.close();
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	public IngredientDTO getIngredient(int ingredientID) throws SQLException {
+//		IngredientDTO ingredient = null;
+//		ResultSet results = null;
+//
+//		String query = "Select * from raavare WHERE raavare_id = ?";
+//		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//		preparedStatement.setInt(1, ingredientID);
+//		results = preparedStatement.executeQuery();
+//
+//		if(results.next()) {
+//			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
+//			preparedStatement.close();
+//			return ingredient;
+//		}
+//		preparedStatement.close();
+//		return null;
+//	}
+//
+//	public boolean createIngredient(int ingredientID, String ingredientName) throws SQLException {
+//		if(getIngredient(ingredientID) == null) {
+//			IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
+//
+//			String query = "Call opretRaavare(?, ?)";
+//			preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//			preparedStatement.setInt(1, ingredient.getIngredientID());
+//			preparedStatement.setString(2, ingredient.getIngredientName());
+//			preparedStatement.execute();
+//			preparedStatement.close();
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	public boolean editIngredient(int ingredientID, String ingredientName) throws SQLException {
 		String query = "call redigerRaavare(?, ?)";
