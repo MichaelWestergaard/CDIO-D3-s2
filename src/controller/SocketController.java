@@ -167,6 +167,8 @@ public class SocketController implements Runnable {
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							continueProcedure = true;
 						} else {
 							continueProcedure = true;
 						}
@@ -240,6 +242,8 @@ public class SocketController implements Runnable {
 											if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 												return false;
 											}
+											
+											inputOK = true;
 										} else {
 											inputOK = true;
 										}
@@ -310,6 +314,8 @@ public class SocketController implements Runnable {
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							continueProcedure = true;
 						} else {
 							continueProcedure = true;
 						}
@@ -375,6 +381,8 @@ public class SocketController implements Runnable {
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							continueProcedure = true;
 						} else {
 							continueProcedure = true;
 						}
@@ -436,14 +444,18 @@ public class SocketController implements Runnable {
 				String[] inputArr = inputString.split(" ");
 				sleep();
 				boolean inputOK = false;
+				System.out.println(inputString);
+				
 				if(inputArr[1].equals("A")) {
 					if(inputArr.length == 2) {
 						inputOK = true;
 					} else if(inputArr.length == 3) {
-						if(!inputArr[2].replace("\"", "").equals("")) {
+						if(!inputArr[2].replace("\"", "").equals("")) {							
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							inputOK = true;
 						} else {
 							inputOK = true;
 						}
@@ -525,6 +537,8 @@ public class SocketController implements Runnable {
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							unloadConfirmed = true;
 						} else {
 							unloadConfirmed = true;
 							sendMessage("T");
@@ -633,6 +647,8 @@ public class SocketController implements Runnable {
 							if(!Character.isDigit(inputArr[2].replace("\"", "").charAt(0))){
 								return false;
 							}
+							
+							taraConfirmed = true;
 						} else {
 							taraConfirmed = true;
 							sendMessage("T");
