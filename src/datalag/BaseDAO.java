@@ -10,9 +10,9 @@ import com.mysql.jdbc.Statement;
 
 public interface BaseDAO<T> {
 		
-	boolean create(int ID, String[] parameters) throws SQLException;
+	boolean create(T object) throws SQLException;
 	T read(int ID);
-	boolean update(int ID, String[] parameters) throws SQLException;
+	boolean update(T object) throws SQLException;
 	List<T> list() throws SQLException;
 	T delete(int ID);
 	
