@@ -98,4 +98,8 @@ public class IngredientController extends ResponseHandler{
 	public String getIngBatchList() throws ClassNotFoundException, SQLException {
 		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.list()));
 	}
+
+	public String getIngredientBatchesByIngredient(int ingredientID) throws ClassNotFoundException, SQLException {
+		return createResponse("success", 1, new Gson().toJson(ingBatchDAO.getIngredientBatchesByIngredient(ingredientID)));
+	}
 }

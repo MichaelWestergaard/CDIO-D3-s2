@@ -534,23 +534,23 @@ public class MySQLController {
 		return true;
 	}
 
-	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException {
-		List<Integer> productBatches = new ArrayList<Integer>();
-		ResultSet results = null;
-
-		String query = "SELECT rb_id FROM raavarebatch WHERE raavare_id = ?";
-		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
-		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery();
-
-		while(results.next()) {
-			productBatches.add(results.getInt("rb_id"));
-		}
-
-		preparedStatement.close();
-		return productBatches;
-
-	}
+//	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException {
+//		List<Integer> productBatches = new ArrayList<Integer>();
+//		ResultSet results = null;
+//
+//		String query = "SELECT rb_id FROM raavarebatch WHERE raavare_id = ?";
+//		preparedStatement = (PreparedStatement) getConnection().prepareStatement(query);
+//		preparedStatement.setInt(1, ingredientID);
+//		results = preparedStatement.executeQuery();
+//
+//		while(results.next()) {
+//			productBatches.add(results.getInt("rb_id"));
+//		}
+//
+//		preparedStatement.close();
+//		return productBatches;
+//
+//	}
 
 	public ProductBatchDTO endProductBatch(int productBatchID) throws SQLException{
 		ProductBatchDTO productBatch = null;

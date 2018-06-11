@@ -68,6 +68,23 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 		preparedStatement.close();
 		return ingBatches;
 	}
+	
+	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException, ClassNotFoundException {
+		List<Integer> ingBatches = new ArrayList<Integer>();
+		ResultSet results = null;
+
+		String query = "SELECT rb_id FROM raavarebatch WHERE raavare_id = ?";
+		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		preparedStatement.setInt(1, ingredientID);
+		results = preparedStatement.executeQuery();
+
+		while(results.next()) {
+			ingBatches.add(results.getInt("rb_id"));
+		}
+
+		preparedStatement.close();
+		return ingBatches;
+	}
 
 	@Override
 	public boolean update(IngBatchDTO ingBatch) throws SQLException {

@@ -161,10 +161,15 @@ public class IngredientService extends ResponseHandler {
 	@Path("getIngredientBatchesByIngredient")
 	public String getIngredientBatchesByIngredient(@QueryParam("ingredientID") int ingredientID) {
 		try {
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getIngredientBatchesByIngredient(ingredientID)));
+			return ingredientController.getIngredientBatchesByIngredient(ingredientID);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
+		
+		return null;
 	}
 
 }
