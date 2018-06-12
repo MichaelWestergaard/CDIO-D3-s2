@@ -41,7 +41,6 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 		results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
-			preparedStatement.close();
 			return new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
 		}
 		preparedStatement.close();

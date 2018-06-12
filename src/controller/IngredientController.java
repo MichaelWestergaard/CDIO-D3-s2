@@ -30,10 +30,13 @@ public class IngredientController extends ResponseHandler{
 		if(ingredientID >= 1 && ingredientID <= 99999999) {
 			if(ingredientName.length() >= 2 && ingredientName.length() <= 20) {
 				IngredientDTO ingredient = new IngredientDTO(ingredientID, ingredientName);
-				
 				try {
-					if(ingDAO.create(ingredient)) {			
-						return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
+					if(ingDAO.read(ingredientID) == null) {
+						if(ingDAO.create(ingredient)) {			
+							return createResponse("success", 1, "Råvaren \"" + ingredientName + "\" blev oprettet");
+						}
+					} else {
+						return createResponse("error", 0, "ID'et er allerede taget");
 					}
 				} catch (ClassNotFoundException e) {
 					return createResponse("error", 0, e.getMessage());
@@ -88,8 +91,12 @@ public class IngredientController extends ResponseHandler{
 				IngBatchDTO ingBatch = new IngBatchDTO(ingBatchID, ingredientID, amount, "", supplier);
 				
 				try {
-					if(ingBatchDAO.create(ingBatch)) {
-						return createResponse("success", 1, "Råvarebatchen med råvaren \"" + ingDAO.read(ingredientID).getIngredientName() + "\" blev oprettet");
+					if(ingBatchDAO.read(ingBatchID) == null) {
+						if(ingBatchDAO.create(ingBatch)) {
+							return createResponse("success", 1, "Råvarebatchen med råvaren \"" + ingDAO.read(ingredientID).getIngredientName() + "\" blev oprettet");
+						}
+					} else {
+						return createResponse("error", 0, "ID'et er taget");
 					}
 				} catch (ClassNotFoundException e) {
 					return createResponse("error", 0, e.getMessage());
@@ -98,10 +105,9 @@ public class IngredientController extends ResponseHandler{
 				}
 			}
 		} else {
-			return createResponse("error", 0, "Råvare ID skal være i mellem 1-99999999!");
+			return createResponse("error", 0, "Råvarebatch ID skal være i mellem 1-99999999!");
 		}
-		
-		return createResponse("error", 0, String.valueOf(amount));
+		return createResponse("error", 0, "Kunne ikke oprette råvarebatchen");
 	}
 
 	public String getIngredientList() {

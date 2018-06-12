@@ -11,7 +11,7 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
 	public boolean create(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException, NotImplementedException {
-		if(read(receptComponent.getReceptID()) == null)  {
+		if(read(receptComponent.getReceptID(), receptComponent.ingredientID) == null)  {
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			MySQLConnector connector = MySQLConnector.getInstance();
 			PreparedStatement preparedStatement = connector.getStatement(query);
@@ -41,7 +41,6 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 		results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
-			preparedStatement.close();
 			return new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance"));
 		}
 		preparedStatement.close();
@@ -95,7 +94,7 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
 	public ReceptComponentDTO read(int ID) throws NotImplementedException {
-		throw new NotImplementedException("Denne metode er ikke lavet! Brug read(int receptID, int ingredientID)");
+		throw new NotImplementedException("Denne ReceptComponentDTO.read(int) er ikke lavet! Brug read(int receptID, int ingredientID)");
 	}
 
 }

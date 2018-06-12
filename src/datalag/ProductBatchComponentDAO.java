@@ -79,7 +79,7 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 
 	@Override
 	public ProductBatchComponentDTO read(int ID) throws NotImplementedException {
-		throw new NotImplementedException("Denne metode er ikke lavet! Brug read(int pbID, int raavareBatchID)");
+		throw new NotImplementedException("ProductBatchComponentDTO.read(int) er ikke lavet! Brug read(int pbID, int raavareBatchID)");
 	}
 
 }

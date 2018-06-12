@@ -94,7 +94,7 @@ public class ReceptController extends ResponseHandler {
 			boolean receptFound = false;
 			boolean ingredientFound = false;		
 			
-			if(rcDAO.read(receptID) != null) {
+			if(rcDAO.read(receptID, ingredientID) != null) {
 				return createResponse("error", 0, "receptkomponenten eksisterer allerede");
 			}
 			

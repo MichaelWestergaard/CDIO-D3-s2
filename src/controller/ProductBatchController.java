@@ -87,8 +87,9 @@ public class ProductBatchController extends ResponseHandler {
 		try {
 			return createResponse("success", 1, new Gson().toJson(pbcDAO.list()));
 		} catch (ClassNotFoundException e) {
-			return createResponse("error", 0, e.getMessage());
+			return createResponse("error", 2, e.getMessage());
 		} catch (SQLException e) {
+			System.out.println("test");
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		}
 	}
