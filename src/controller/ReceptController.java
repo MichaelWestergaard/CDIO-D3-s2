@@ -3,6 +3,7 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
+import datalag.IngredientDAO;
 import datalag.ReceptComponentDAO;
 import datalag.ReceptComponentDTO;
 import datalag.ReceptDAO;
@@ -13,7 +14,7 @@ public class ReceptController extends ResponseHandler {
  
 	private ReceptDAO receptDAO = new ReceptDAO();
 	private ReceptComponentDAO rcDAO = new ReceptComponentDAO();
-	private IngredientController ingController = new IngredientController();
+	private IngredientDAO ingDAO = new IngredientDAO();
 	
 	public String getRecept(int receptID) {
 		try {
@@ -100,7 +101,7 @@ public class ReceptController extends ResponseHandler {
 				receptFound = true;
 			}
 			
-			if(ingController.getIngredient(ingredientID) != null) {
+			if(ingDAO.read(ingredientID) != null) {
 				ingredientFound = true;
 			}
 			
