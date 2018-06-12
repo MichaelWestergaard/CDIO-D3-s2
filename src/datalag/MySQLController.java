@@ -321,7 +321,7 @@ public class MySQLController {
 	}
 	*/
 
-	public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
+	/*public List<ProductBatchComponentDTO> getProductBatchComponents() throws SQLException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
 		ResultSet results = null;
 
@@ -335,9 +335,9 @@ public class MySQLController {
 		}
 		statement.close();
 		return productBatchComponents;
-	}
+	}*/
 
-	public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
+	/*public ProductBatchComponentDTO getProductBatchComponent(int productBatchID, int raavareBatchID) throws SQLException {
 		ProductBatchComponentDTO productBatchComponent = null;
 		ResultSet results = null;
 
@@ -354,9 +354,9 @@ public class MySQLController {
 		}
 		preparedStatement.close();
 		return null;
-	}
+	}*/
 
-	public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
+	/*public boolean createProductBatchComponent(int productBatchID, int raavareBatchID, int operatorID, double netto, double tara) throws SQLException {
 		if(getProductBatchComponent(productBatchID, raavareBatchID) == null)  {
 
 			String query = "Call afvejning(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
@@ -372,7 +372,7 @@ public class MySQLController {
 		} else {
 			return false;			
 		}
-	}
+	}*/
 
 	/*public List<IngBatchDTO> getIngBatches() throws SQLException {
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
