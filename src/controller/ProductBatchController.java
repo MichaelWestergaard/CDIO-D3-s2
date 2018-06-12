@@ -3,22 +3,19 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
-import datalag.ReceptDAO;
-import datalag.IngBatchDAO;
 import datalag.ProductBatchComponentDAO;
 import datalag.ProductBatchComponentDTO;
 import datalag.ProductBatchDAO;
 import datalag.ProductBatchDTO;
 import datalag.ResponseHandler;
-import datalag.UserDAO;
 
 public class ProductBatchController extends ResponseHandler {
 	
 	private ProductBatchDAO pbDAO = new ProductBatchDAO();
 	private ProductBatchComponentDAO pbcDAO = new ProductBatchComponentDAO();
-	private ReceptDAO receptDAO = new ReceptDAO();
-	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
-	private UserDAO userDAO = new UserDAO();
+	private ReceptController receptController = new ReceptController();
+	private IngredientController ingController = new IngredientController();
+	private UserController userController = new UserController();
 	
 	public String getProductBatch(int productBatchID) {		
 		try {
@@ -47,10 +44,10 @@ public class ProductBatchController extends ResponseHandler {
 					ProductBatchDTO pbDTO = new ProductBatchDTO(productBatchID, status, receptID, null, null);
 					
 					try {
-						if(receptDAO.read(receptID) != null && pbDAO.read(productBatchID) == null) {
+						if(receptController.getRecept(receptID) != null && pbDAO.read(productBatchID) == null) {
 							if(pbDAO.create(pbDTO)) {
 								if(pbDAO.read(productBatchID) != null) {
-									return createResponse("success", 1, "ProductBatchen med Recepten \"" + receptDAO.read(receptID).getReceptName() + "\" blev oprettet");
+									return createResponse("success", 1, "ProductBatchen med Recepten \"" + receptController.getRecept(receptID).getReceptName() + "\" blev oprettet");
 								}
 							}
 						}
@@ -126,11 +123,11 @@ public class ProductBatchController extends ResponseHandler {
 				productBatchFound = true;
 			}	
 			
-			if(ingBatchDAO.read(ingredientBatchID) != null) {
+			if(ingController.getIngBatch(ingredientBatchID) != null) {
 				ingredientBatchFound = true;
 			}
 			
-			if(userDAO.read(operatorID) != null) {
+			if(userController.getUser(operatorID) != null) {
 				userFound = true;
 			}
 			
