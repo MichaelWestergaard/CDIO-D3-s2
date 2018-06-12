@@ -13,12 +13,8 @@ import javax.ws.rs.FormParam;
 @Path("recept")
 public class ReceptService {
 
-	private ReceptController receptController;
+	private ReceptController receptController = new ReceptController();
 	
-	public ReceptService() {
-	}
-	
-	//Receptliste 
 	@GET
 	@Path("getReceptList")
 	public String getReceptList() {

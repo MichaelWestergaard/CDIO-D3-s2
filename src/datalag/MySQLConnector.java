@@ -15,11 +15,10 @@ public class MySQLConnector {
 	private static final String USER = "michaelwest_dk";
 	private static final String PASSWORD = "68wukovuzovi";
 	
-	private static MySQLConnector connector;
-	private Connection connection;
+	private static MySQLConnector connector = null;
+	private Connection connection = null;
 	
 	private MySQLConnector() throws ClassNotFoundException, SQLException {
-		//initialize connection!
 		Class.forName(DRIVER_CLASS);
 		connection = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
 	}
@@ -34,7 +33,7 @@ public class MySQLConnector {
 	private Connection getConnection() {
 		return connection;
 	}
-
+	
 	public PreparedStatement getStatement(String sql) throws SQLException{
 		return connection.prepareStatement(sql);
 		//TODO 

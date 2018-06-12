@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.ws.rs.FormParam;
-
 import com.google.gson.Gson;
 
 import datalag.ResponseHandler;

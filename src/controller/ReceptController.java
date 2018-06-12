@@ -107,15 +107,14 @@ public class ReceptController extends ResponseHandler {
 			}
 			
 			if(receptFound && ingredientFound) {					
-			rcDAO.create(new ReceptComponentDTO(receptID, ingredientID, null, nomNetto, tolerance));
-	
+				rcDAO.create(new ReceptComponentDTO(receptID, ingredientID, null, nomNetto, tolerance));
 			} else if (!receptFound && ingredientFound ) {
 				return createResponse("error", 0, "receptID eksistere ikke");
 			} else if (receptFound && !ingredientFound ) {
 				return createResponse("error", 0, "ingredientID eksistere ikke");
 			}
 			
-			if(rcDAO.read(receptID) != null) {
+			if(rcDAO.read(receptID, ingredientID) != null) {
 				return createResponse("success", 1, "Recepkomponenten med recepten \"" + receptDAO.read(receptID).getReceptName() + "\" blev oprettet");
 
 			} else {
@@ -127,6 +126,6 @@ public class ReceptController extends ResponseHandler {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		} catch (NotImplementedException e) {
 			return createResponse("error", 0, e.getMessage());
-		} 
+		}
 	}
 }

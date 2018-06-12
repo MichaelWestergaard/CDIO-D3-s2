@@ -44,6 +44,7 @@ $.ajax({
 	url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptList',
 	dataType: 'json',
 	success: function(data){
+		console.log(data);
 		if(data.response_status == "success"){
 			response = JSON.parse(data.response_message);
 			for(var i = 0; i < response.length; i++){
@@ -52,6 +53,9 @@ $.ajax({
 		} else {
 			showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
 		}
-	}
+	},
+    error: function (request, status, error) {
+        alert(request.responseText);
+    }
 });
 </script>

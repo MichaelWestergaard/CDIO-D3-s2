@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import datalag.BaseDAO.NotImplementedException;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -57,11 +55,10 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 	@Override
 	public List<ProductBatchComponentDTO> list() throws SQLException, ClassNotFoundException {
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
-		ResultSet results = null;
 
 		String query = "SELECT * FROM produkt_batch_komponent";
 		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		ResultSet results = preparedStatement.executeQuery(query);
 
 		while(results.next()) {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));

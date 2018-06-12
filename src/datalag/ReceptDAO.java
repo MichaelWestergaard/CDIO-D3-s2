@@ -2,6 +2,7 @@ package datalag;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import java.sql.PreparedStatement;
@@ -52,15 +53,17 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
 	public List<ReceptDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+				
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
-		ResultSet results = null;
 
 		String query = "SELECT * FROM recept";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			recepter.add(new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn")));
+
 		}
 		preparedStatement.close();
 		return recepter;

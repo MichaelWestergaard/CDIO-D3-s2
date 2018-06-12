@@ -47,8 +47,8 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 	}
 
 	@Override
-	public boolean update(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public boolean update(ReceptComponentDTO receptComponent) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 
 	@Override

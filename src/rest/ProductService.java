@@ -14,13 +14,8 @@ import javax.ws.rs.FormParam;
 	@Path("Product")
 	public class ProductService {
 		
-		private ProductBatchController productBatchController;
+		private ProductBatchController productBatchController = new ProductBatchController();
 		
-		public ProductService() {
-			
-		}
-		
-		//ProduktBatchkomponent-Liste
 		@GET
 		@Path("getProductBatchComponentList")
 		public String getProductBatchComponentList() {

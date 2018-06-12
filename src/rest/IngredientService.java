@@ -13,7 +13,7 @@ import javax.ws.rs.FormParam;
 @Path("ingredient")
 public class IngredientService {
 	
-	private IngredientController ingredientController;
+	private IngredientController ingredientController = new IngredientController();
 	
 	//Råvareliste
 	@GET
