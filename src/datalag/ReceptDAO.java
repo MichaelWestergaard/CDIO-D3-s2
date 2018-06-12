@@ -38,9 +38,8 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 		results = preparedStatement.executeQuery();
 
 		if(results.next()) {
-			recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
 			preparedStatement.close();
-			return recept;
+			return new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
 		}
 		preparedStatement.close();
 		return null;
@@ -62,8 +61,7 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 		results = preparedStatement.executeQuery(query);
 
 		while(results.next()) {
-			ReceptDTO recept = new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn"));
-			recepter.add(recept);
+			recepter.add(new ReceptDTO(results.getInt("recept_id"), results.getString("recept_navn")));
 		}
 		preparedStatement.close();
 		return recepter;
