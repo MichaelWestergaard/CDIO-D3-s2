@@ -58,11 +58,10 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 		MySQLConnector connector = MySQLConnector.getInstance();
 		
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
-		ResultSet results = null;
 
 		String query = "SELECT * FROM recept_komponent";
 		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
-		results = connector.doQuery(preparedStatement);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			receptComponents.add(new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance")));
