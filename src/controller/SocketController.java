@@ -60,6 +60,8 @@ public class SocketController implements Runnable {
 	public void init() {
 		try {
 			socket = new Socket("169.254.2.3", 8000);
+			//System.out.println("TIMEOUT VALUE: " + socket.getSoTimeout());
+			//socket.setSoTimeout(0);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
