@@ -11,7 +11,7 @@ import com.mysql.jdbc.Statement;
 import datalag.ReceptDTO;
 
 
-public abstract class receptDAO implements BaseDAO<ReceptDTO> {
+public class ReceptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
 	public boolean create(ReceptDTO recept) throws SQLException, ClassNotFoundException {

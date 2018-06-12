@@ -13,6 +13,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import com.google.gson.Gson;
 
+import controller.ProductBatchController;
 import datalag.IngBatchDTO;
 import datalag.IngredientDTO;
 import datalag.MySQLController;
@@ -33,16 +34,11 @@ import javax.ws.rs.FormParam;
 
 	@Path("Product")
 	public class ProductService extends ResponseHandler{
-
-		private MySQLController mySQLController;
+		
+		private ProductBatchController productBatchController;
 		
 		public ProductService() {
-			try {
-				mySQLController = new MySQLController();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 		}
 		
 		//ProduktBatchkomponent-Liste
@@ -146,56 +142,19 @@ import javax.ws.rs.FormParam;
 		@GET
 		@Path("getProductBatchList")
 		public String getProductBatchList() {
-			try {
-				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatches()));
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
+			return productBatchController.getProductBatchList();
 		}
 		
 		@POST
 		@Path("createProductBatch")
 		public String createProductBatch(@FormParam("productBatchID") int productBatchID, @FormParam("status") int status, @FormParam("receptID") int receptID, @Context ServletContext context) throws IOException  {
-			try {
-				
-				//Validering af data
-				if(productBatchID >= 1 && productBatchID <= 99999999) {
-					if(status == 0 || status == 1 || status == 2) {
-						if(receptID >= 1 && receptID <= 99999999) {
-							//All good
-						} else {
-							return createResponse("error", 0, "Recept ID skal være i mellem 1-99999999!");
-						}
-					} else {
-						return createResponse("error", 0, "Status skal enten være 0, 1 eller 2!");
-					}
-				} else {
-					return createResponse("error", 0, "Produktbatch ID skal være i mellem 1-99999999!");
-				}
-				
-				if(mySQLController.getRecept(receptID) != null && mySQLController.getProductBatch(productBatchID) == null) {
-					if(mySQLController.createProductBatch(productBatchID, status, receptID)) {
-						ProductBatchDTO createdProductBatch = mySQLController.getProductBatch(productBatchID);
-				
-						if(createdProductBatch != null) {
-							return createResponse("success", 1, "ProductBatchen med Recepten \"" + mySQLController.getRecept(createdProductBatch.getReceptID()).getReceptName() + "\" blev oprettet");
-						}
-					}
-				}
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
-			return createResponse("error", 0, "Kunne ikke oprette ProductBatchen");
+			return productBatchController.createProductBatch(productBatchID, status, receptID);
 		}
 		
 		@GET
 		@Path("getProductBatch")
 		public String getProductBatch(@QueryParam("productBatchID") int productBatchID) {
-			try {
-				return createResponse("success", 1, new Gson().toJson(mySQLController.getProductBatch(productBatchID)));
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
+			return productBatchController.getProductBatch(productBatchID);
 		
 		}
 		
