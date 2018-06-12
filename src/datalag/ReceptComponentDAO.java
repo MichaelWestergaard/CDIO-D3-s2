@@ -30,13 +30,15 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 	}
 
 	public ReceptComponentDTO read(int receptID, int ingredientID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		ResultSet results = null;
 
 		String query = "Select * from recept_komponent WHERE recept_id = ? and raavare_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, receptID );
 		preparedStatement.setInt(2, ingredientID);
-		results = preparedStatement.executeQuery();
+		results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
 			preparedStatement.close();
@@ -53,12 +55,14 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
 	public List<ReceptComponentDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
 		String query = "SELECT * FROM recept_komponent";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			receptComponents.add(new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance")));
@@ -68,13 +72,15 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 	}
 	
 	public List<ReceptComponentDTO> list(int receptID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
 		ResultSet results = null;
 
 		String query = "SELECT * FROM recept_komponent where recept_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, receptID);
-		results = preparedStatement.executeQuery(query);
+		results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			receptComponents.add(new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance")));

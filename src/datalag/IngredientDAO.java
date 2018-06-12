@@ -12,11 +12,11 @@ import com.mysql.jdbc.Statement;
 public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	
 	@Override
-	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {		
+	public boolean create(IngredientDTO ingredient) throws SQLException, ClassNotFoundException  {	
+		MySQLConnector connector = MySQLConnector.getInstance();	
 		if(read(ingredient.getIngredientID()) == null) {								
 			String query = "Call opretRaavare(?, ?)";
-			MySQLConnector connector = MySQLConnector.getInstance();
-			PreparedStatement preparedStatement = connector.getStatement(query);
+			PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 			preparedStatement.setInt(1, ingredient.getIngredientID());
 			preparedStatement.setString(2, ingredient.getIngredientName());
 			if(connector.execute(preparedStatement)) {
@@ -31,13 +31,13 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 
 	@Override
 	public IngredientDTO read(int ingredientID) throws ClassNotFoundException, SQLException  {
+		MySQLConnector connector = MySQLConnector.getInstance();
 		IngredientDTO ingredient = null;
-		ResultSet results = null;
 
 		String query = "Select * from raavare WHERE raavare_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery();
+		ResultSet results = connector.doQuery(preparedStatement);
 		
 		if(results.next()) {
 			ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));
@@ -51,10 +51,10 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 
 	@Override
 	public boolean update(IngredientDTO ingredient) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
 		if(read(ingredient.getIngredientID()) != null) {
 			String query = "call redigerRaavare(?, ?)";
-			MySQLConnector connector = MySQLConnector.getInstance();
-			PreparedStatement preparedStatement = connector.getStatement(query);
+			PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 			preparedStatement.setInt(1, ingredient.getIngredientID());
 			preparedStatement.setString(2, ingredient.getIngredientName());
 			if(connector.execute(preparedStatement)) {
@@ -69,12 +69,12 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 
 	@Override
 	public List<IngredientDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
 		List<IngredientDTO> ingredients = new ArrayList<IngredientDTO>();
-		ResultSet results = null;
 
 		String query = "SELECT * FROM raavare";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			IngredientDTO ingredient = new IngredientDTO(results.getInt("raavare_id"), results.getString("raavare_navn"));

@@ -15,9 +15,10 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 
 	@Override
 	public boolean create(IngBatchDTO ingBatch) throws SQLException, ClassNotFoundException {		
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		if(read(ingBatch.getIngBatchID()) == null) {
 			String query = "Call opretRaavarebatch(?, ?, ?, ?)";
-			MySQLConnector connector = MySQLConnector.getInstance();
 			PreparedStatement preparedStatement = connector.getStatement(query);
 			preparedStatement.setInt(1, ingBatch.getIngBatchID());
 			preparedStatement.setInt(2, ingBatch.getIngredientID());
@@ -35,16 +36,15 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 
 	@Override
 	public IngBatchDTO read(int ingBatchID) throws ClassNotFoundException, SQLException {
-		IngBatchDTO ingBatch = null;
-		ResultSet results = null;
-
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		String query = "Select * from raavare_batch WHERE rb_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, ingBatchID);
-		results = preparedStatement.executeQuery();
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
-			ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
+			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
 			preparedStatement.close();
 			return ingBatch;
 		}
@@ -54,12 +54,13 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 
 	@Override
 	public List<IngBatchDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<IngBatchDTO> ingBatches = new ArrayList<IngBatchDTO>();
-		ResultSet results = null;
 
 		String query = "SELECT * FROM raavare_batch";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			IngBatchDTO ingBatch = new IngBatchDTO(results.getInt("rb_id"), results.getInt("raavare_id"), results.getDouble("maengde"), results.getString("raavare_navn"), results.getString("leverandoer"));
@@ -70,13 +71,14 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 	}
 		
 	public List<Integer> list(int ingredientID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<Integer> productBatches = new ArrayList<Integer>();
-		ResultSet results = null;
 
 		String query = "SELECT rb_id FROM raavare_batch WHERE raavare_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery(query);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			productBatches.add(results.getInt("rb_id"));
@@ -87,13 +89,14 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 	}
 	
 	public List<Integer> getIngredientBatchesByIngredient(int ingredientID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<Integer> ingBatches = new ArrayList<Integer>();
-		ResultSet results = null;
 
 		String query = "SELECT rb_id FROM raavarebatch WHERE raavare_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, ingredientID);
-		results = preparedStatement.executeQuery();
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			ingBatches.add(results.getInt("rb_id"));
@@ -104,6 +107,7 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 	}
 
 	public boolean updateAmount(int ingBatchID, double weighedAmount) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
 		if(read(ingBatchID) == null) {
 			return false;
 		}
@@ -112,7 +116,7 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 		}
 
 		String query = "call opdaterMaengde(?, ?)";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, ingBatchID);
 		preparedStatement.setDouble(2, weighedAmount);
 		preparedStatement.execute();

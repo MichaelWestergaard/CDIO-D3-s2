@@ -32,11 +32,13 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 	}
 
 	public ProductBatchComponentDTO read(int pbID, int raavareBatchID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		String query = "Select * from produkt_batch_komponent WHERE pb_id = ? and rb_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, pbID);
 		preparedStatement.setInt(2, raavareBatchID);
-		ResultSet results = preparedStatement.executeQuery();
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
@@ -54,11 +56,13 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 
 	@Override
 	public List<ProductBatchComponentDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<ProductBatchComponentDTO> productBatchComponents = new ArrayList<ProductBatchComponentDTO>();
 
 		String query = "SELECT * FROM produkt_batch_komponent";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		ResultSet results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		ResultSet results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));

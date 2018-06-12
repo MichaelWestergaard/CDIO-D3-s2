@@ -12,10 +12,11 @@ public class ProductBatchDAO implements BaseDAO<ProductBatchDTO> {
 
 	@Override
 	public boolean create(ProductBatchDTO pb) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		if(read(pb.getProductBatchID()) == null) {
 			String query = "Call opretProduktBatch(?, ?, ?)";
-			MySQLConnector connector = MySQLConnector.getInstance();
-			PreparedStatement preparedStatement = connector.getStatement(query);
+			PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 			preparedStatement.setInt(1, pb.getProductBatchID());
 			preparedStatement.setInt(2, pb.getStatus());
 			preparedStatement.setInt(3, pb.getReceptID());
@@ -31,13 +32,15 @@ public class ProductBatchDAO implements BaseDAO<ProductBatchDTO> {
 
 	@Override
 	public ProductBatchDTO read(int pbID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		ProductBatchDTO productBatch = null;
 		ResultSet results = null;
 
 		String query = "Select * from produktbatch WHERE pb_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, pbID);
-		results = preparedStatement.executeQuery();
+		results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
 			String endDate = "";
@@ -61,12 +64,14 @@ public class ProductBatchDAO implements BaseDAO<ProductBatchDTO> {
 
 	@Override
 	public List<ProductBatchDTO> list() throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		List<ProductBatchDTO> productBatches = new ArrayList<ProductBatchDTO>();
 		ResultSet results = null;
 
 		String query = "SELECT * FROM produktbatch";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
-		results = preparedStatement.executeQuery(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
+		results = connector.doQuery(preparedStatement);
 
 		while(results.next()) {
 			String endDate = "";
@@ -88,13 +93,16 @@ public class ProductBatchDAO implements BaseDAO<ProductBatchDTO> {
 	}
 
 	public boolean finishProductBatch(int pbID) throws SQLException, ClassNotFoundException {
-		String query = "call afslutProduktion(?)";
 		MySQLConnector connector = MySQLConnector.getInstance();
-		PreparedStatement preparedStatement = connector.getStatement(query);
+		
+		String query = "call afslutProduktion(?)";
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, pbID);
-		preparedStatement.execute();
-		preparedStatement.close();
-		return true;
+		if(connector.execute(preparedStatement)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override

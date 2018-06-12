@@ -30,13 +30,15 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
 	public ReceptDTO read(int receptID) throws SQLException, ClassNotFoundException {
+		MySQLConnector connector = MySQLConnector.getInstance();
+		
 		ReceptDTO recept = null;
 		ResultSet results = null;
 
 		String query = "Select * from recept WHERE recept_id = ?";
-		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 		preparedStatement.setInt(1, receptID);
-		results = preparedStatement.executeQuery();
+		results = connector.doQuery(preparedStatement);
 
 		if(results.next()) {
 			preparedStatement.close();
@@ -54,7 +56,7 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 	@Override
 	public List<ReceptDTO> list() throws SQLException, ClassNotFoundException {
 		MySQLConnector connector = MySQLConnector.getInstance();
-				
+		
 		List<ReceptDTO> recepter = new ArrayList<ReceptDTO>();
 
 		String query = "SELECT * FROM recept";
