@@ -3,6 +3,7 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
+import datalag.BaseDAO.NotImplementedException;
 import datalag.IngredientDAO;
 import datalag.ReceptComponentDAO;
 import datalag.ReceptComponentDTO;
@@ -124,6 +125,8 @@ public class ReceptController extends ResponseHandler {
 			return createResponse("error", 0, e.getMessage());
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
+		} catch (NotImplementedException e) {
+			return createResponse("error", 0, e.getMessage());
 		} 
 	}
 }

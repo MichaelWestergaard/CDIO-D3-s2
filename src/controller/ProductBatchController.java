@@ -3,6 +3,7 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
+import datalag.BaseDAO.NotImplementedException;
 import datalag.IngBatchDAO;
 import datalag.IngredientDAO;
 import datalag.ProductBatchComponentDAO;
@@ -72,9 +73,9 @@ public class ProductBatchController extends ResponseHandler {
 		return createResponse("error", 0, "ProduktBatch kunne ikke oprettes");
 	}
 
-	public String getProductBatchComponent(int pbID) {
+	public String getProductBatchComponent(int pbID, int raavareBatchID) {
 		try {
-			return createResponse("success", 1, new Gson().toJson(pbcDAO.read(pbID)));
+			return createResponse("success", 1, new Gson().toJson(pbcDAO.read(pbID, raavareBatchID)));
 		} catch (ClassNotFoundException e) {
 			return createResponse("error", 0, e.getMessage());
 		} catch (SQLException e) {
@@ -118,7 +119,7 @@ public class ProductBatchController extends ResponseHandler {
 			boolean ingredientBatchFound = false;		
 			boolean userFound = false;
 			
-			if(pbcDAO.read(productBatchID) != null) {
+			if(pbcDAO.read(productBatchID, ingredientBatchID) != null) {
 				return createResponse("error", 0, "ProdukBatchkomponenten eksisterer allerede");
 			}
 			
@@ -146,7 +147,7 @@ public class ProductBatchController extends ResponseHandler {
 				return createResponse("error", 0, "operatorID eksistere ikke");
 			}
 			
-			if(pbcDAO.read(productBatchID) != null) {
+			if(pbcDAO.read(productBatchID, ingredientBatchID) != null) {
 				return createResponse("success", 1, "ProduktBatchkomponenten med produktbatchen \"" + productBatchID + "\" blev oprettet");
 
 			} else {
@@ -156,6 +157,8 @@ public class ProductBatchController extends ResponseHandler {
 			return createResponse("error", 0, e.getMessage());
 		} catch (SQLException e) {
 			return createResponse("error", e.getErrorCode(), e.getMessage());
+		} catch (NotImplementedException e) {
+			return createResponse("error", 0, e.getMessage());
 		} 
 	}
 }

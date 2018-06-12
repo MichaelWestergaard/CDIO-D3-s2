@@ -37,7 +37,7 @@ import javax.ws.rs.FormParam;
 		@GET
 		@Path("getProductBatchComponent")
 		public String getProductBatchComponent(@QueryParam("productBatchID") int productBatchID, @QueryParam("raavareBatchID") int raavareBatchID) {
-			return productBatchController.getProductBatchComponent(productBatchID);
+			return productBatchController.getProductBatchComponent(productBatchID, raavareBatchID);
 		}
 		
 		//ProduktBatch-Liste
