@@ -14,19 +14,33 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import datalag.MySQLController;
-import datalag.ProductBatchComponentDTO;
-import datalag.ProductBatchDTO;
-import datalag.ReceptComponentDTO;
-import datalag.UserDTO;
+import datalag.BaseDAO.NotImplementedException;
+import datalag.IngBatchDAO;
 import datalag.IngBatchDTO;
-import datalag.ReceptDTO;
+import datalag.IngredientDAO;
+import datalag.ProductBatchComponentDAO;
+import datalag.ProductBatchComponentDTO;
+import datalag.ProductBatchDAO;
+import datalag.ProductBatchDTO;
+import datalag.ReceptComponentDAO;
+import datalag.ReceptComponentDTO;
+import datalag.ReceptDAO;
+import datalag.UserDAO;
+import datalag.UserDTO;
 
 
 public class SocketController implements Runnable {
 	Socket socket;
 	static String readLine = null;
-	MySQLController mySQLController;
+	
+	UserDAO userDAO;
+	IngBatchDAO ingBatchDAO;
+	IngredientDAO ingredientDAO;
+	ProductBatchDAO productBatchDAO;
+	ProductBatchComponentDAO productBatchComponentDAO;
+	ReceptComponentDAO receptComponentDAO;
+	ReceptDAO receptDAO;
+	
 	int operatorID;
 	int productBatchID;
 	int ingredientBatchID;
@@ -34,7 +48,13 @@ public class SocketController implements Runnable {
 	double netto;
 
 	public SocketController() throws ClassNotFoundException {
-		mySQLController = new MySQLController();
+		userDAO = new UserDAO();
+		ingBatchDAO = new IngBatchDAO();
+		ingredientDAO = new IngredientDAO();
+		productBatchDAO = new ProductBatchDAO();
+		productBatchComponentDAO = new ProductBatchComponentDAO();
+		receptComponentDAO = new ReceptComponentDAO();
+		receptDAO = new ReceptDAO();
 	}
 
 	public void init() {
@@ -100,7 +120,7 @@ public class SocketController implements Runnable {
 				sleep();
 				if(inputArr.length >= 3) {
 					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-					UserDTO user = mySQLController.getUser(input);
+					UserDTO user = userDAO.read(input);
 					if(user != null) {
 	
 						boolean allowed = false;
@@ -140,6 +160,8 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Indtast dit ID:\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (ClassNotFoundException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage()+"\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -182,7 +204,7 @@ public class SocketController implements Runnable {
 				if(continueProcedure) {
 					ReceptComponentDTO recept = null;
 					int ingredientID = Integer.parseInt(inputArr[2].replace("\"", ""));
-					List<ReceptComponentDTO> receptComponents = mySQLController.getReceptComponents(mySQLController.getProductBatch(productBatchID).getReceptID());
+					List<ReceptComponentDTO> receptComponents = receptComponentDAO.list(productBatchDAO.read(productBatchID).getReceptID());
 	
 					boolean ingredientInRecept = false;
 					for (ReceptComponentDTO receptComponentDTO : receptComponents) {
@@ -199,13 +221,13 @@ public class SocketController implements Runnable {
 						boolean alreadyWeighed = false;
 						int nothingLeftCount = 0;
 	
-						List<Integer> ingredientBatchesByIngredient = mySQLController.getIngredientBatchesByIngredient(ingredientID);
+						List<Integer> ingredientBatchesByIngredient = ingBatchDAO.list(ingredientID);
 						for (Iterator<Integer> iterator = ingredientBatchesByIngredient.iterator(); iterator.hasNext();) {
 							Integer ingredientBatchID = (Integer) iterator.next();
 	
-							if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+							if(ingBatchDAO.read(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
 								//Tjek om råvaren er blevet afvejet før
-								if(mySQLController.getProductBatchComponent(productBatchID, ingredientBatchID) == null) {
+								if(productBatchComponentDAO.read(productBatchID, ingredientBatchID) == null) {
 									availableIngredientBatches.add(ingredientBatchID);
 									availableIngredientBatchesText += "" + ingredientBatchID;
 									if(iterator.hasNext()) {
@@ -257,7 +279,7 @@ public class SocketController implements Runnable {
 								if(inputOK) {
 									int ingredientBatchID = Integer.parseInt(inputArr[2].replace("\"", ""));
 									if(availableIngredientBatches.contains(ingredientBatchID)) {
-										if(mySQLController.getIngBatch(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
+										if(ingBatchDAO.read(ingredientBatchID).getAmount() >= recept.getNomNetto()) {
 											this.ingredientBatchID = ingredientBatchID;
 											ingredientConfirmed = true;
 											return true;
@@ -285,11 +307,11 @@ public class SocketController implements Runnable {
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (ClassNotFoundException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage()+"\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -328,10 +350,10 @@ public class SocketController implements Runnable {
 				
 				if(continueProcedure) {
 					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-					IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
+					IngBatchDTO ingredientBatch = ingBatchDAO.read(input);
 					boolean ingredientInRecept = false;
-					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-					for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponentList()) {
+					int receptID = (productBatchDAO.read(productBatchID)).getReceptID();
+					for(ReceptComponentDTO receptComponent : receptComponentDAO.list()) {
 						if(receptComponent.getReceptID() == receptID) {
 							if(ingredientBatch != null) {
 								if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
@@ -356,6 +378,8 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (ClassNotFoundException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage()+"\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -364,7 +388,7 @@ public class SocketController implements Runnable {
 		try {
 			InputStream is = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			String ingredientName = mySQLController.getIngredient(mySQLController.getIngBatch(ingredientBatchID).getIngredientID()).getIngredientName();
+			String ingredientName = ingredientDAO.read(ingBatchDAO.read(ingredientBatchID).getIngredientID()).getIngredientName();
 			sendMessage("RM20 8 \"Afvej " + ingredientName + ":\" \"\" \"&3\"");
 			boolean nettoConfirmed = false;
 			while(!nettoConfirmed) {
@@ -396,9 +420,9 @@ public class SocketController implements Runnable {
 				if(continueProcedure) {
 					netto = getLoad();
 
-					int ingredientID = (mySQLController.getIngBatch(ingredientBatchID)).getIngredientID();
-					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-					ReceptComponentDTO receptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
+					int ingredientID = (ingBatchDAO.read(ingredientBatchID)).getIngredientID();
+					int receptID = (productBatchDAO.read(productBatchID)).getReceptID();
+					ReceptComponentDTO receptComponent = receptComponentDAO.read(receptID, ingredientID);
 					double nomNetto = receptComponent.getNomNetto();
 					double tolerance = receptComponent.getTolerance();
 					System.out.println("Netto: " + netto);
@@ -406,8 +430,8 @@ public class SocketController implements Runnable {
 					System.out.println("Max: " + (nomNetto + (nomNetto*tolerance)/100));
 					if(netto >= (nomNetto - (nomNetto*tolerance)/100) && netto <= (nomNetto + (nomNetto*tolerance)/100)) {
 						nettoConfirmed = true;
-						if(mySQLController.updateAmount(ingredientBatchID, netto)) {
-							mySQLController.createProductBatchComponent(productBatchID, ingredientBatchID, operatorID, netto, tara);
+						if(ingBatchDAO.updateAmount(ingredientBatchID, netto)) {
+							productBatchComponentDAO.create(new ProductBatchComponentDTO(productBatchID, ingredientBatchID, operatorID, null, 0, null, netto, tara));
 							System.out.println("Done");
 							sendMessage("T");
 							sleep();
@@ -428,6 +452,10 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (ClassNotFoundException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage() + "!\" \"\" \"&3\"");
+		} catch (NotImplementedException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage() + "!\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -468,10 +496,10 @@ public class SocketController implements Runnable {
 				
 				if(inputOK) {
 					int input = Integer.parseInt(inputArr[2].replace("\"", ""));
-					ProductBatchDTO productBatch = mySQLController.getProductBatch(input);
+					ProductBatchDTO productBatch = productBatchDAO.read(input);
 					if(	productBatch != null) {
 						if(productBatch.getStatus() != 2) {
-							sendMessage("RM20 8 \"" + "Bekraeft " + mySQLController.getRecept(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
+							sendMessage("RM20 8 \"" + "Bekraeft " + receptDAO.read(productBatch.getReceptID()).getReceptName() + "?" + "\" \"\" \"&3\"");
 	
 							productBatchID = input;
 	
@@ -510,6 +538,8 @@ public class SocketController implements Runnable {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
+		} catch (ClassNotFoundException e) {
+			sendMessage("RM20 8 \"Fejl: "+e.getMessage() + "!\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -613,8 +643,7 @@ public class SocketController implements Runnable {
 				pw.flush();	
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}
 	}
 
@@ -668,7 +697,7 @@ public class SocketController implements Runnable {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		}
 		return false;
 	}
@@ -688,8 +717,8 @@ public class SocketController implements Runnable {
 
 				//Antal råvare der skal afvejes
 				int numberOfReceptComponents = 0;
-				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponentList()) {
+				int receptID = (productBatchDAO.read(productBatchID)).getReceptID();
+				for(ReceptComponentDTO receptComponent : receptComponentDAO.list()) {
 					if(receptComponent.getReceptID() == receptID) {
 						numberOfReceptComponents++;
 					}
@@ -697,7 +726,7 @@ public class SocketController implements Runnable {
 
 				//Antal råvare der allerede er afvejet
 				int numberOfPBComponents = 0;
-				for(ProductBatchComponentDTO productBatchComponent : mySQLController.getProductBatchComponents()) {
+				for(ProductBatchComponentDTO productBatchComponent : productBatchComponentDAO.list()) {
 					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
 						numberOfPBComponents++;
 					}
@@ -721,7 +750,7 @@ public class SocketController implements Runnable {
 				}
 
 				//Afsluttet afvejning besked
-				if(mySQLController.finishProductBatch(productBatchID)) {
+				if(productBatchDAO.finishProductBatch(productBatchID)) {
 					InputStream is = socket.getInputStream();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
@@ -750,6 +779,8 @@ public class SocketController implements Runnable {
 				sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 			} catch (IOException e) {
 				sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
+			} catch (ClassNotFoundException e) {
+				sendMessage("RM20 8 \"Fejl: "+e.getMessage() + "!\" \"\" \"&3\"");
 			}
 
 		}

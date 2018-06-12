@@ -66,6 +66,22 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 		preparedStatement.close();
 		return receptComponents;
 	}
+	
+	public List<ReceptComponentDTO> list(int receptID) throws SQLException, ClassNotFoundException {
+		List<ReceptComponentDTO> receptComponents = new ArrayList<ReceptComponentDTO>();
+		ResultSet results = null;
+
+		String query = "SELECT * FROM recept_komponent where recept_id = ?";
+		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
+		preparedStatement.setInt(1, receptID);
+		results = preparedStatement.executeQuery(query);
+
+		while(results.next()) {
+			receptComponents.add(new ReceptComponentDTO(results.getInt("recept_id"), results.getInt("raavare_id"), results.getString("raavare_navn"), results.getDouble("nom_netto"), results.getDouble("tolerance")));
+		}
+		preparedStatement.close();
+		return receptComponents;
+	}
 
 	@Override
 	public ReceptComponentDTO delete(int receptID) throws NotImplementedException {
