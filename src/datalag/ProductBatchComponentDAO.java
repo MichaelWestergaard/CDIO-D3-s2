@@ -11,11 +11,11 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 
 	@Override
 	public boolean create(ProductBatchComponentDTO pbcDTO) throws SQLException, ClassNotFoundException, NotImplementedException {
-		if(read(pbcDTO.getProductBatchID()) == null)  {
+		if(read(pbcDTO.getProductBatchID(), pbcDTO.getIngredientBatchID()) == null)  {
 
 			String query = "Call afvejning(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
 			MySQLConnector connector = MySQLConnector.getInstance();
-			PreparedStatement preparedStatement = connector.getStatement(query);
+			PreparedStatement preparedStatement = (PreparedStatement) connector.getStatement(query);
 			preparedStatement.setInt(1, pbcDTO.getProductBatchID());
 			preparedStatement.setInt(2, pbcDTO.getIngredientBatchID());
 			preparedStatement.setDouble(3, pbcDTO.getTara());

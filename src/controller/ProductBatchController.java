@@ -157,6 +157,7 @@ public class ProductBatchController extends ResponseHandler {
 		} catch (ClassNotFoundException e) {
 			return createResponse("error", 0, e.getMessage());
 		} catch (SQLException e) {
+			e.printStackTrace();
 			return createResponse("error", e.getErrorCode(), e.getMessage());
 		} catch (NotImplementedException e) {
 			return createResponse("error", 0, e.getMessage());

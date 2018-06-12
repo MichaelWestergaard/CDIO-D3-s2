@@ -431,7 +431,7 @@ public class SocketController implements Runnable {
 					if(netto >= (nomNetto - (nomNetto*tolerance)/100) && netto <= (nomNetto + (nomNetto*tolerance)/100)) {
 						nettoConfirmed = true;
 						if(ingBatchDAO.updateAmount(ingredientBatchID, netto)) {
-							productBatchComponentDAO.create(new ProductBatchComponentDTO(productBatchID, ingredientBatchID, operatorID, null, 0, null, netto, tara));
+							productBatchComponentDAO.create(new ProductBatchComponentDTO(productBatchID, ingredientBatchID, 0, null, operatorID, null, netto, tara));
 							System.out.println("Done");
 							sendMessage("T");
 							sleep();
@@ -444,13 +444,12 @@ public class SocketController implements Runnable {
 						//TODO Fix tekst
 						sendMessage("RM20 8 \"Fejl i afvejning\" \"\" \"&3\"");
 					}
-				} else {
-					sendMessage("RM20 8 \"Proev igen!\" \"\" \"&3\"");
-				}
+				} 
 			}
 		} catch (IOException e) {
 			sendMessage("RM20 8 \"Fejl i indtastningen\" \"\" \"&3\"");
 		} catch (SQLException e) {
+			e.printStackTrace();
 			sendMessage("RM20 8 \"Fejl: "+e.getErrorCode()+"! Fejl i database\" \"\" \"&3\"");
 		} catch (ClassNotFoundException e) {
 			sendMessage("RM20 8 \"Fejl: "+e.getMessage() + "!\" \"\" \"&3\"");
