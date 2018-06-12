@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
-	public boolean create(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException {
+	public boolean create(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException, NotImplementedException {
 		if(read(receptComponent.getReceptID()) == null)  {
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			MySQLConnector connector = MySQLConnector.getInstance();
@@ -68,13 +68,13 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 	}
 
 	@Override
-	public ReceptComponentDTO delete(int receptID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public ReceptComponentDTO delete(int receptID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 
 	@Override
-	public ReceptComponentDTO read(int ID) throws SQLException, ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet! Brug read(int receptID, int ingredientID)");
+	public ReceptComponentDTO read(int ID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet! Brug read(int receptID, int ingredientID)");
 	}
 
 }

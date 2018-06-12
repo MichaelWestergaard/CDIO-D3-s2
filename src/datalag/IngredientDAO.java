@@ -85,7 +85,7 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	}
 	
 	@Override
-	public IngredientDTO delete(int ingredientID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public IngredientDTO delete(int ingredientID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 }

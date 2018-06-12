@@ -4,13 +4,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import datalag.BaseDAO.NotImplementedException;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDTO> {
 
 	@Override
-	public boolean create(ProductBatchComponentDTO pbcDTO) throws SQLException, ClassNotFoundException {
+	public boolean create(ProductBatchComponentDTO pbcDTO) throws SQLException, ClassNotFoundException, NotImplementedException {
 		if(read(pbcDTO.getProductBatchID()) == null)  {
 
 			String query = "Call afvejning(?, ?, ?, ?, ?)"; //Ved ikke, om det er det rigtige sql call ??? 
@@ -31,19 +33,15 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 		}
 	}
 
-	@Override
-	public ProductBatchComponentDTO read(int pbID) throws SQLException, ClassNotFoundException {
-		ProductBatchComponentDTO productBatchComponent = null;
-		ResultSet results = null;
-
+	public ProductBatchComponentDTO read(int pbID, int raavareBatchID) throws SQLException, ClassNotFoundException {
 		String query = "Select * from produkt_batch_komponent WHERE pb_id = ? and rb_id = ?";
 		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
 		preparedStatement.setInt(1, pbID);
-		//preparedStatement.setInt(2, raavareBatchID);			DETTE SKAL FIXES!!! HUSK HUSK HUSK HUSK HUSK HUSK
-		results = preparedStatement.executeQuery();
+		preparedStatement.setInt(2, raavareBatchID);
+		ResultSet results = preparedStatement.executeQuery();
 
 		if(results.next()) {
-			productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
+			ProductBatchComponentDTO productBatchComponent = new ProductBatchComponentDTO(results.getInt("pb_id"), results.getInt("rb_id"), results.getInt("raavare_id"), results.getString("rb_raavare_navn"), results.getInt("opr_id"), results.getString("initialer"), results.getDouble("netto"), results.getDouble("tara"));
 			preparedStatement.close();
 			return productBatchComponent;
 		}
@@ -74,8 +72,13 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 	}
 
 	@Override
-	public ProductBatchComponentDTO delete(int pbcID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public ProductBatchComponentDTO delete(int pbcID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
+	}
+
+	@Override
+	public ProductBatchComponentDTO read(int ID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet! Brug read(int pbID, int raavareBatchID)");
 	}
 
 }

@@ -46,8 +46,8 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 	}
 
 	@Override
-	public boolean update(ReceptDTO recept) throws SQLException, ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public boolean update(ReceptDTO recept) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 	}
 
 	@Override
-	public ReceptDTO delete(int receptID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public ReceptDTO delete(int receptID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 
 }

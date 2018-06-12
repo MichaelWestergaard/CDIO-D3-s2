@@ -98,13 +98,13 @@ public class ProductBatchDAO implements BaseDAO<ProductBatchDTO> {
 	}
 	
 	@Override
-	public boolean update(ProductBatchDTO pb) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public boolean update(ProductBatchDTO pb) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 	
 	@Override
-	public ProductBatchDTO delete(int pbID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public ProductBatchDTO delete(int pbID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 	
 }

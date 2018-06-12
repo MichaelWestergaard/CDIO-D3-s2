@@ -104,12 +104,12 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 	}
 	
 	@Override
-	public boolean update(IngBatchDTO ingBatch) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public boolean update(IngBatchDTO ingBatch) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 
 	@Override
-	public IngBatchDTO delete(int ID) throws ClassNotFoundException {
-		throw new ClassNotFoundException("Denne metode er ikke lavet");
+	public IngBatchDTO delete(int ID) throws NotImplementedException {
+		throw new NotImplementedException("Denne metode er ikke lavet");
 	}
 }

@@ -3,18 +3,21 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
+import datalag.IngBatchDAO;
+import datalag.IngredientDAO;
 import datalag.ProductBatchComponentDAO;
 import datalag.ProductBatchComponentDTO;
 import datalag.ProductBatchDAO;
 import datalag.ProductBatchDTO;
+import datalag.ReceptDAO;
 import datalag.ResponseHandler;
 
 public class ProductBatchController extends ResponseHandler {
 	
 	private ProductBatchDAO pbDAO = new ProductBatchDAO();
 	private ProductBatchComponentDAO pbcDAO = new ProductBatchComponentDAO();
-	private ReceptController receptController = new ReceptController();
-	private IngredientController ingController = new IngredientController();
+	private ReceptDAO receptDAO = new ReceptDAO();
+	private IngBatchDAO ingBatchDAO = new IngBatchDAO();
 	private UserController userController = new UserController();
 	
 	public String getProductBatch(int productBatchID) {		
@@ -44,10 +47,10 @@ public class ProductBatchController extends ResponseHandler {
 					ProductBatchDTO pbDTO = new ProductBatchDTO(productBatchID, status, receptID, null, null);
 					
 					try {
-						if(receptController.getRecept(receptID) != null && pbDAO.read(productBatchID) == null) {
+						if(ingBatchDAO.read(receptID) != null && pbDAO.read(productBatchID) == null) {
 							if(pbDAO.create(pbDTO)) {
 								if(pbDAO.read(productBatchID) != null) {
-									return createResponse("success", 1, "ProductBatchen med Recepten \"" + receptController.getRecept(receptID).getReceptName() + "\" blev oprettet");
+									return createResponse("success", 1, "ProductBatchen med Recepten \"" + receptDAO.read(receptID).getReceptName() + "\" blev oprettet");
 								}
 							}
 						}
@@ -123,7 +126,7 @@ public class ProductBatchController extends ResponseHandler {
 				productBatchFound = true;
 			}	
 			
-			if(ingController.getIngBatch(ingredientBatchID) != null) {
+			if(ingBatchDAO.read(ingredientBatchID) != null) {
 				ingredientBatchFound = true;
 			}
 			
