@@ -85,8 +85,7 @@ public class IngredientDAO implements BaseDAO<IngredientDTO> {
 	}
 	
 	@Override
-	public IngredientDTO delete(int ingredientID) {
-		// TODO Auto-generated method stub
-		return null;
+	public IngredientDTO delete(int ingredientID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 }

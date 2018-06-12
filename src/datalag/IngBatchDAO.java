@@ -104,14 +104,12 @@ public class IngBatchDAO implements BaseDAO<IngBatchDTO> {
 	}
 	
 	@Override
-	public boolean update(IngBatchDTO ingBatch) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(IngBatchDTO ingBatch) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
 	@Override
-	public IngBatchDTO delete(int ID) {
-		// TODO Auto-generated method stub
-		return null;
+	public IngBatchDTO delete(int ID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 }

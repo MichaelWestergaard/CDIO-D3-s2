@@ -331,7 +331,7 @@ public class SocketController implements Runnable {
 					IngBatchDTO ingredientBatch = mySQLController.getIngBatch(input);
 					boolean ingredientInRecept = false;
 					int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-					for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+					for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponentList()) {
 						if(receptComponent.getReceptID() == receptID) {
 							if(ingredientBatch != null) {
 								if(receptComponent.getIngredientID() == ingredientBatch.getIngredientID()) {
@@ -689,7 +689,7 @@ public class SocketController implements Runnable {
 				//Antal råvare der skal afvejes
 				int numberOfReceptComponents = 0;
 				int receptID = (mySQLController.getProductBatch(productBatchID)).getReceptID();
-				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponents()) {
+				for(ReceptComponentDTO receptComponent : mySQLController.getReceptComponentList()) {
 					if(receptComponent.getReceptID() == receptID) {
 						numberOfReceptComponents++;
 					}

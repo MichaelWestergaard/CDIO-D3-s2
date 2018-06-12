@@ -52,9 +52,8 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 	}
 
 	@Override
-	public boolean update(ProductBatchComponentDTO pbcDTO) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean update(ProductBatchComponentDTO pbcDTO) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
 	@Override
@@ -75,9 +74,8 @@ public class ProductBatchComponentDAO implements BaseDAO<ProductBatchComponentDT
 	}
 
 	@Override
-	public ProductBatchComponentDTO delete(int pbcID) {
-		// TODO Auto-generated method stub
-		return null;
+	public ProductBatchComponentDTO delete(int pbcID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
 }

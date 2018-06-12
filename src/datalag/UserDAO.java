@@ -119,7 +119,7 @@ public class UserDAO implements BaseDAO<UserDTO> {
 	}
 	
 	@Override
-	public UserDTO delete(int ID) {
-		return null;
+	public UserDTO delete(int ID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 }

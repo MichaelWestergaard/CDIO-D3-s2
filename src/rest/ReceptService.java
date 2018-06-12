@@ -1,166 +1,51 @@
 package rest;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
-import com.google.gson.Gson;
-
-import datalag.IngredientDTO;
-import datalag.MySQLController;
-import datalag.ReceptComponentDTO;
-import datalag.ReceptDTO;
-import datalag.ResponseHandler;
-import datalag.UserDTO;
-
+import javax.servlet.ServletContext;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.servlet.ServletContext;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+
+import controller.ReceptController;
+import datalag.ResponseHandler;
 
 @Path("recept")
 public class ReceptService extends ResponseHandler{
-
-	private MySQLController mySQLController;
 	
-	public ReceptService() {
-		try {
-			mySQLController = new MySQLController();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	private ReceptController controller = new ReceptController();
 	
-	//Receptliste 
 	@GET
 	@Path("getReceptList")
 	public String getReceptList() {
-		try {
-			return createResponse("success", 1, new Gson().toJson(mySQLController.getRecepter()));
-		} catch (SQLException e) {
-			return createResponse("error", e.getErrorCode(), e.getMessage());
-		}
+		return controller.getReceptList();
 	}
 	
-	//Tilføj en ReceptKomponent, der skal laves en fejl besked
-		@POST
-		@Path("createReceptComponent")
-		public String createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
-			if(receptID < 1 || receptID > 99999999) {
-				return createResponse("error", 0, "Recept ID skal være mellem 1 - 99999999");
-			}
-			
-			if(ingredientID < 1 || ingredientID > 99999999) {
-				return createResponse("error", 0, "Råvare ID skal være mellem 1 - 99999999");
-			}
-			
-			if(nomNetto < 0.05 || nomNetto > 20.0) {
-				return createResponse("error", 0, "Nettovæten skal være mellem 0.05 - 20.0");
-			}
-			
-			if(tolerance < 0.1 || tolerance > 10.0) {
-				return createResponse("error", 0, "Tolerancen skal være mellem 0.1 - 10.0");
-			}
-			
-			try {
-				List<ReceptDTO> recepts = mySQLController.getRecepter();
-				List<IngredientDTO> ingredients = mySQLController.getIngredients();
-				boolean receptFound = false;
-				boolean ingredientFound = false;		
-				
-				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
-					return createResponse("error", 0, "receptkomponenten eksisterer allerede");
-				}
-				
-				for (ReceptDTO recept : recepts) {
-					if(mySQLController.getRecept(receptID) != null) {
-						receptFound = true;
-					}
-				}	
-				for (IngredientDTO ingredient : ingredients) {
-					if(mySQLController.getIngredient(ingredientID) != null) {
-						ingredientFound = true;
-					}
-				}
-				if(receptFound && ingredientFound) {					
-				mySQLController.createReceptComponent(receptID, ingredientID, nomNetto, tolerance);
-		
-				} else if (!receptFound && ingredientFound ) {
-					return createResponse("error", 0, "receptID eksistere ikke");
-				} else if (receptFound && !ingredientFound ) {
-					return createResponse("error", 0, "ingredientID eksistere ikke");
-				}
-				
-				if(mySQLController.getReceptComponent(receptID, ingredientID) != null) {
-					ReceptComponentDTO createdReceptComponent = mySQLController.getReceptComponent(receptID, ingredientID);
-					return createResponse("success", 1, "Recepkomponenten med recepten \"" + mySQLController.getRecept(createdReceptComponent.getReceptID()).getReceptName() + "\" blev oprettet");
+	@POST
+	@Path("createReceptComponent")
+	public String createReceptComponent(@FormParam("receptID") int receptID, @FormParam("ingredientID") int ingredientID, @FormParam("nomNetto") double nomNetto, @FormParam("tolerance") double tolerance, @Context ServletContext context) throws IOException  {
+		return controller.createReceptComponent(receptID, ingredientID, nomNetto, tolerance);
+	}
 
-				} else {
-					return createResponse("error", 0, "Kunne ikke oprette receptkomponenten");
-				}
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
-		}
-	
-		@GET
-		@Path("getRecept")
-		public String getRecept(@QueryParam("receptID") int receptID) {
-			try {
-				return createResponse("success", 1, new Gson().toJson(mySQLController.getRecept(receptID)));
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
-		
-		}
-				
-		@POST
-		@Path("createRecept")
-		public String createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
-			try {
-				
-				//Validering af data
-				if(receptID >= 1 && receptID <= 99999999) {
-					if(receptName.length() >= 2 && receptName.length() <= 20) {
-						//All good
-					} else {
-						return createResponse("error", 0, "Recept navnet skal være 2-20 tegn!");
-					}
-				} else {
-					return createResponse("error", 0, "Recept ID skal være i mellem 1-99999999!");
-				}
-				
-				if(mySQLController.createRecept(receptID, receptName)) {
-				ReceptDTO createdRecept = mySQLController.getRecept(receptID);
-				
-				if(createdRecept != null) {
-					return createResponse("success", 1, "Recepten \"" + createdRecept.getReceptName() + "\" blev oprettet");
-				}
-				}
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
-			return createResponse("error", 0, "Kunne ikke oprette Recepten");
-		}
-	
-		//Receptkomponentliste
-		@GET
-		@Path("getReceptComponentList")
-		public String getReceptComponentList() {
-			try {
-				return createResponse("success", 1, new Gson().toJson(mySQLController.getReceptComponents()));
-			} catch (SQLException e) {
-				return createResponse("error", e.getErrorCode(), e.getMessage());
-			}
-		}	
+	@GET
+	@Path("getRecept")
+	public String getRecept(@QueryParam("receptID") int receptID) {
+		return controller.getRecept(receptID);
+	}
+			
+	@POST
+	@Path("createRecept")
+	public String createRecept(@FormParam("receptID") int receptID, @FormParam("receptName") String receptName, @Context ServletContext context) throws IOException  {
+		return controller.createRecept(receptID, receptName);
+	}
+
+	@GET
+	@Path("getReceptComponentList")
+	public String getReceptComponentList() {
+		return controller.getReceptComponentList();
+	}	
 		
 }

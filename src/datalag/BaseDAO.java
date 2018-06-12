@@ -14,7 +14,7 @@ public interface BaseDAO<T> {
 	T read(int ID) throws SQLException, ClassNotFoundException;
 	boolean update(T object) throws SQLException, ClassNotFoundException;
 	List<T> list() throws SQLException, ClassNotFoundException;
-	T delete(int ID);
+	T delete(int ID) throws ClassNotFoundException;
 	
 	
 //	public class NotImplementedException extends Exception {

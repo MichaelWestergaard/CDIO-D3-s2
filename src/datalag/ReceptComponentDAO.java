@@ -29,14 +29,13 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 		}
 	}
 
-	@Override
-	public ReceptComponentDTO read(int receptID) throws SQLException, ClassNotFoundException {
+	public ReceptComponentDTO read(int receptID, int ingredientID) throws SQLException, ClassNotFoundException {
 		ResultSet results = null;
 
 		String query = "Select * from recept_komponent WHERE recept_id = ? and raavare_id = ?";
 		PreparedStatement preparedStatement = MySQLConnector.getInstance().getStatement(query);
 		preparedStatement.setInt(1, receptID );
-		//preparedStatement.setInt(2, ingredientID);		DETTE SKAL FIXES!! HUSK HUSK HUSK HUSK HUSK
+		preparedStatement.setInt(2, ingredientID);
 		results = preparedStatement.executeQuery();
 
 		if(results.next()) {
@@ -49,8 +48,7 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
 	public boolean update(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
 	@Override
@@ -70,11 +68,13 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 	}
 
 	@Override
-	public ReceptComponentDTO delete(int receptID) {
-		// TODO Auto-generated method stub
-		return null;
+	public ReceptComponentDTO delete(int receptID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
-	
-	
+	@Override
+	public ReceptComponentDTO read(int ID) throws SQLException, ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet! Brug read(int receptID, int ingredientID)");
+	}
+
 }

@@ -47,8 +47,7 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 
 	@Override
 	public boolean update(ReceptDTO recept) throws SQLException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return false;
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
 
 	@Override
@@ -68,11 +67,8 @@ public class ReceptDAO implements BaseDAO<ReceptDTO> {
 	}
 
 	@Override
-	public ReceptDTO delete(int receptID) {
-		// TODO Auto-generated method stub
-		return null;
+	public ReceptDTO delete(int receptID) throws ClassNotFoundException {
+		throw new ClassNotFoundException("Denne metode er ikke lavet");
 	}
-	
-	
-	
+
 }
