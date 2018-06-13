@@ -1,4 +1,4 @@
-package datalag;
+package DTO;
 
 import java.sql.Timestamp;
 

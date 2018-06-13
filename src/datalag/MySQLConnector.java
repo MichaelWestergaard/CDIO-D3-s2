@@ -36,22 +36,17 @@ public class MySQLConnector {
 	
 	public PreparedStatement getStatement(String sql) throws SQLException{
 		return connection.prepareStatement(sql);
-		//TODO 
 	}
 	
-	boolean execute(PreparedStatement statement) throws SQLException {
+	public boolean execute(PreparedStatement statement) throws SQLException {
 		statement.execute();
 		statement.close();
 		return true;
 	}
 	
-	ResultSet doQuery(PreparedStatement statement) throws SQLException {
+	public ResultSet doQuery(PreparedStatement statement) throws SQLException {
 		ResultSet result = statement.executeQuery();
 		return result;
 	}
 	
-	void doUpdate(Statement stmnt) {
-		
-	}
-
 }

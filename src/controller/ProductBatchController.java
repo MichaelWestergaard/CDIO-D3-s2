@@ -3,14 +3,14 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
-import datalag.BaseDAO.NotImplementedException;
-import datalag.IngBatchDAO;
-import datalag.IngredientDAO;
-import datalag.ProductBatchComponentDAO;
-import datalag.ProductBatchComponentDTO;
-import datalag.ProductBatchDAO;
-import datalag.ProductBatchDTO;
-import datalag.ReceptDAO;
+import DAO.IngBatchDAO;
+import DAO.IngredientDAO;
+import DAO.ProductBatchComponentDAO;
+import DAO.ProductBatchDAO;
+import DAO.ReceptDAO;
+import DAO.BaseDAO.NotImplementedException;
+import DTO.ProductBatchComponentDTO;
+import DTO.ProductBatchDTO;
 import datalag.ResponseHandler;
 
 public class ProductBatchController extends ResponseHandler {

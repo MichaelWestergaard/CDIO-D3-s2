@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import DAO.UserDAO;
+import DTO.UserDTO;
 import datalag.ResponseHandler;
-import datalag.UserDAO;
-import datalag.UserDTO;
 
 public class UserController extends ResponseHandler {
 	

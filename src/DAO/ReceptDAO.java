@@ -1,9 +1,12 @@
-package datalag;
+package DAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import DTO.ReceptDTO;
+import datalag.MySQLConnector;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

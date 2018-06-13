@@ -1,8 +1,11 @@
-package datalag;
+package DAO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import DTO.ReceptComponentDTO;
+import datalag.MySQLConnector;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +14,7 @@ public class ReceptComponentDAO implements BaseDAO<ReceptComponentDTO> {
 
 	@Override
 	public boolean create(ReceptComponentDTO receptComponent) throws SQLException, ClassNotFoundException, NotImplementedException {
-		if(read(receptComponent.getReceptID(), receptComponent.ingredientID) == null)  {
+		if(read(receptComponent.getReceptID(), receptComponent.getIngredientID()) == null)  {
 			String query = "Call opretRekomponent(?, ?, ?, ?)";
 			MySQLConnector connector = MySQLConnector.getInstance();
 			PreparedStatement preparedStatement = connector.getStatement(query);

@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-import datalag.IngBatchDAO;
-import datalag.IngBatchDTO;
-import datalag.IngredientDAO;
-import datalag.IngredientDTO;
+import DAO.IngBatchDAO;
+import DAO.IngredientDAO;
+import DTO.IngBatchDTO;
+import DTO.IngredientDTO;
 import datalag.ResponseHandler;
 
 public class IngredientController extends ResponseHandler{

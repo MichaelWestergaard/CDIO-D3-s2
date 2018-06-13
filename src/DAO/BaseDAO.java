@@ -1,4 +1,4 @@
-package datalag;
+package DAO;
 
 import java.sql.SQLException;
 import java.util.List;

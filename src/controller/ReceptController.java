@@ -3,12 +3,12 @@ package controller;
 import java.sql.SQLException;
 import com.google.gson.Gson;
 
-import datalag.BaseDAO.NotImplementedException;
-import datalag.IngredientDAO;
-import datalag.ReceptComponentDAO;
-import datalag.ReceptComponentDTO;
-import datalag.ReceptDAO;
-import datalag.ReceptDTO;
+import DAO.IngredientDAO;
+import DAO.ReceptComponentDAO;
+import DAO.ReceptDAO;
+import DAO.BaseDAO.NotImplementedException;
+import DTO.ReceptComponentDTO;
+import DTO.ReceptDTO;
 import datalag.ResponseHandler;
 
 public class ReceptController extends ResponseHandler {

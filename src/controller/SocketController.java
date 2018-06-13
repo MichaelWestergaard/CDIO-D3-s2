@@ -14,19 +14,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import datalag.BaseDAO.NotImplementedException;
-import datalag.IngBatchDAO;
-import datalag.IngBatchDTO;
-import datalag.IngredientDAO;
-import datalag.ProductBatchComponentDAO;
-import datalag.ProductBatchComponentDTO;
-import datalag.ProductBatchDAO;
-import datalag.ProductBatchDTO;
-import datalag.ReceptComponentDAO;
-import datalag.ReceptComponentDTO;
-import datalag.ReceptDAO;
-import datalag.UserDAO;
-import datalag.UserDTO;
+import DAO.IngBatchDAO;
+import DAO.IngredientDAO;
+import DAO.ProductBatchComponentDAO;
+import DAO.ProductBatchDAO;
+import DAO.ReceptComponentDAO;
+import DAO.ReceptDAO;
+import DAO.UserDAO;
+import DAO.BaseDAO.NotImplementedException;
+import DTO.IngBatchDTO;
+import DTO.ProductBatchComponentDTO;
+import DTO.ProductBatchDTO;
+import DTO.ReceptComponentDTO;
+import DTO.UserDTO;
 
 
 public class SocketController implements Runnable {
@@ -60,8 +60,8 @@ public class SocketController implements Runnable {
 	public void init() {
 		try {
 			socket = new Socket("169.254.2.3", 8000);
-			//System.out.println("TIMEOUT VALUE: " + socket.getSoTimeout());
-			//socket.setSoTimeout(0);
+			socket.setKeepAlive(true);
+			socket.setSoTimeout(0);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

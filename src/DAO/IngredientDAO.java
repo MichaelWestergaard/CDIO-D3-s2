@@ -1,4 +1,4 @@
-package datalag;
+package DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mysql.jdbc.Statement;
+
+import DTO.IngredientDTO;
+import datalag.MySQLConnector;
 
 
 public class IngredientDAO implements BaseDAO<IngredientDTO> {
