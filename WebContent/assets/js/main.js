@@ -294,6 +294,14 @@
 									}
 								}
 								
+								if(Math.round(sumTara) !== sumTara){
+									sumTara = sumTara.toFixed(3);
+								}
+								
+								if(Math.round(sumNetto) !== sumNetto){
+									sumNetto = sumNetto.toFixed(3);
+								}
+								
 								mywindow.document.write('<table><tr><td>Sum Tara:</td><td id="sumTara">'+sumTara+'</td></tr><tr><td>Sum Netto:</td><td id="sumNetto">'+sumNetto+'</td></tr></table></div>')
 								
 								switch(response.status){
