@@ -410,7 +410,7 @@ public class SocketController implements Runnable {
 							
 							continueProcedure = true;
 						} else {
-							continueProcedure = false;
+							continueProcedure = true;
 						}
 					} else {
 						sendMessage("RM20 8 \"" + "Afvejningsfejl" + "\" \"\" \"&3\"");
