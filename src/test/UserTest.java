@@ -7,11 +7,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import datalag.UserDTO;
+import DTO.UserDTO;
 
 public class UserTest {
 	
-	UserDTO User = new UserDTO (1, "Mort123", "Morten", "Petersen", "111111-1111", "wergergw33", "AA", Arrays.asList("Admin"), 1);
+	UserDTO User = new UserDTO (1, "Mort123", "Morten", "Petersen", "111111-1111", 
+									"wergergw33", "AA", Arrays.asList("Admin"), 1);
 
 	@Test
 	public final void testGetName() {
