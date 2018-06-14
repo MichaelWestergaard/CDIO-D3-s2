@@ -42,25 +42,29 @@ public class UserController extends ResponseHandler {
 
 			if(userID >= 1 && userID <= 999) {
 				if(userName.length() >= 2 && userName.length() <= 20) {
-					if(CPR.length() == 11) {
-						String[] splitCPR = CPR.split("-");
-						String combinedCPR = splitCPR[0] + splitCPR[1];
-						char[] cprChars = combinedCPR.toCharArray();
-						int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
-						int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
-						int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
-
-						if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
-							for (UserDTO user : users) {
-								if(user.getCpr().equals(CPR)) {
-									return createResponse("error", 0, "CPR-nummeret findes allerede!");
+					if(role.size() > 0) {
+						if(CPR.length() == 11) {
+							String[] splitCPR = CPR.split("-");
+							String combinedCPR = splitCPR[0] + splitCPR[1];
+							char[] cprChars = combinedCPR.toCharArray();
+							int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
+							int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
+							int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
+	
+							if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
+								for (UserDTO user : users) {
+									if(user.getCpr().equals(CPR)) {
+										return createResponse("error", 0, "CPR-nummeret findes allerede!");
+									}
 								}
+							} else {
+								return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
 							}
 						} else {
 							return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
 						}
 					} else {
-						return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+						return createResponse("error", 0, "Du skal minimum have en rolle");
 					}
 					
 					if(initial.length() >= 2 && initial.length() <= 4) {
@@ -100,27 +104,30 @@ public class UserController extends ResponseHandler {
 			List<UserDTO> users = userDAO.list();
 			
 			if(userName.length() >= 2 && userName.length() <= 20) {
-				if(CPR.length() == 11) {
-					String[] splitCPR = CPR.split("-");
-					String combinedCPR = splitCPR[0] + splitCPR[1];
-					char[] cprChars = combinedCPR.toCharArray();
-					int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
-					int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
-					int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
-					
-					if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
-						for (UserDTO user : users) {
-							if(user.getCpr().equals(CPR) && user.getUserID() != userID) {
-								return createResponse("error", 0, "CPR-nummeret findes allerede!");
+				if(!role.isEmpty()) {
+					if(CPR.length() == 11) {
+						String[] splitCPR = CPR.split("-");
+						String combinedCPR = splitCPR[0] + splitCPR[1];
+						char[] cprChars = combinedCPR.toCharArray();
+						int cprDay = Integer.parseInt(new StringBuilder().append(cprChars[0]).append(cprChars[1]).toString());
+						int cprMonth = Integer.parseInt(new StringBuilder().append(cprChars[2]).append(cprChars[3]).toString());
+						int cprYear = Integer.parseInt(new StringBuilder().append(cprChars[4]).append(cprChars[5]).toString());
+						
+						if(cprDay > 0 && cprDay < 32 && cprMonth > 0 && cprMonth < 13 && cprYear >= 0 && cprYear <= 99) {
+							for (UserDTO user : users) {
+								if(user.getCpr().equals(CPR) && user.getUserID() != userID) {
+									return createResponse("error", 0, "CPR-nummeret findes allerede!");
+								}
 							}
+						} else {
+							return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
 						}
 					} else {
 						return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
 					}
 				} else {
-					return createResponse("error", 0, "CPR-nummeret er ugyldigt!");
+					return createResponse("error", 0, "Du skal minimum have en rolle");
 				}
-				
 				if(initial.length() >= 2 && initial.length() <= 4) {
 					for (UserDTO user : users) {
 						if(user.getInitial().equals(initial) && user.getUserID() != userID) {
