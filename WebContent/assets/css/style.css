@@ -103,6 +103,11 @@ body {
 	font-weight: 500;
 }
 
+.content .group-img {
+	margin: 0 auto;
+	display: block;
+}
+
 table {
 	width: 100%;
 }
