@@ -71,7 +71,6 @@
            data: $('form').serialize(),
            success: function(data){
         	   data = JSON.parse(data);
-        	   console.log(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
         	   if(data.response_status == "success"){
         		   if($(form).attr('action') == "rest/Product/createProductBatch"){
@@ -87,7 +86,6 @@
             				url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
             				dataType: 'json',
             				success: function(data){
-            					console.log(data);
             					if(data.response_status == "success"){
             						response = JSON.parse(data.response_message);
             						
@@ -208,7 +206,7 @@
 				    var currentDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
 					
 					mywindow.document.write('<div class="report-content"><div class="top-info"><table><tr><td>Udskrevet d.</td><td id="date">'+currentDate+'</td></tr><tr><td>Produkt Batch Nr.</td><td id="productBatchID">'+ response.productBatchID +'</td></tr><tr><td>Recept Nr.</td><td id="receptID">'+response.receptID+'</td></tr></table></div><div class="recept-components">');
-					//Lav om til et kald
+
 					$.ajax({
 						type: 'GET',
 						url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
@@ -342,7 +340,6 @@
 		$('.status-container').append('<div class="status-content ' + status + '" id="notification-'+num+'"><div class="status-message">'+ text +'</div></div>');
 		notificationNum++;
 		setTimeout(function(){
-			console.log("Removing " + num);
 			$('.status-content#notification-'+ num).fadeOut(400, function() { $(this).remove(); });
 		}, 3000);
 	}
