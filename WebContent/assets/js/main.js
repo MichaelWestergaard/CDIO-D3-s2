@@ -337,10 +337,10 @@
 	
 	function showStatusMessage(text, status){
 		var num = notificationNum;
-		$('.status-container').append('<div class="status-content ' + status + '" id="'+num+'"><div class="status-message">'+ text +'</div></div>');
+		$('.status-container').append('<div class="status-content ' + status + '" id="notification-'+num+'"><div class="status-message">'+ text +'</div></div>');
 		notificationNum++;
 		setTimeout(function(){
-			$('.status-content#'+ num).toggleClass('shown');
-			$('.status-content#'+ num).remove();
+			console.log("Removing " + num);
+			$('.status-content#notification-'+ num).fadeOut(400, function() { $(this).remove(); });
 		}, 3000);
 	}
