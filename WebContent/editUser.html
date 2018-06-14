@@ -56,7 +56,9 @@
 		});
 		role = role.slice(0, -1);
 		var active 		= $("input[name=active]:checked").val();
-
+		
+		console.log(role);
+		
 		$.ajax({
         	type: "POST",
         	url: "http://localhost:8080/CDIO-D3-s2/rest/user/updateUser",
