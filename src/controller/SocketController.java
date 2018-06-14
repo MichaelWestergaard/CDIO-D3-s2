@@ -194,7 +194,7 @@ public class SocketController implements Runnable {
 							
 							continueProcedure = true;
 						} else {
-							continueProcedure = true;
+							continueProcedure = false;
 						}
 					} else {
 						continueProcedure = false;
@@ -269,7 +269,7 @@ public class SocketController implements Runnable {
 											
 											inputOK = true;
 										} else {
-											inputOK = true;
+											inputOK = false;
 										}
 									} else {
 										inputOK = false;
@@ -341,7 +341,7 @@ public class SocketController implements Runnable {
 							
 							continueProcedure = true;
 						} else {
-							continueProcedure = true;
+							continueProcedure = false;
 						}
 					} else {
 						continueProcedure = false;
@@ -410,7 +410,7 @@ public class SocketController implements Runnable {
 							
 							continueProcedure = true;
 						} else {
-							continueProcedure = true;
+							continueProcedure = false;
 						}
 					} else {
 						sendMessage("RM20 8 \"" + "Afvejningsfejl" + "\" \"\" \"&3\"");
@@ -486,7 +486,7 @@ public class SocketController implements Runnable {
 							
 							inputOK = true;
 						} else {
-							inputOK = true;
+							inputOK = false;
 						}
 					} else {
 						inputOK = false;
