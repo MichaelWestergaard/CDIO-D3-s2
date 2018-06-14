@@ -11,8 +11,6 @@ public class Main {
 		
 		socketcontroller.sendMessage("P111 \"Tast x for log ud\"");
 		socketcontroller.sleep();
-		socketcontroller.sleep();
-		socketcontroller.sleep();
 		socketcontroller.sleep();		
 		while(true) {
 			socketcontroller.completeProcedure();

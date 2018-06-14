@@ -241,6 +241,7 @@ table {
 
 .status-container .status-content {
 	position: relative;
+	margin: 10px 0;
 	padding: 15px;
 	border-radius: 3px;
 	opacity: 0;
@@ -249,7 +250,7 @@ table {
 	transition: .8s all ease;
 }
 
-.status-container.shown .status-content {
+.status-container .status-content {
 	opacity: .7;
 }
 

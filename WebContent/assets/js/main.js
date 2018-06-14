@@ -1,4 +1,6 @@
-	
+	var notificationNum = 0;
+
+
 	$('#homeBtn').click(function(e) {
 		e.preventDefault();
 		$(".content-container").load($(this).attr("href"));
@@ -334,11 +336,11 @@
 	}
 	
 	function showStatusMessage(text, status){
-		$('.status-container .status-content .status-message').html(text);
-		$('.status-container .status-content').addClass(status);
-		$('.status-container').toggleClass('shown');
+		var num = notificationNum;
+		$('.status-container').append('<div class="status-content ' + status + '" id="'+num+'"><div class="status-message">'+ text +'</div></div>');
+		notificationNum++;
 		setTimeout(function(){
-			$('.status-container').toggleClass('shown');
-			$('.status-container .status-content').removeClass(status);
+			$('.status-content#'+ num).toggleClass('shown');
+			$('.status-content#'+ num).remove();
 		}, 3000);
 	}
