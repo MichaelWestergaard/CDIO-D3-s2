@@ -71,6 +71,7 @@
            data: $('form').serialize(),
            success: function(data){
         	   data = JSON.parse(data);
+        	   console.log(data);
         	   showStatusMessage(data.response_code + ": " + data.response_message, data.response_status);
         	   if(data.response_status == "success"){
         		   if($(form).attr('action') == "rest/Product/createProductBatch"){
@@ -86,6 +87,7 @@
             				url: 'http://localhost:8080/CDIO-D3-s2/rest/recept/getReceptComponentList',
             				dataType: 'json',
             				success: function(data){
+            					console.log(data);
             					if(data.response_status == "success"){
             						response = JSON.parse(data.response_message);
             						

@@ -46,9 +46,9 @@ public class ProductBatchController extends ResponseHandler {
 			if(status == 0 || status == 1 || status == 2) {
 				if(receptID >= 1 && receptID <= 99999999) {
 					ProductBatchDTO pbDTO = new ProductBatchDTO(productBatchID, status, receptID, null, null);
-					
+
 					try {
-						if(ingBatchDAO.read(receptID) != null && pbDAO.read(productBatchID) == null) {
+						if(receptDAO.read(receptID) != null && pbDAO.read(productBatchID) == null) {
 							if(pbDAO.create(pbDTO)) {
 								if(pbDAO.read(productBatchID) != null) {
 									return createResponse("success", 1, "ProductBatchen med Recepten \"" + receptDAO.read(receptID).getReceptName() + "\" blev oprettet");
