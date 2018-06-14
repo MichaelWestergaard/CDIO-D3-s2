@@ -607,8 +607,28 @@ public class SocketController implements Runnable {
 					if(alphaCount+specialCount < 22) {
 						if(Character.isAlphabetic(c) || Character.isDigit(c) || c == ',') {
 							if(alphaCount < 20) {
-								returnMsg += c;
-								alphaCount++;
+								
+								if(c == 'æ' || c == 'ø' || c == 'å') {
+									if(alphaCount+2 <= 20) {
+										String newLetter = "";
+										
+										if(c == 'æ' || c == 'Æ') {
+											newLetter = "ae";
+										} else if(c == 'ø' || c == 'Ø') {
+											newLetter = "oe";
+										} else if(c == 'å' || c == 'Å') {
+											newLetter = "aa";
+										}
+										
+										for (int i = 0; i < newLetter.length(); i++) {
+											returnMsg += newLetter.charAt(i);
+											alphaCount++;
+										}
+									}
+								} else {
+									returnMsg += c;
+									alphaCount++;
+								}
 							} else {
 								if(specialCount+2 < 8) {
 									returnMsg += "..";
@@ -728,7 +748,7 @@ public class SocketController implements Runnable {
 				//Antal råvare der allerede er afvejet
 				int numberOfPBComponents = 0;
 				for(ProductBatchComponentDTO productBatchComponent : productBatchComponentDAO.list()) {
-					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
+					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID && productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
 						numberOfPBComponents++;
 					}
 				}
