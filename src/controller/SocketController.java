@@ -748,7 +748,7 @@ public class SocketController implements Runnable {
 				//Antal råvare der allerede er afvejet
 				int numberOfPBComponents = 0;
 				for(ProductBatchComponentDTO productBatchComponent : productBatchComponentDAO.list()) {
-					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID && productBatchComponent.getProductBatchID() == productBatchID) {
+					if(productBatchComponent.getProductBatchID() == productBatchID) {
 						numberOfPBComponents++;
 					}
 				}
