@@ -59,7 +59,7 @@ public class SocketController implements Runnable {
 
 	public void init() {
 		try {
-			socket = new Socket("169.254.2.3", 8000);
+			socket = new Socket("169.254.2.2", 8000);
 			socket.setKeepAlive(true);
 			socket.setSoTimeout(0);
 		} catch (UnknownHostException e) {
@@ -748,7 +748,7 @@ public class SocketController implements Runnable {
 				//Antal råvare der allerede er afvejet
 				int numberOfPBComponents = 0;
 				for(ProductBatchComponentDTO productBatchComponent : productBatchComponentDAO.list()) {
-					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID && productBatchComponent.getIngredientBatchID() == ingredientBatchID) {
+					if(productBatchComponent.getIngredientBatchID() == ingredientBatchID && productBatchComponent.getProductBatchID() == productBatchID) {
 						numberOfPBComponents++;
 					}
 				}
